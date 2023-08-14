@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/> <!--디폴스 설정 include -->
+    <include
+            resource="org/springframework/boot/logging/logback/console-appender.xml"/> <!--콘솔에 로그를 찍기위해 console-appender include-->
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+    </root>
+</configuration>
