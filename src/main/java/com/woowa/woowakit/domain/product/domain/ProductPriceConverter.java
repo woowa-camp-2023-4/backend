@@ -9,12 +9,12 @@ import com.woowa.woowakit.domain.model.Money;
 public class ProductPriceConverter implements AttributeConverter<ProductPrice, Long> {
 
 	@Override
-	public Long convertToDatabaseColumn(ProductPrice attribute) {
+	public Long convertToDatabaseColumn(final ProductPrice attribute) {
 		return attribute.getPrice().getValue();
 	}
 
 	@Override
-	public ProductPrice convertToEntityAttribute(Long dbData) {
+	public ProductPrice convertToEntityAttribute(final Long dbData) {
 		return ProductPrice.from(Money.from(dbData));
 	}
 }

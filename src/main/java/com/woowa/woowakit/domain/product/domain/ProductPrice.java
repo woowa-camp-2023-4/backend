@@ -15,4 +15,8 @@ public class ProductPrice {
 	public static ProductPrice from(final Money price) {
 		return new ProductPrice(price);
 	}
+
+	public static ProductPrice from(final Long price) {
+		return new ProductPrice(Money.from(price));
+	}
 }

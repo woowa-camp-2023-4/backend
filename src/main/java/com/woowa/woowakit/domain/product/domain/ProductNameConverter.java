@@ -7,12 +7,12 @@ import javax.persistence.Converter;
 public class ProductNameConverter implements AttributeConverter<ProductName, String> {
 
 	@Override
-	public String convertToDatabaseColumn(ProductName attribute) {
+	public String convertToDatabaseColumn(final ProductName attribute) {
 		return attribute.getName();
 	}
 
 	@Override
-	public ProductName convertToEntityAttribute(String dbData) {
+	public ProductName convertToEntityAttribute(final String dbData) {
 		return ProductName.from(dbData);
 	}
 }
