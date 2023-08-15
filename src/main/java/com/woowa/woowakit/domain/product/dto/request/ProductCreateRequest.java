@@ -13,15 +13,21 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-@AllArgsConstructor(staticName = "of")
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class ProductCreateRequest {
 
-	@NotBlank
+	@NotBlank(message = "이름은 공백일 수 없습니다.")
 	private String name;
-	@NotNull
-	@PositiveOrZero
+
+	@NotNull(message = "가격은 필수 항목입니다.")
+	@PositiveOrZero(message = "가격이 음수일 수 없습니다.")
 	private Long price;
+
 	private String imageUrl;
+
+	public static ProductCreateRequest of(final String name, final Long price, final String imageUrl) {
+		return new ProductCreateRequest(name, price, imageUrl);
+	}
 
 	public Product toEntity() {
 		return Product.of(name, price, imageUrl);

@@ -1,6 +1,5 @@
 package com.woowa.woowakit.domain.product.domain;
 
-import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -23,7 +22,6 @@ public class Product {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "product_id")
 	private Long id;
 
 	@Convert(converter = ProductNameConverter.class)

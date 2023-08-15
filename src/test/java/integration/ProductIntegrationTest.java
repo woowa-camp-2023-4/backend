@@ -34,7 +34,7 @@ public class ProductIntegrationTest extends IntegrationTest {
 		ProductCreateRequest request = ProductCreateRequest.of("test", 3000L, "testImage");
 
 		// when
-		ExtractableResponse<Response> response = post("/product", request);
+		ExtractableResponse<Response> response = post("/products", request);
 
 		//then
 		assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
