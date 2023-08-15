@@ -16,8 +16,8 @@ import com.woowa.woowakit.domain.product.dto.request.ProductCreateRequest;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("/products")
+@RequiredArgsConstructor
 public class ProductController {
 
 	private final ProductService productService;

@@ -1,10 +1,11 @@
 package com.woowa.woowakit.domain.model;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class Money {
 
 	private final Long value;

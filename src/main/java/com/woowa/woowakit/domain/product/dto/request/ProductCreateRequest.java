@@ -11,9 +11,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Getter
 public class ProductCreateRequest {
 
 	@NotBlank(message = "이름은 공백일 수 없습니다.")
