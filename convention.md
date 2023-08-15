@@ -117,10 +117,10 @@ public OrderService(
 
 ```java
 return OrderResponse.of(
-        order.getId(),  // Tab 2번
-        order.getOrderPrice(),
-        order.getExchangeRate(),
-        orderItemResponses
+      order.getId(),  // Tab 1번
+      order.getOrderPrice(),
+      order.getExchangeRate(),
+      orderItemResponses
 );
 
 ```
