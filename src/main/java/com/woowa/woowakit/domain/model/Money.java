@@ -7,9 +7,9 @@ import lombok.Getter;
 @AllArgsConstructor
 public class Money {
 
-	private Long value;
+	private final Long value;
 
-	public static Money of(final Long value) {
+	public static Money from(final Long value) {
 		return new Money(value);
 	}
 }

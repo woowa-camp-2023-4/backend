@@ -8,7 +8,14 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import com.woowa.woowakit.domain.model.Money;
+
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+
 @Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Product {
 
 	@Id
@@ -20,7 +27,37 @@ public class Product {
 
 	@Convert(converter = ProductPriceConverter.class)
 	private ProductPrice price;
+
 	private String imageUrl;
+
 	@Enumerated(EnumType.STRING)
 	private ProductStatus status;
+
+	@Builder
+	private Product(
+		final Long id,
+		final ProductName name,
+		final ProductPrice price,
+		final String imageUrl,
+		final ProductStatus status
+	) {
+		this.id = id;
+		this.name = name;
+		this.price = price;
+		this.imageUrl = imageUrl;
+		this.status = status;
+	}
+
+	public static Product of(
+		final String name,
+		final Long price,
+		final String imageUrl
+	) {
+		return Product.builder()
+			.name(ProductName.from(name))
+			.price(ProductPrice.from(Money.from(price)))
+			.imageUrl(imageUrl)
+			.status(ProductStatus.PRE_REGISTRATION)
+			.build();
+	}
 }

@@ -7,9 +7,9 @@ import lombok.Getter;
 @Getter
 public class ProductName {
 
-	private String name;
+	private final String name;
 
-	public static ProductName of(final String name) {
+	public static ProductName from(final String name) {
 		return new ProductName(name);
 	}
 }

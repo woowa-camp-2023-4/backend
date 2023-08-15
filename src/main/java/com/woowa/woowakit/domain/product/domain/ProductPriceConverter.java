@@ -6,15 +6,15 @@ import javax.persistence.Converter;
 import com.woowa.woowakit.domain.model.Money;
 
 @Converter
-public class ProductPriceConverter implements AttributeConverter<ProductPrice, Money> {
+public class ProductPriceConverter implements AttributeConverter<ProductPrice, Long> {
 
 	@Override
-	public Money convertToDatabaseColumn(ProductPrice attribute) {
-		return attribute.getPrice();
+	public Long convertToDatabaseColumn(ProductPrice attribute) {
+		return attribute.getPrice().getValue();
 	}
 
 	@Override
-	public ProductPrice convertToEntityAttribute(Money dbData) {
-		return ProductPrice.of(dbData);
+	public ProductPrice convertToEntityAttribute(Long dbData) {
+		return ProductPrice.from(Money.from(dbData));
 	}
 }

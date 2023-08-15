@@ -13,6 +13,6 @@ public class ProductNameConverter implements AttributeConverter<ProductName, Str
 
 	@Override
 	public ProductName convertToEntityAttribute(String dbData) {
-		return ProductName.of(dbData);
+		return ProductName.from(dbData);
 	}
 }
