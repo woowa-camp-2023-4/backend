@@ -1,7 +1,7 @@
 package com.woowa.woowakit.domain.member.api;
 
 import com.woowa.woowakit.domain.member.application.AuthSerivce;
-import com.woowa.woowakit.domain.member.dto.SignUpRequest;
+import com.woowa.woowakit.domain.member.dto.request.SignUpRequest;
 import com.woowa.woowakit.domain.member.dto.response.SignupResponse;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;

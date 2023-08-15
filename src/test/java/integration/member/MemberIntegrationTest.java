@@ -2,7 +2,7 @@ package integration.member;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.woowa.woowakit.domain.member.dto.SignUpRequest;
+import com.woowa.woowakit.domain.member.dto.request.SignUpRequest;
 import integration.IntegrationTest;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
@@ -23,7 +23,21 @@ public class MemberIntegrationTest extends IntegrationTest {
         ExtractableResponse<Response> response = post("/auth/signup", signUpRequest);
 
         // then
-        assertThat(response.jsonPath().getLong("id")).isNotEqualTo(0);
+        assertThat(response.jsonPath().getLong("id")).isNotZero();
+        assertThat(response.statusCode()).isEqualTo(201);
+    }
+
+    @Test
+    @DisplayName("이메일, 비밀번호를 입력하면 로그인이 성공하고 토큰을 반환한다")
+    void loginSuccess() {
+        // given
+        SignUpRequest signUpRequest = SignUpRequest.of("email@woowa.com", "passwordss", "name");
+
+        // when
+        ExtractableResponse<Response> response = post("/auth/signup", signUpRequest);
+
+        // then
+        assertThat(response.jsonPath().getLong("id")).isNotZero();
         assertThat(response.statusCode()).isEqualTo(201);
     }
 

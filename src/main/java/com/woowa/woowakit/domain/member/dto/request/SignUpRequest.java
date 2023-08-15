@@ -1,4 +1,4 @@
-package com.woowa.woowakit.domain.member.dto;
+package com.woowa.woowakit.domain.member.dto.request;
 
 
 import javax.validation.constraints.Email;
@@ -16,7 +16,7 @@ public class SignUpRequest {
     @Email
     private String email;
     @NotBlank
-    private String rawpassword;
+    private String password;
     @NotBlank
     private String name;
 
