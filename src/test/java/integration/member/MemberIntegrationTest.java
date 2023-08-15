@@ -17,12 +17,13 @@ public class MemberIntegrationTest extends IntegrationTest {
     @DisplayName("이메일, 비밀번호 닉네임이 입력되면 회원가입을 성공한다")
     void signUpSuccess() {
         // given
-        SignUpRequest signUpRequest = SignUpRequest.of("email", "password", "name");
+        SignUpRequest signUpRequest = SignUpRequest.of("email@woowa.com", "passwordss", "name");
 
         // when
-        ExtractableResponse<Response> response = post("/members/signup", signUpRequest);
+        ExtractableResponse<Response> response = post("/auth/signup", signUpRequest);
 
         // then
+        assertThat(response.jsonPath().getLong("id")).isNotEqualTo(0);
         assertThat(response.statusCode()).isEqualTo(201);
     }
 
