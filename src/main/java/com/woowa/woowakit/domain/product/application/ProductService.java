@@ -7,6 +7,7 @@ import com.woowa.woowakit.domain.product.domain.Product;
 import com.woowa.woowakit.domain.product.domain.ProductRepository;
 import com.woowa.woowakit.domain.product.dto.request.ProductCreateRequest;
 import com.woowa.woowakit.domain.product.dto.response.ProductDetailResponse;
+import com.woowa.woowakit.domain.product.exception.ProductNotExistException;
 
 import lombok.RequiredArgsConstructor;
 
@@ -23,7 +24,11 @@ public class ProductService {
 
 	@Transactional(readOnly = true)
 	public ProductDetailResponse findById(final Long id) {
-		final Product product = productRepository.findById(id).orElseThrow();
+		final Product product = findProductById(id);
 		return ProductDetailResponse.from(product);
+	}
+
+	private Product findProductById(final Long id) {
+		return productRepository.findById(id).orElseThrow(ProductNotExistException::new);
 	}
 }
