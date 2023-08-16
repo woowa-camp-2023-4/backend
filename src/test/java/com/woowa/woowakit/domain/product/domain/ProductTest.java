@@ -25,6 +25,6 @@ class ProductTest {
 		Product product = Product.of("test name", 1000L, "test image url");
 
 		// then
-		assertThat(product).extracting("quantity").isEqualTo(0L);
+		assertThat(product).extracting("quantity").isEqualTo(ProductQuantity.from(0));
 	}
 }
