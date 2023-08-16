@@ -9,12 +9,12 @@ import com.woowa.woowakit.domain.product.domain.product.ProductQuantity;
 public class ProductQuantityConverter implements AttributeConverter<ProductQuantity, Long> {
 
 	@Override
-	public Long convertToDatabaseColumn(ProductQuantity attribute) {
+	public Long convertToDatabaseColumn(final ProductQuantity attribute) {
 		return attribute.getQuantity();
 	}
 
 	@Override
-	public ProductQuantity convertToEntityAttribute(Long dbData) {
+	public ProductQuantity convertToEntityAttribute(final Long dbData) {
 		return ProductQuantity.from(dbData);
 	}
 }
