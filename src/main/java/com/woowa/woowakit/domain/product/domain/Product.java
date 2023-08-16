@@ -22,20 +22,19 @@ import lombok.NoArgsConstructor;
 @Getter
 public class Product extends BaseEntity {
 
+	private static final int INITIAL_QUANTITY = 0;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-
 	@Convert(converter = ProductNameConverter.class)
 	private ProductName name;
-
 	@Convert(converter = ProductPriceConverter.class)
 	private ProductPrice price;
-
 	private String imageUrl;
-
 	@Enumerated(EnumType.STRING)
 	private ProductStatus status;
+	private long quantity;
 
 	@Builder
 	private Product(
@@ -43,13 +42,15 @@ public class Product extends BaseEntity {
 		final ProductName name,
 		final ProductPrice price,
 		final String imageUrl,
-		final ProductStatus status
+		final ProductStatus status,
+		final long quantity
 	) {
 		this.id = id;
 		this.name = name;
 		this.price = price;
 		this.imageUrl = imageUrl;
 		this.status = status;
+		this.quantity = quantity;
 	}
 
 	public static Product of(
@@ -62,6 +63,7 @@ public class Product extends BaseEntity {
 			.price(ProductPrice.from(price))
 			.imageUrl(imageUrl)
 			.status(ProductStatus.PRE_REGISTRATION)
+			.quantity(INITIAL_QUANTITY)
 			.build();
 	}
 }

@@ -17,4 +17,14 @@ class ProductTest {
 		// then
 		assertThat(product).extracting("status").isEqualTo(ProductStatus.PRE_REGISTRATION);
 	}
+
+	@Test
+	@DisplayName("Product 생성 시 수량이 0인 상태로 생성된다.")
+	void createProductWithZeroQuantity() {
+		// when
+		Product product = Product.of("test name", 1000L, "test image url");
+
+		// then
+		assertThat(product).extracting("quantity").isEqualTo(0L);
+	}
 }
