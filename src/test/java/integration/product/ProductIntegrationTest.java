@@ -2,6 +2,9 @@ package integration.product;
 
 import static org.assertj.core.api.Assertions.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
@@ -47,5 +50,24 @@ public class ProductIntegrationTest extends IntegrationTest {
 		assertThat(detailResponse).extracting("quantity").isEqualTo(0L);
 		assertThat(detailResponse).extracting("imageUrl").isEqualTo("http://localhost:8080/testImage");
 		assertThat(detailResponse).extracting("status").isEqualTo("PRE_REGISTRATION");
+	}
+
+	@Test
+	@DisplayName("상품 리스트를 조회할 수 있다.")
+	void findAll() {
+		// given
+		ProductCreateRequest request1 = ProductCreateRequest.of("test1", 3000L, "testImage");
+		CommonRestAssuredUtils.post("/products", request1).header("Location");
+
+		ProductCreateRequest request2 = ProductCreateRequest.of("test2", 6000L, "testImage");
+		CommonRestAssuredUtils.post("/products", request2).header("Location");
+
+		// when
+		ExtractableResponse<Response> response = CommonRestAssuredUtils.get("/products");
+
+		// then
+		assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+		List<ProductDetailResponse> responses = response.as(ArrayList.class);
+		assertThat(responses).hasSize(2);
 	}
 }

@@ -1,5 +1,8 @@
 package com.woowa.woowakit.domain.product.application;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +29,14 @@ public class ProductService {
 	public ProductDetailResponse findById(final Long id) {
 		final Product product = findProductById(id);
 		return ProductDetailResponse.from(product);
+	}
+
+	@Transactional(readOnly = true)
+	public List<ProductDetailResponse> findAll() {
+		return productRepository.findAll()
+			.stream()
+			.map(ProductDetailResponse::from)
+			.collect(Collectors.toUnmodifiableList());
 	}
 
 	private Product findProductById(final Long id) {

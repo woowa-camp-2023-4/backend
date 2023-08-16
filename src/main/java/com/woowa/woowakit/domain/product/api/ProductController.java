@@ -1,6 +1,7 @@
 package com.woowa.woowakit.domain.product.api;
 
 import java.net.URI;
+import java.util.List;
 
 import javax.validation.Valid;
 
@@ -34,6 +35,12 @@ public class ProductController {
 	@GetMapping("/{id}")
 	public ResponseEntity<ProductDetailResponse> findById(@PathVariable final Long id) {
 		final ProductDetailResponse response = productService.findById(id);
+		return ResponseEntity.ok(response);
+	}
+
+	@GetMapping
+	public ResponseEntity<List<ProductDetailResponse>> findAll() {
+		final List<ProductDetailResponse> response = productService.findAll();
 		return ResponseEntity.ok(response);
 	}
 }
