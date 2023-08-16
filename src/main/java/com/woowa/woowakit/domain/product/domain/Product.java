@@ -10,6 +10,10 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import com.woowa.woowakit.domain.model.BaseEntity;
+import com.woowa.woowakit.domain.product.domain.converter.ProductImageConverter;
+import com.woowa.woowakit.domain.product.domain.converter.ProductNameConverter;
+import com.woowa.woowakit.domain.product.domain.converter.ProductPriceConverter;
+import com.woowa.woowakit.domain.product.domain.converter.ProductQuantityConverter;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -22,7 +26,7 @@ import lombok.NoArgsConstructor;
 @Getter
 public class Product extends BaseEntity {
 
-	private static final int INITIAL_QUANTITY = 0;
+	private static final ProductQuantity INITIAL_QUANTITY = ProductQuantity.from(0);
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,19 +35,21 @@ public class Product extends BaseEntity {
 	private ProductName name;
 	@Convert(converter = ProductPriceConverter.class)
 	private ProductPrice price;
-	private String imageUrl;
+	@Convert(converter = ProductImageConverter.class)
+	private ProductImage imageUrl;
 	@Enumerated(EnumType.STRING)
 	private ProductStatus status;
-	private long quantity;
+	@Convert(converter = ProductQuantityConverter.class)
+	private ProductQuantity quantity;
 
 	@Builder
 	private Product(
 		final Long id,
 		final ProductName name,
 		final ProductPrice price,
-		final String imageUrl,
+		final ProductImage imageUrl,
 		final ProductStatus status,
-		final long quantity
+		final ProductQuantity quantity
 	) {
 		this.id = id;
 		this.name = name;
@@ -61,7 +67,7 @@ public class Product extends BaseEntity {
 		return Product.builder()
 			.name(ProductName.from(name))
 			.price(ProductPrice.from(price))
-			.imageUrl(imageUrl)
+			.imageUrl(ProductImage.from(imageUrl))
 			.status(ProductStatus.PRE_REGISTRATION)
 			.quantity(INITIAL_QUANTITY)
 			.build();
