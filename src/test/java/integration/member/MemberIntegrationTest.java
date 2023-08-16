@@ -2,16 +2,17 @@ package integration.member;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.woowa.woowakit.domain.member.dto.request.LoginRequest;
 import com.woowa.woowakit.domain.member.dto.request.SignUpRequest;
 import integration.IntegrationTest;
-import io.restassured.RestAssured;
+import integration.helper.CommonRestAssuredUtils;
+import integration.helper.MemberHelper;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.http.MediaType;
 
-public class MemberIntegrationTest extends IntegrationTest {
+class MemberIntegrationTest extends IntegrationTest {
 
     @Test
     @DisplayName("이메일, 비밀번호 닉네임이 입력되면 회원가입을 성공한다")
@@ -20,7 +21,8 @@ public class MemberIntegrationTest extends IntegrationTest {
         SignUpRequest signUpRequest = SignUpRequest.of("email@woowa.com", "passwordss", "name");
 
         // when
-        ExtractableResponse<Response> response = post("/auth/signup", signUpRequest);
+        ExtractableResponse<Response> response = CommonRestAssuredUtils.post("/auth/signup",
+            signUpRequest);
 
         // then
         assertThat(response.jsonPath().getLong("id")).isNotZero();
@@ -31,24 +33,15 @@ public class MemberIntegrationTest extends IntegrationTest {
     @DisplayName("이메일, 비밀번호를 입력하면 로그인이 성공하고 토큰을 반환한다")
     void loginSuccess() {
         // given
-        SignUpRequest signUpRequest = SignUpRequest.of("email@woowa.com", "passwordss", "name");
+        MemberHelper.signup(MemberHelper.createSignUpRequest());
+        LoginRequest loginRequest = LoginRequest.of("email@woowa.com", "password");
 
-        // when
-        ExtractableResponse<Response> response = post("/auth/signup", signUpRequest);
+        //when
+        ExtractableResponse<Response> response = CommonRestAssuredUtils.post("/auth/login",
+            loginRequest);
 
-        // then
-        assertThat(response.jsonPath().getLong("id")).isNotZero();
-        assertThat(response.statusCode()).isEqualTo(201);
+        //then
+        assertThat(response.jsonPath().getString("accessToken")).isNotBlank();
+        assertThat(response.statusCode()).isEqualTo(200);
     }
-
-    public static <T> ExtractableResponse<Response> post(String url, T body) {
-        return RestAssured.given().log().all()
-            .body(body)
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .when()
-            .post(url)
-            .then().log().all()
-            .extract();
-    }
-
 }

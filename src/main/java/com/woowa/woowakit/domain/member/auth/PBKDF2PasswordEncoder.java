@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 public class PBKDF2PasswordEncoder implements PasswordEncoder {
 
     @Override
-    public boolean match(String planePassword, String encodedPassword) {
+    public boolean matches(String planePassword, String encodedPassword) {
         byte[] salt = getSalt(encodedPassword);
         String hashedPassword = encode(planePassword, salt);
 

@@ -17,10 +17,14 @@ public class EncodedPassword {
     }
 
     public static EncodedPassword of(
-            final String rawPassword,
-            final PasswordEncoder passwordEncoder
+        final String rawPassword,
+        final PasswordEncoder passwordEncoder
     ) {
         return new EncodedPassword(passwordEncoder.encode(rawPassword));
+    }
+
+    public boolean isMatch(final String rawPassword, final PasswordEncoder passwordEncoder) {
+        return passwordEncoder.matches(rawPassword, value);
     }
 
     @Override

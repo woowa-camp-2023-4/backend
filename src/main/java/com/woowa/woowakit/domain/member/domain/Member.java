@@ -1,5 +1,6 @@
 package com.woowa.woowakit.domain.member.domain;
 
+import com.woowa.woowakit.domain.member.exception.LoginFailException;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
@@ -36,6 +37,12 @@ public class Member {
         this.email = email;
         this.encodedPassword = encodedPassword;
         this.name = name;
+    }
+
+    public void validatePassword(String password, PasswordEncoder passwordEncoder) {
+        if (!encodedPassword.isMatch(password, passwordEncoder)) {
+            throw new LoginFailException();
+        }
     }
 
     public static Member of(String email, EncodedPassword encodedPassword, String name) {

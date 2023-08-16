@@ -1,7 +1,9 @@
 package com.woowa.woowakit.domain.member.api;
 
-import com.woowa.woowakit.domain.member.application.AuthSerivce;
+import com.woowa.woowakit.domain.member.application.AuthService;
+import com.woowa.woowakit.domain.member.dto.request.LoginRequest;
 import com.woowa.woowakit.domain.member.dto.request.SignUpRequest;
+import com.woowa.woowakit.domain.member.dto.response.LoginResponse;
 import com.woowa.woowakit.domain.member.dto.response.SignupResponse;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -17,14 +19,19 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class AuthController {
 
-    private final AuthSerivce authSerivce;
+    private final AuthService authService;
 
     //signup
     @PostMapping("/signup")
     public ResponseEntity<SignupResponse> signUp(@Valid @RequestBody SignUpRequest request) {
-        Long memberId = authSerivce.signUp(request);
+        Long memberId = authService.signUp(request);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(SignupResponse.from(memberId));
     }
 
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest request) {
+        LoginResponse loginResponse = authService.loginMember(request);
+        return ResponseEntity.ok(loginResponse);
+    }
 }
