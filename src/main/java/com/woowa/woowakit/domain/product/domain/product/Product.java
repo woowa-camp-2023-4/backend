@@ -1,4 +1,4 @@
-package com.woowa.woowakit.domain.product.domain;
+package com.woowa.woowakit.domain.product.domain.product;
 
 import javax.persistence.Convert;
 import javax.persistence.Entity;
@@ -10,10 +10,10 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import com.woowa.woowakit.domain.model.BaseEntity;
-import com.woowa.woowakit.domain.product.domain.converter.ProductImageConverter;
-import com.woowa.woowakit.domain.product.domain.converter.ProductNameConverter;
-import com.woowa.woowakit.domain.product.domain.converter.ProductPriceConverter;
-import com.woowa.woowakit.domain.product.domain.converter.ProductQuantityConverter;
+import com.woowa.woowakit.domain.product.domain.product.converter.ProductImageConverter;
+import com.woowa.woowakit.domain.product.domain.product.converter.ProductNameConverter;
+import com.woowa.woowakit.domain.product.domain.product.converter.ProductPriceConverter;
+import com.woowa.woowakit.domain.product.domain.product.converter.ProductQuantityConverter;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -43,7 +43,7 @@ public class Product extends BaseEntity {
 
 	@Enumerated(EnumType.STRING)
 	private ProductStatus status;
-	
+
 	@Convert(converter = ProductQuantityConverter.class)
 	private ProductQuantity quantity;
 

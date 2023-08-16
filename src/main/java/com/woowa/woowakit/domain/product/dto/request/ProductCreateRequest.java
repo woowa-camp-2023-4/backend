@@ -4,7 +4,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
 
-import com.woowa.woowakit.domain.product.domain.Product;
+import com.woowa.woowakit.domain.product.domain.product.Product;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

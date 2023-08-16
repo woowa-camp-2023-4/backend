@@ -1,4 +1,4 @@
-package com.woowa.woowakit.domain.product.domain;
+package com.woowa.woowakit.domain.product.domain.product;
 
 import java.util.Objects;
 
