@@ -1,7 +1,8 @@
 package com.woowa.woowakit.domain.auth.domain;
 
-import java.util.Objects;
 import lombok.Getter;
+
+import java.util.Objects;
 
 @Getter
 public class EncodedPassword {
@@ -16,10 +17,7 @@ public class EncodedPassword {
         return new EncodedPassword(encodedPassword);
     }
 
-    public static EncodedPassword of(
-        final String rawPassword,
-        final PasswordEncoder passwordEncoder
-    ) {
+    public static EncodedPassword of(final String rawPassword, final PasswordEncoder passwordEncoder) {
         return new EncodedPassword(passwordEncoder.encode(rawPassword));
     }
 
@@ -47,7 +45,7 @@ public class EncodedPassword {
     @Override
     public String toString() {
         return "Password{" +
-            "value='" + value + '\'' +
-            '}';
+                "value='" + value + '\'' +
+                '}';
     }
 }

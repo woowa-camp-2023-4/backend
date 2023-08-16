@@ -23,15 +23,15 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/signup")
-    public ResponseEntity<SignupResponse> signUp(@Valid @RequestBody SignUpRequest request) {
-        Long memberId = authService.signUp(request);
+    public ResponseEntity<SignupResponse> signUp(@Valid @RequestBody final SignUpRequest request) {
+        final Long memberId = authService.signUp(request);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(SignupResponse.from(memberId));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest request) {
-        LoginResponse loginResponse = authService.loginMember(request);
+    public ResponseEntity<LoginResponse> login(@Valid @RequestBody final LoginRequest request) {
+        final LoginResponse loginResponse = authService.loginMember(request);
 
         return ResponseEntity.ok(loginResponse);
     }

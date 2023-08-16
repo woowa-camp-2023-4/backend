@@ -1,29 +1,30 @@
 package com.woowa.woowakit.domain.auth.domain;
 
 import com.woowa.woowakit.domain.auth.exception.EmailInvalidException;
-import java.util.Objects;
 import lombok.Getter;
+
+import java.util.Objects;
 
 @Getter
 public class Email {
 
     private static final String EMAIL_REGEX_PATTERN = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
 
-    private String value;
+    private final String value;
 
     private Email(final String value) {
         validate(value);
         this.value = value;
     }
 
+    public static Email from(final String value) {
+        return new Email(value);
+    }
+
     private void validate(final String value) {
         if (value == null || !value.matches(EMAIL_REGEX_PATTERN)) {
             throw new EmailInvalidException();
         }
-    }
-
-    public static Email from(final String value) {
-        return new Email(value);
     }
 
     @Override
@@ -46,7 +47,7 @@ public class Email {
     @Override
     public String toString() {
         return "Email{" +
-            "value='" + value + '\'' +
-            '}';
+                "value='" + value + '\'' +
+                '}';
     }
 }

@@ -1,12 +1,13 @@
 package com.woowa.woowakit.domain.auth.dto.request;
 
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -19,7 +20,7 @@ public class LoginRequest {
     @NotBlank
     private String password;
 
-    public static LoginRequest of(String email, String password) {
+    public static LoginRequest of(final String email, final String password) {
         return new LoginRequest(email, password);
     }
 }

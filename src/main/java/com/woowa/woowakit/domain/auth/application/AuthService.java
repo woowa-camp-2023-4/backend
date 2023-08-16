@@ -2,18 +2,12 @@ package com.woowa.woowakit.domain.auth.application;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.woowa.woowakit.domain.auth.domain.AuthPrincipal;
-import com.woowa.woowakit.domain.auth.domain.EncodedPassword;
-import com.woowa.woowakit.domain.auth.domain.MemberRepository;
-import com.woowa.woowakit.domain.auth.dto.response.LoginResponse;
-import com.woowa.woowakit.domain.auth.exception.LoginFailException;
-import com.woowa.woowakit.domain.auth.exception.UnExpectedException;
-import com.woowa.woowakit.domain.auth.infra.TokenProvider;
-import com.woowa.woowakit.domain.auth.domain.Email;
-import com.woowa.woowakit.domain.auth.domain.Member;
-import com.woowa.woowakit.domain.auth.domain.PasswordEncoder;
+import com.woowa.woowakit.domain.auth.domain.*;
 import com.woowa.woowakit.domain.auth.dto.request.LoginRequest;
 import com.woowa.woowakit.domain.auth.dto.request.SignUpRequest;
+import com.woowa.woowakit.domain.auth.dto.response.LoginResponse;
+import com.woowa.woowakit.domain.auth.exception.LoginFailException;
+import com.woowa.woowakit.domain.auth.infra.TokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,34 +26,34 @@ public class AuthService {
     public Long signUp(final SignUpRequest request) {
         passwordValidator.validatePassword(request.getPassword());
 
-        Member member = Member.of(
-            request.getEmail(),
-            EncodedPassword.of(request.getPassword(), passwordEncoder),
-            request.getName()
+        final Member member = Member.of(
+                request.getEmail(),
+                EncodedPassword.of(request.getPassword(), passwordEncoder),
+                request.getName()
         );
 
         return memberRepository.save(member).getId();
     }
 
     @Transactional(readOnly = true)
-    public LoginResponse loginMember(LoginRequest loginRequest) {
-        Member member = getMemberByEmail(loginRequest.getEmail());
+    public LoginResponse loginMember(final LoginRequest loginRequest) {
+        final Member member = getMemberByEmail(loginRequest.getEmail());
         member.validatePassword(loginRequest.getPassword(), passwordEncoder);
-        AuthPrincipal authPrincipal = AuthPrincipal.from(member);
+        final AuthPrincipal authPrincipal = AuthPrincipal.from(member);
 
         return LoginResponse.from(tokenProvider.createToken(principalToJson(authPrincipal)));
     }
 
-    private String principalToJson(AuthPrincipal authPrincipal) {
+    private String principalToJson(final AuthPrincipal authPrincipal) {
         try {
             return objectMapper.writeValueAsString(authPrincipal);
         } catch (JsonProcessingException e) {
-            throw new UnExpectedException(e);
+            throw new IllegalStateException(e);
         }
     }
 
-    private Member getMemberByEmail(String email) {
+    private Member getMemberByEmail(final String email) {
         return memberRepository.findByEmail(Email.from(email))
-            .orElseThrow(LoginFailException::new);
+                .orElseThrow(LoginFailException::new);
     }
 }

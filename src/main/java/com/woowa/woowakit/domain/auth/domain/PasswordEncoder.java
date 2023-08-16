@@ -2,7 +2,7 @@ package com.woowa.woowakit.domain.auth.domain;
 
 public interface PasswordEncoder {
 
-    boolean matches(String planePassword, String encodedPassword);
+    boolean matches(final String planePassword, final String encodedPassword);
 
-    String encode(String password);
+    String encode(final String password);
 }

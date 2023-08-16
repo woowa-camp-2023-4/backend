@@ -12,7 +12,7 @@ public class SignupResponse {
 
     private Long id;
 
-    public static SignupResponse from(Long id) {
+    public static SignupResponse from(final Long id) {
         return new SignupResponse(id);
     }
 }

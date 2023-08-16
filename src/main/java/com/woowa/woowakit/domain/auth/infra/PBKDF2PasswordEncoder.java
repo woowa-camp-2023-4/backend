@@ -2,26 +2,27 @@ package com.woowa.woowakit.domain.auth.infra;
 
 import com.woowa.woowakit.domain.auth.domain.PasswordEncoder;
 import com.woowa.woowakit.domain.auth.exception.PasswordNotHashException;
+import org.springframework.stereotype.Component;
+
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.PBEKeySpec;
 import java.security.SecureRandom;
 import java.security.spec.KeySpec;
 import java.util.Base64;
 import java.util.Random;
-import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.PBEKeySpec;
-import org.springframework.stereotype.Component;
 
 @Component
 public class PBKDF2PasswordEncoder implements PasswordEncoder {
 
     @Override
-    public boolean matches(String planePassword, String encodedPassword) {
+    public boolean matches(final String planePassword, final String encodedPassword) {
         byte[] salt = getSalt(encodedPassword);
         String hashedPassword = encode(planePassword, salt);
 
         return encodedPassword.equals(hashedPassword);
     }
 
-    private String encode(String password, byte[] salt) {
+    private String encode(final String password, final byte[] salt) {
         try {
             KeySpec spec = new PBEKeySpec(password.toCharArray(), salt, 65536, 128);
             SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
@@ -37,7 +38,7 @@ public class PBKDF2PasswordEncoder implements PasswordEncoder {
     }
 
     @Override
-    public String encode(String password) {
+    public String encode(final String password) {
         return encode(password, getSalt());
     }
 
@@ -48,7 +49,7 @@ public class PBKDF2PasswordEncoder implements PasswordEncoder {
         return salt;
     }
 
-    private byte[] getSalt(String digest) {
+    private byte[] getSalt(final String digest) {
         return Base64.getDecoder().decode(digest.substring(0, 24));
     }
 }
