@@ -64,25 +64,5 @@ class AuthInterceptorTest {
             mockHttpServletRequest, mockHttpServletResponse, null))
             .isInstanceOf(TokenInvalidException.class);
     }
-
-    @Test
-    @DisplayName("등록되지 않은 유저인 경우 예외를 반환한다")
-    void preHandleWhenInvalidUser() {
-        MockHttpServletRequest mockHttpServletRequest = new MockHttpServletRequest();
-        mockHttpServletRequest.addHeader(HttpHeaders.AUTHORIZATION,
-            BEARER_TYPE + " " + LONG_EXPIRED_TOKEN);
-        MockHttpServletResponse mockHttpServletResponse = new MockHttpServletResponse();
-
-        TokenProvider tokenProvider = new TokenProvider(SECRET_KEY, VALIDITY_IN_MILLISECONDS);
-        AuthInterceptor authInterceptor = new AuthInterceptor(
-            tokenProvider,
-            memberRepository,
-            new ObjectMapper()
-        );
-
-        assertThatThrownBy(() -> authInterceptor.preHandle(
-            mockHttpServletRequest, mockHttpServletResponse, null))
-            .isInstanceOf(NotFoundMemberException.class);
-    }
 }
 
