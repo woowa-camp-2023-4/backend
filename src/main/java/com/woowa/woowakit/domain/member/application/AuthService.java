@@ -2,7 +2,7 @@ package com.woowa.woowakit.domain.member.application;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.woowa.woowakit.domain.member.auth.TokenProvider;
+import com.woowa.woowakit.domain.member.domain.AuthPrincipal;
 import com.woowa.woowakit.domain.member.domain.Email;
 import com.woowa.woowakit.domain.member.domain.EncodedPassword;
 import com.woowa.woowakit.domain.member.domain.Member;
@@ -13,7 +13,7 @@ import com.woowa.woowakit.domain.member.dto.request.SignUpRequest;
 import com.woowa.woowakit.domain.member.dto.response.LoginResponse;
 import com.woowa.woowakit.domain.member.exception.LoginFailException;
 import com.woowa.woowakit.domain.member.exception.UnExpectedException;
-import com.woowa.woowakit.domain.model.AuthPrincipal;
+import com.woowa.woowakit.domain.member.infra.TokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,7 +45,7 @@ public class AuthService {
     public LoginResponse loginMember(LoginRequest loginRequest) {
         Member member = getMemberByEmail(loginRequest.getEmail());
         member.validatePassword(loginRequest.getPassword(), passwordEncoder);
-        AuthPrincipal authPrincipal = AuthPrincipal.from(member.getId());
+        AuthPrincipal authPrincipal = AuthPrincipal.from(member);
 
         return LoginResponse.from(tokenProvider.createToken(principalToJson(authPrincipal)));
     }

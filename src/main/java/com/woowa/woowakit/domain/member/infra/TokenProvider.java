@@ -1,4 +1,4 @@
-package com.woowa.woowakit.domain.member.auth;
+package com.woowa.woowakit.domain.member.infra;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
@@ -12,8 +12,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class TokenProvider {
 
-    private String secretKey;
-    private long validityInMilliseconds;
+    private final String secretKey;
+    private final long validityInMilliseconds;
 
     public TokenProvider(
         @Value("${security.jwt.token.secret-key}") String secretKey,

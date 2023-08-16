@@ -20,8 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
 
     private final AuthService authService;
-
-    //signup
+    
     @PostMapping("/signup")
     public ResponseEntity<SignupResponse> signUp(@Valid @RequestBody SignUpRequest request) {
         Long memberId = authService.signUp(request);

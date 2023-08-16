@@ -1,4 +1,4 @@
-package com.woowa.woowakit.domain.member.auth;
+package com.woowa.woowakit.domain.member.infra;
 
 import com.woowa.woowakit.domain.member.domain.PasswordEncoder;
 import com.woowa.woowakit.domain.member.exception.PasswordNotHashException;

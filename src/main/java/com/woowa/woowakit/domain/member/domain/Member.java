@@ -1,9 +1,13 @@
 package com.woowa.woowakit.domain.member.domain;
 
+import com.woowa.woowakit.domain.member.domain.converter.EmailConverter;
+import com.woowa.woowakit.domain.member.domain.converter.PasswordConverter;
 import com.woowa.woowakit.domain.member.exception.LoginFailException;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -28,25 +32,29 @@ public class Member {
 
     @Column(name = "password", nullable = false)
     @Convert(converter = PasswordConverter.class)
-
     private EncodedPassword encodedPassword;
+
     @Column(name = "name", nullable = false, length = 255)
     private String name;
 
-    private Member(Email email, EncodedPassword encodedPassword, String name) {
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
+    private Member(Email email, EncodedPassword encodedPassword, String name, Role role) {
         this.email = email;
         this.encodedPassword = encodedPassword;
         this.name = name;
+        this.role = role;
+    }
+
+    public static Member of(String email, EncodedPassword encodedPassword, String name) {
+        return new Member(Email.from(email), encodedPassword, name, Role.USER);
     }
 
     public void validatePassword(String password, PasswordEncoder passwordEncoder) {
         if (!encodedPassword.isMatch(password, passwordEncoder)) {
             throw new LoginFailException();
         }
-    }
-
-    public static Member of(String email, EncodedPassword encodedPassword, String name) {
-        return new Member(Email.from(email), encodedPassword, name);
     }
 
     @Override

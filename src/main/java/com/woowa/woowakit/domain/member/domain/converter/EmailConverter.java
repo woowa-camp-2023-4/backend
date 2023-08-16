@@ -1,5 +1,6 @@
-package com.woowa.woowakit.domain.member.domain;
+package com.woowa.woowakit.domain.member.domain.converter;
 
+import com.woowa.woowakit.domain.member.domain.Email;
 import javax.persistence.AttributeConverter;
 
 public class EmailConverter implements AttributeConverter<Email, String> {

@@ -1,5 +1,6 @@
-package com.woowa.woowakit.domain.member.domain;
+package com.woowa.woowakit.domain.member.domain.converter;
 
+import com.woowa.woowakit.domain.member.domain.EncodedPassword;
 import javax.persistence.AttributeConverter;
 
 public class PasswordConverter implements AttributeConverter<EncodedPassword, String> {
