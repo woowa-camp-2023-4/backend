@@ -1,6 +1,9 @@
 package com.woowa.woowakit.domain.member.domain;
 
-import com.woowa.woowakit.domain.member.exception.LoginFailException;
+import com.woowa.woowakit.domain.auth.domain.EncodedPassword;
+import com.woowa.woowakit.domain.auth.domain.Member;
+import com.woowa.woowakit.domain.auth.domain.PasswordEncoder;
+import com.woowa.woowakit.domain.auth.exception.LoginFailException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

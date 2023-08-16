@@ -2,7 +2,7 @@ package com.woowa.woowakit.domain.member.auth;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.woowa.woowakit.domain.member.infra.TokenProvider;
+import com.woowa.woowakit.domain.auth.infra.TokenProvider;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

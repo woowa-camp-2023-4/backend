@@ -1,6 +1,6 @@
 package integration.helper;
 
-import com.woowa.woowakit.domain.member.dto.request.SignUpRequest;
+import com.woowa.woowakit.domain.auth.dto.request.SignUpRequest;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 
