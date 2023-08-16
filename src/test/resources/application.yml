@@ -16,3 +16,9 @@ spring:
     driver-class-name: org.h2.Driver
     username: sa
     password:
+
+security:
+  jwt:
+    token:
+      secret-key: test
+      expire-length: 3600000

@@ -1,8 +1,12 @@
 package com.woowa.woowakit.global.error;
 
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -25,5 +29,26 @@ public class CommonExceptionHandler {
         return ResponseEntity
             .status(exception.getHttpStatus())
             .body(new ErrorResponse(exception.getHttpStatus().value(), exception.getMessage()));
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorResponse> handleValidationExceptions(
+        MethodArgumentNotValidException exception) {
+        String errorMessage = "입력값이 잘못되었습니다.\n";
+
+        return ResponseEntity
+            .status(HttpStatus.BAD_REQUEST)
+            .body(new ErrorResponse(
+                HttpStatus.BAD_REQUEST.value(),
+                errorMessage + String.join(", ", getFieldErrorMessages(exception))
+            ));
+    }
+
+    private List<String> getFieldErrorMessages(MethodArgumentNotValidException ex) {
+        return ex.getBindingResult().getAllErrors().stream().map(error -> {
+            String fieldName = ((FieldError) error).getField();
+            String message = error.getDefaultMessage();
+            return fieldName + ": " + message;
+        }).collect(Collectors.toUnmodifiableList());
     }
 }

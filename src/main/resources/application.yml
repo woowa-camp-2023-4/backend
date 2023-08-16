@@ -1,2 +1,8 @@
 logging:
   config: classpath:logback-spring-${spring.profiles.active}.xml
+
+security:
+  jwt:
+    token:
+      secret-key: ${ secret-key }
+      expire-length: ${ expire-length }
