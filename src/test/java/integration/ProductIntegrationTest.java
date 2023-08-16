@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 import com.woowa.woowakit.domain.product.dto.request.ProductCreateRequest;
+import com.woowa.woowakit.domain.product.dto.response.ProductDetailResponse;
 
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
@@ -27,6 +28,16 @@ public class ProductIntegrationTest extends IntegrationTest {
 			.extract();
 	}
 
+	public static <T> ExtractableResponse<Response> get(String url) {
+		return RestAssured.given().log().all()
+			.contentType(MediaType.APPLICATION_JSON_VALUE)
+			.accept(MediaType.APPLICATION_JSON_VALUE)
+			.when()
+			.get(url)
+			.then().log().all()
+			.extract();
+	}
+
 	@Test
 	@DisplayName("상품 이름, 가격, 이미지 주소를 입력해 Product를 생성할 수 있다.")
 	void createWithName() {
@@ -38,6 +49,24 @@ public class ProductIntegrationTest extends IntegrationTest {
 
 		//then
 		assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
-		assertThat(response.header("Location")).isEqualTo("/products/1");
+		assertThat(response.header("Location")).matches("^/products/[0-9]+$");
+	}
+
+	@Test
+	@DisplayName("상품 Id로 상품 상세 정보를 조회할 수 있다.")
+	void findById() {
+		// given
+		ProductCreateRequest request = ProductCreateRequest.of("test", 3000L, "testImage");
+		String location = post("/products", request).header("Location");
+
+		// when
+		ExtractableResponse<Response> response = get(location);
+
+		// then
+		assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+		ProductDetailResponse detailResponse = response.as(ProductDetailResponse.class);
+		assertThat(detailResponse).extracting("quantity").isEqualTo(0L);
+		assertThat(detailResponse).extracting("imageUrl").isEqualTo("http://localhost:8080/testImage");
+		assertThat(detailResponse).extracting("status").isEqualTo("PRE_REGISTRATION");
 	}
 }
