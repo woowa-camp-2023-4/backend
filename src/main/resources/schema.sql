@@ -17,5 +17,7 @@ create table if not exists PRODUCTS
     image_url varchar(255),
     price bigint not null,
     status varchar(255) not null,
+    created_at datetime not null,
+    updated_at datetime not null,
     primary key (id)
 );
