@@ -31,14 +31,19 @@ public class Product extends BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+
 	@Convert(converter = ProductNameConverter.class)
 	private ProductName name;
+
 	@Convert(converter = ProductPriceConverter.class)
 	private ProductPrice price;
+
 	@Convert(converter = ProductImageConverter.class)
 	private ProductImage imageUrl;
+
 	@Enumerated(EnumType.STRING)
 	private ProductStatus status;
+	
 	@Convert(converter = ProductQuantityConverter.class)
 	private ProductQuantity quantity;
 
