@@ -14,8 +14,9 @@ import javax.persistence.Table;
 
 import com.woowa.woowakit.domain.model.BaseEntity;
 import com.woowa.woowakit.domain.product.domain.product.Product;
+import com.woowa.woowakit.domain.product.domain.product.Quantity;
+import com.woowa.woowakit.domain.product.domain.product.converter.QuantityConverter;
 import com.woowa.woowakit.domain.product.domain.stock.converter.ExpiryDateConverter;
-import com.woowa.woowakit.domain.product.domain.stock.converter.StockQuantityConverter;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -35,8 +36,8 @@ public class Stock extends BaseEntity {
 	@Convert(converter = ExpiryDateConverter.class)
 	private ExpiryDate expiryDate;
 
-	@Convert(converter = StockQuantityConverter.class)
-	private StockQuantity quantity;
+	@Convert(converter = QuantityConverter.class)
+	private Quantity quantity;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "product_id")
@@ -46,7 +47,7 @@ public class Stock extends BaseEntity {
 	private Stock(
 		final Long id,
 		final ExpiryDate expiryDate,
-		final StockQuantity quantity,
+		final Quantity quantity,
 		final Product product
 	) {
 		this.id = id;
@@ -57,13 +58,17 @@ public class Stock extends BaseEntity {
 
 	public static Stock of(
 		final LocalDate expiryDate,
-		final long quantity,
 		final Product product
 	) {
 		return Stock.builder()
 			.expiryDate(ExpiryDate.from(expiryDate))
-			.quantity(StockQuantity.from(quantity))
+			.quantity(Quantity.from(0))
 			.product(product)
 			.build();
+	}
+
+	public void addQuantity(final Quantity quantity) {
+		this.quantity = this.quantity.add(quantity);
+		this.product.addQuantity(quantity);
 	}
 }

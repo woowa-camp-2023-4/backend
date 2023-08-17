@@ -7,17 +7,17 @@ import com.woowa.woowakit.domain.product.exception.ProductQuantityNegativeExcept
 import lombok.Getter;
 
 @Getter
-public class ProductQuantity {
+public class Quantity {
 
 	private final long quantity;
 
-	private ProductQuantity(final long quantity) {
+	private Quantity(final long quantity) {
 		validNotNegative(quantity);
 		this.quantity = quantity;
 	}
 
-	public static ProductQuantity from(final long quantity) {
-		return new ProductQuantity(quantity);
+	public static Quantity from(final long quantity) {
+		return new Quantity(quantity);
 	}
 
 	private void validNotNegative(final long quantity) {
@@ -26,13 +26,17 @@ public class ProductQuantity {
 		}
 	}
 
+	public Quantity add(final Quantity other) {
+		return Quantity.from(quantity + other.quantity);
+	}
+
 	@Override
 	public boolean equals(final Object o) {
 		if (this == o)
 			return true;
 		if (o == null || getClass() != o.getClass())
 			return false;
-		ProductQuantity that = (ProductQuantity)o;
+		Quantity that = (Quantity)o;
 		return quantity == that.quantity;
 	}
 
