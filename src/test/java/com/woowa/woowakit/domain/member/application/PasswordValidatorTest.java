@@ -1,6 +1,7 @@
 package com.woowa.woowakit.domain.member.application;
 
-import com.woowa.woowakit.domain.member.exception.PasswordInvalidException;
+import com.woowa.woowakit.domain.auth.application.PasswordValidator;
+import com.woowa.woowakit.domain.auth.exception.PasswordInvalidException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;

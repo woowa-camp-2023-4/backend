@@ -2,13 +2,14 @@ package com.woowa.woowakit.domain.member.auth;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.woowa.woowakit.domain.auth.infra.TokenProvider;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 @DisplayName("TokenProvider 테스트")
 class TokenProviderTest {
 
-    private TokenProvider tokenProvider = new TokenProvider("woowatechcamp", 10000);
+    private final TokenProvider tokenProvider = new TokenProvider("woowatechcamp", 10000);
 
     @Test
     @DisplayName("토큰 생성 테스트")

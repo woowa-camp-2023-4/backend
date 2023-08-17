@@ -3,7 +3,8 @@ package com.woowa.woowakit.domain.member.domain;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.woowa.woowakit.domain.member.exception.EmailInvalidException;
+import com.woowa.woowakit.domain.auth.domain.Email;
+import com.woowa.woowakit.domain.auth.exception.EmailInvalidException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
