@@ -1,9 +1,11 @@
-package com.woowa.woowakit.domain.product.domain;
+package com.woowa.woowakit.domain.product.domain.product;
 
 import static org.assertj.core.api.Assertions.*;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import com.woowa.woowakit.domain.model.Quantity;
 
 @DisplayName("Product 도메인 엔티티 테스트")
 class ProductTest {
@@ -25,6 +27,6 @@ class ProductTest {
 		Product product = Product.of("test name", 1000L, "test image url");
 
 		// then
-		assertThat(product).extracting("quantity").isEqualTo(ProductQuantity.from(0));
+		assertThat(product).extracting("quantity").isEqualTo(Quantity.from(0));
 	}
 }

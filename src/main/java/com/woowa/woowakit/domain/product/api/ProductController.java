@@ -15,7 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.woowa.woowakit.domain.auth.annotation.Admin;
 import com.woowa.woowakit.domain.product.application.ProductService;
+import com.woowa.woowakit.domain.product.application.StockService;
 import com.woowa.woowakit.domain.product.dto.request.ProductCreateRequest;
+import com.woowa.woowakit.domain.product.dto.request.StockCreateRequest;
 import com.woowa.woowakit.domain.product.dto.response.ProductDetailResponse;
 
 import lombok.RequiredArgsConstructor;
@@ -26,6 +28,7 @@ import lombok.RequiredArgsConstructor;
 public class ProductController {
 
 	private final ProductService productService;
+	private final StockService stockService;
 
 	@Admin
 	@PostMapping
@@ -44,5 +47,14 @@ public class ProductController {
 	public ResponseEntity<List<ProductDetailResponse>> findAll() {
 		final List<ProductDetailResponse> response = productService.findAll();
 		return ResponseEntity.ok(response);
+	}
+
+	@PostMapping("/{id}/stocks")
+	public ResponseEntity<Void> addStock(
+		@PathVariable final Long id,
+		@Valid @RequestBody final StockCreateRequest request
+	) {
+		long resultId = stockService.create(request, id);
+		return ResponseEntity.created(URI.create("/products/" + id + "/stocks/" + resultId)).build();
 	}
 }

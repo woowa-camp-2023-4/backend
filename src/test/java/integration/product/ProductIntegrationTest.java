@@ -2,6 +2,7 @@ package integration.product;
 
 import static org.assertj.core.api.Assertions.*;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 
 import com.woowa.woowakit.domain.product.dto.request.ProductCreateRequest;
+import com.woowa.woowakit.domain.product.dto.request.StockCreateRequest;
 import com.woowa.woowakit.domain.product.dto.response.ProductDetailResponse;
 
 import integration.IntegrationTest;
@@ -42,8 +44,7 @@ class ProductIntegrationTest extends IntegrationTest {
 	void findById() {
 		// given
 		String accessToken = MemberHelper.login(MemberHelper.createAdminLoginRequest());
-		ProductCreateRequest request = ProductCreateRequest.of("test", 3000L, "testImage");
-		String location = ProductHelper.createProduct(request, accessToken);
+		String location = ProductHelper.createProduct(ProductHelper.createProductCreateRequest(), accessToken);
 
 		// when
 		ExtractableResponse<Response> response = CommonRestAssuredUtils.get(location);
@@ -72,5 +73,24 @@ class ProductIntegrationTest extends IntegrationTest {
 		assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
 		List<ProductDetailResponse> responses = response.as(ArrayList.class);
 		assertThat(responses).hasSize(3);
+	}
+
+	@Test
+	@DisplayName("유통기한, 수량을 입력받아 재고를 추가할 수 있다.")
+	void addStock() {
+		// given
+		String accessToken = MemberHelper.login(MemberHelper.createAdminLoginRequest());
+		String location = ProductHelper.createProduct(ProductHelper.createProductCreateRequest(), accessToken);
+
+		// when
+		StockCreateRequest stockRequest = StockCreateRequest.of(LocalDate.now().plusDays(1), 5L);
+		ExtractableResponse<Response> response = CommonRestAssuredUtils.post(location + "/stocks", stockRequest);
+
+		//then
+		assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
+		assertThat(response.header("Location")).matches("^/products/[0-9]+/stocks/[0-9]+$");
+
+		ProductDetailResponse productResponse = CommonRestAssuredUtils.get(location).as(ProductDetailResponse.class);
+		assertThat(productResponse).extracting("quantity").isEqualTo(5L);
 	}
 }

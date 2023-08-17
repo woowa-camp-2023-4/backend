@@ -6,8 +6,8 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.woowa.woowakit.domain.product.domain.Product;
-import com.woowa.woowakit.domain.product.domain.ProductRepository;
+import com.woowa.woowakit.domain.product.domain.product.Product;
+import com.woowa.woowakit.domain.product.domain.product.ProductRepository;
 import com.woowa.woowakit.domain.product.dto.request.ProductCreateRequest;
 import com.woowa.woowakit.domain.product.dto.response.ProductDetailResponse;
 import com.woowa.woowakit.domain.product.exception.ProductNotExistException;

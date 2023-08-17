@@ -1,9 +1,9 @@
-package com.woowa.woowakit.domain.product.domain.converter;
+package com.woowa.woowakit.domain.product.domain.product.converter;
 
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 
-import com.woowa.woowakit.domain.product.domain.ProductName;
+import com.woowa.woowakit.domain.product.domain.product.ProductName;
 
 @Converter
 public class ProductNameConverter implements AttributeConverter<ProductName, String> {

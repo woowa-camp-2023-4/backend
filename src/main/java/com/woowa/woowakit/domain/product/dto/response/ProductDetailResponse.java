@@ -1,6 +1,6 @@
 package com.woowa.woowakit.domain.product.dto.response;
 
-import com.woowa.woowakit.domain.product.domain.Product;
+import com.woowa.woowakit.domain.product.domain.product.Product;
 
 import lombok.AccessLevel;
 import lombok.Builder;

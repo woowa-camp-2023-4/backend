@@ -1,4 +1,4 @@
-package com.woowa.woowakit.domain.product.domain;
+package com.woowa.woowakit.domain.product.domain.product;
 
 import javax.persistence.Convert;
 import javax.persistence.Entity;
@@ -10,10 +10,11 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import com.woowa.woowakit.domain.model.BaseEntity;
-import com.woowa.woowakit.domain.product.domain.converter.ProductImageConverter;
-import com.woowa.woowakit.domain.product.domain.converter.ProductNameConverter;
-import com.woowa.woowakit.domain.product.domain.converter.ProductPriceConverter;
-import com.woowa.woowakit.domain.product.domain.converter.ProductQuantityConverter;
+import com.woowa.woowakit.domain.model.Quantity;
+import com.woowa.woowakit.domain.model.converter.QuantityConverter;
+import com.woowa.woowakit.domain.product.domain.product.converter.ProductImageConverter;
+import com.woowa.woowakit.domain.product.domain.product.converter.ProductNameConverter;
+import com.woowa.woowakit.domain.product.domain.product.converter.ProductPriceConverter;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -26,7 +27,7 @@ import lombok.NoArgsConstructor;
 @Getter
 public class Product extends BaseEntity {
 
-	private static final ProductQuantity INITIAL_QUANTITY = ProductQuantity.from(0);
+	private static final Quantity INITIAL_QUANTITY = Quantity.from(0);
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,9 +44,9 @@ public class Product extends BaseEntity {
 
 	@Enumerated(EnumType.STRING)
 	private ProductStatus status;
-	
-	@Convert(converter = ProductQuantityConverter.class)
-	private ProductQuantity quantity;
+
+	@Convert(converter = QuantityConverter.class)
+	private Quantity quantity;
 
 	@Builder
 	private Product(
@@ -54,7 +55,7 @@ public class Product extends BaseEntity {
 		final ProductPrice price,
 		final ProductImage imageUrl,
 		final ProductStatus status,
-		final ProductQuantity quantity
+		final Quantity quantity
 	) {
 		this.id = id;
 		this.name = name;
@@ -76,5 +77,9 @@ public class Product extends BaseEntity {
 			.status(ProductStatus.PRE_REGISTRATION)
 			.quantity(INITIAL_QUANTITY)
 			.build();
+	}
+
+	public void addQuantity(final Quantity quantity) {
+		this.quantity = this.quantity.add(quantity);
 	}
 }

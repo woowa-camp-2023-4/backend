@@ -1,10 +1,10 @@
-package com.woowa.woowakit.domain.product.domain.converter;
+package com.woowa.woowakit.domain.product.domain.product.converter;
 
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 
 import com.woowa.woowakit.domain.model.Money;
-import com.woowa.woowakit.domain.product.domain.ProductPrice;
+import com.woowa.woowakit.domain.product.domain.product.ProductPrice;
 
 @Converter
 public class ProductPriceConverter implements AttributeConverter<ProductPrice, Long> {
