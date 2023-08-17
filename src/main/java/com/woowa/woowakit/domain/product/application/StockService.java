@@ -10,6 +10,7 @@ import com.woowa.woowakit.domain.product.domain.stock.ExpiryDate;
 import com.woowa.woowakit.domain.product.domain.stock.Stock;
 import com.woowa.woowakit.domain.product.domain.stock.StockRepository;
 import com.woowa.woowakit.domain.product.dto.request.StockCreateRequest;
+import com.woowa.woowakit.domain.product.exception.ProductNotExistException;
 
 import lombok.RequiredArgsConstructor;
 
@@ -22,8 +23,7 @@ public class StockService {
 
 	@Transactional
 	public long create(final StockCreateRequest request, final Long productId) {
-		final Product product = productRepository.findById(productId)
-			.orElseThrow();
+		final Product product = findProductById(productId);
 
 		final Stock stock = stockRepository
 			.findByProductIdAndExpiryDate(productId, ExpiryDate.from(request.getExpiryDate()))
@@ -32,5 +32,9 @@ public class StockService {
 		stock.addQuantity(Quantity.from(request.getQuantity()));
 
 		return stockRepository.save(stock).getId();
+	}
+
+	private Product findProductById(final Long id) {
+		return productRepository.findById(id).orElseThrow(ProductNotExistException::new);
 	}
 }
