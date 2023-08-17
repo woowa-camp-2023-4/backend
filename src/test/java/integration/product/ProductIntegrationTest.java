@@ -44,8 +44,7 @@ class ProductIntegrationTest extends IntegrationTest {
 	void findById() {
 		// given
 		String accessToken = MemberHelper.login(MemberHelper.createAdminLoginRequest());
-		ProductCreateRequest request = ProductCreateRequest.of("test", 3000L, "testImage");
-		String location = ProductHelper.createProduct(request, accessToken);
+		String location = ProductHelper.createProduct(ProductHelper.createProductCreateRequest(), accessToken);
 
 		// when
 		ExtractableResponse<Response> response = CommonRestAssuredUtils.get(location);
@@ -80,8 +79,8 @@ class ProductIntegrationTest extends IntegrationTest {
 	@DisplayName("유통기한, 수량을 입력받아 재고를 추가할 수 있다.")
 	void addStock() {
 		// given
-		ProductCreateRequest productRequest = ProductCreateRequest.of("test", 3000L, "testImage");
-		String location = CommonRestAssuredUtils.post("/products", productRequest).header("Location");
+		String accessToken = MemberHelper.login(MemberHelper.createAdminLoginRequest());
+		String location = ProductHelper.createProduct(ProductHelper.createProductCreateRequest(), accessToken);
 
 		// when
 		StockCreateRequest stockRequest = StockCreateRequest.of(LocalDate.now().plusDays(1), 5L);
