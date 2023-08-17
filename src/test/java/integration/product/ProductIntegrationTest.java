@@ -14,20 +14,23 @@ import com.woowa.woowakit.domain.product.dto.response.ProductDetailResponse;
 
 import integration.IntegrationTest;
 import integration.helper.CommonRestAssuredUtils;
+import integration.helper.MemberHelper;
+import integration.helper.ProductHelper;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 
 @DisplayName("Product 인수 테스트")
-public class ProductIntegrationTest extends IntegrationTest {
+class ProductIntegrationTest extends IntegrationTest {
 
 	@Test
-	@DisplayName("상품 이름, 가격, 이미지 주소를 입력해 Product를 생성할 수 있다.")
+	@DisplayName("관리자는 상품 이름, 가격, 이미지 주소를 입력해 Product를 생성할 수 있다.")
 	void createWithName() {
 		// given
-		ProductCreateRequest request = ProductCreateRequest.of("test", 3000L, "testImage");
+		String accessToken = MemberHelper.login(MemberHelper.createAdminLoginRequest());
+		ProductCreateRequest request = ProductHelper.createProductCreateRequest();
 
 		// when
-		ExtractableResponse<Response> response = CommonRestAssuredUtils.post("/products", request);
+		ExtractableResponse<Response> response = CommonRestAssuredUtils.post("/products", request, accessToken);
 
 		//then
 		assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
@@ -38,8 +41,9 @@ public class ProductIntegrationTest extends IntegrationTest {
 	@DisplayName("상품 Id로 상품 상세 정보를 조회할 수 있다.")
 	void findById() {
 		// given
+		String accessToken = MemberHelper.login(MemberHelper.createAdminLoginRequest());
 		ProductCreateRequest request = ProductCreateRequest.of("test", 3000L, "testImage");
-		String location = CommonRestAssuredUtils.post("/products", request).header("Location");
+		String location = ProductHelper.createProduct(request, accessToken);
 
 		// when
 		ExtractableResponse<Response> response = CommonRestAssuredUtils.get(location);
@@ -56,11 +60,10 @@ public class ProductIntegrationTest extends IntegrationTest {
 	@DisplayName("상품 리스트를 조회할 수 있다.")
 	void findAll() {
 		// given
-		ProductCreateRequest request1 = ProductCreateRequest.of("test1", 3000L, "testImage");
-		CommonRestAssuredUtils.post("/products", request1).header("Location");
-
-		ProductCreateRequest request2 = ProductCreateRequest.of("test2", 6000L, "testImage");
-		CommonRestAssuredUtils.post("/products", request2).header("Location");
+		String accessToken = MemberHelper.login(MemberHelper.createAdminLoginRequest());
+		ProductHelper.createProduct(ProductHelper.createProductCreateRequest(), accessToken);
+		ProductHelper.createProduct(ProductHelper.createProductCreateRequest2(), accessToken);
+		ProductHelper.createProduct(ProductHelper.createProductCreateRequest3(), accessToken);
 
 		// when
 		ExtractableResponse<Response> response = CommonRestAssuredUtils.get("/products");
@@ -68,6 +71,6 @@ public class ProductIntegrationTest extends IntegrationTest {
 		// then
 		assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
 		List<ProductDetailResponse> responses = response.as(ArrayList.class);
-		assertThat(responses).hasSize(2);
+		assertThat(responses).hasSize(3);
 	}
 }

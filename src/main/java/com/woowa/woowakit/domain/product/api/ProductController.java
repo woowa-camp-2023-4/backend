@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.woowa.woowakit.domain.auth.annotation.Admin;
 import com.woowa.woowakit.domain.product.application.ProductService;
 import com.woowa.woowakit.domain.product.dto.request.ProductCreateRequest;
 import com.woowa.woowakit.domain.product.dto.response.ProductDetailResponse;
@@ -26,6 +27,7 @@ public class ProductController {
 
 	private final ProductService productService;
 
+	@Admin
 	@PostMapping
 	public ResponseEntity<Void> create(@Valid @RequestBody final ProductCreateRequest request) {
 		final Long id = productService.create(request);

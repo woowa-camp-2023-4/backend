@@ -10,15 +10,15 @@ import lombok.NoArgsConstructor;
 @Getter
 public class AuthPrincipal {
 
-    private Long id;
-    private String email;
-    private Role role;
+	private Long id;
+	private String email;
+	private Role role;
 
-    public static AuthPrincipal from(final Member member) {
-        return new AuthPrincipal(member.getId(), member.getEmail().getValue(), member.getRole());
-    }
+	public static AuthPrincipal from(final Member member) {
+		return new AuthPrincipal(member.getId(), member.getEmail().getValue(), member.getRole());
+	}
 
-    public boolean isAdmin() {
-        return role.isAdmin();
-    }
+	public boolean isAdmin() {
+		return role.isAdmin();
+	}
 }

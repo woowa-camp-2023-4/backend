@@ -4,9 +4,9 @@ import lombok.Getter;
 
 @Getter
 public enum Role {
-    ADMIN, USER;
+	ADMIN, USER;
 
-    public boolean isAdmin() {
-        return this == ADMIN;
-    }
+	public boolean isAdmin() {
+		return this == ADMIN;
+	}
 }
