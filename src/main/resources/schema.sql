@@ -3,6 +3,7 @@ drop table if exists PRODUCTS;
 drop table if exists STOCKS;
 drop table if exists ORDERS;
 drop table if exists ORDER_ITEMS;
+drop table if exists PAYMENTS;
 
 create table if not exists MEMBERS
 (
@@ -60,3 +61,12 @@ create table if not exists ORDERS
     primary key (id)
 );
 
+create table if not exists PAYMENTS
+(
+    id bigint auto_increment not null,
+    order_id bigint auto_increment not null,
+    payment_key varchar(255) not null,
+    created_at datetime not null,
+    updated_at datetime not null,
+    primary key (id)
+);
