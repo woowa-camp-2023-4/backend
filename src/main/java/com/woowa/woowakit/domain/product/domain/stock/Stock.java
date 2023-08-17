@@ -13,9 +13,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.woowa.woowakit.domain.model.BaseEntity;
+import com.woowa.woowakit.domain.model.Quantity;
+import com.woowa.woowakit.domain.model.converter.QuantityConverter;
 import com.woowa.woowakit.domain.product.domain.product.Product;
-import com.woowa.woowakit.domain.product.domain.product.Quantity;
-import com.woowa.woowakit.domain.product.domain.product.converter.QuantityConverter;
 import com.woowa.woowakit.domain.product.domain.stock.converter.ExpiryDateConverter;
 
 import lombok.AccessLevel;

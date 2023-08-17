@@ -7,8 +7,8 @@ import java.time.LocalDate;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import com.woowa.woowakit.domain.model.Quantity;
 import com.woowa.woowakit.domain.product.domain.product.Product;
-import com.woowa.woowakit.domain.product.domain.product.Quantity;
 
 @DisplayName("Stock 도메인 단위 테스트")
 class StockTest {

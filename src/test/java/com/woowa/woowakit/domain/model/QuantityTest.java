@@ -1,4 +1,4 @@
-package com.woowa.woowakit.domain.product.domain.product;
+package com.woowa.woowakit.domain.model;
 
 import static org.assertj.core.api.Assertions.*;
 

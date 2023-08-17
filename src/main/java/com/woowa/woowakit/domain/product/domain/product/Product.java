@@ -10,10 +10,11 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import com.woowa.woowakit.domain.model.BaseEntity;
+import com.woowa.woowakit.domain.model.Quantity;
+import com.woowa.woowakit.domain.model.converter.QuantityConverter;
 import com.woowa.woowakit.domain.product.domain.product.converter.ProductImageConverter;
 import com.woowa.woowakit.domain.product.domain.product.converter.ProductNameConverter;
 import com.woowa.woowakit.domain.product.domain.product.converter.ProductPriceConverter;
-import com.woowa.woowakit.domain.product.domain.product.converter.QuantityConverter;
 
 import lombok.AccessLevel;
 import lombok.Builder;

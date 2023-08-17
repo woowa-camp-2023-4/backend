@@ -1,9 +1,9 @@
-package com.woowa.woowakit.domain.product.domain.product.converter;
+package com.woowa.woowakit.domain.model.converter;
 
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 
-import com.woowa.woowakit.domain.product.domain.product.Quantity;
+import com.woowa.woowakit.domain.model.Quantity;
 
 @Converter
 public class QuantityConverter implements AttributeConverter<Quantity, Long> {
