@@ -10,18 +10,23 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
+import com.woowa.woowakit.domain.model.BaseEntity;
 import com.woowa.woowakit.domain.product.domain.product.Product;
 import com.woowa.woowakit.domain.product.domain.stock.converter.ExpiryDateConverter;
 import com.woowa.woowakit.domain.product.domain.stock.converter.StockQuantityConverter;
 
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Table(name = "STOCKS")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Stock {
+@Getter
+public class Stock extends BaseEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
