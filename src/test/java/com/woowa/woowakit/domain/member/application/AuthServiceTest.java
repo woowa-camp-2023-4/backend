@@ -1,10 +1,12 @@
 package com.woowa.woowakit.domain.member.application;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.woowa.woowakit.domain.member.auth.PBKDF2PasswordEncoder;
-import com.woowa.woowakit.domain.member.auth.TokenProvider;
-import com.woowa.woowakit.domain.member.dto.request.LoginRequest;
-import com.woowa.woowakit.domain.member.exception.LoginFailException;
+import com.woowa.woowakit.domain.auth.application.AuthService;
+import com.woowa.woowakit.domain.auth.application.PasswordValidator;
+import com.woowa.woowakit.domain.auth.dto.request.LoginRequest;
+import com.woowa.woowakit.domain.auth.exception.LoginFailException;
+import com.woowa.woowakit.domain.auth.infra.PBKDF2PasswordEncoder;
+import com.woowa.woowakit.domain.auth.infra.TokenProvider;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

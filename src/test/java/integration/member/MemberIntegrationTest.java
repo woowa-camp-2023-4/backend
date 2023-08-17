@@ -2,8 +2,8 @@ package integration.member;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.woowa.woowakit.domain.member.dto.request.LoginRequest;
-import com.woowa.woowakit.domain.member.dto.request.SignUpRequest;
+import com.woowa.woowakit.domain.auth.dto.request.LoginRequest;
+import com.woowa.woowakit.domain.auth.dto.request.SignUpRequest;
 import integration.IntegrationTest;
 import integration.helper.CommonRestAssuredUtils;
 import integration.helper.MemberHelper;
