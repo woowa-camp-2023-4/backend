@@ -23,10 +23,11 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class OrderService {
 
-    private final OrderMapper orderMapper;
     private final ProductRepository productRepository;
     private final StockRepository stockRepository;
     private final OrderRepository orderRepository;
+    private final PaymentService paymentService;
+    private final OrderMapper orderMapper;
 
     @Transactional
     public PreOrderResponse preOrder(AuthPrincipal authPrincipal, PreOrderCreateRequest request) {
@@ -42,6 +43,12 @@ public class OrderService {
         validateEnoughProductQuantity(order);
         takeStockOut(order);
 
+        paymentService.validatePayment(
+            request.getPaymentKey(),
+            order.getUuid(),
+            order.getTotalPrice()
+        );
+        
         return order.getId();
     }
 

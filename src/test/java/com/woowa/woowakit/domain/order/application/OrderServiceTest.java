@@ -19,15 +19,17 @@ import com.woowa.woowakit.domain.product.domain.product.ProductRepository;
 import com.woowa.woowakit.domain.product.domain.stock.Stock;
 import com.woowa.woowakit.domain.product.domain.stock.StockRepository;
 import java.time.LocalDate;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 
 @DisplayName("OrderService 단위테스트")
 @DataJpaTest
-@Import({OrderService.class, OrderMapper.class})
+@Import({OrderMapper.class})
 class OrderServiceTest {
 
     @Autowired
@@ -38,8 +40,22 @@ class OrderServiceTest {
     private StockRepository stockRepository;
     @Autowired
     private OrderRepository orderRepository;
-    @Autowired
     private OrderService orderService;
+    @Autowired
+    private OrderMapper orderMapper;
+    @Mock
+    private PaymentService paymentService;
+
+    @BeforeEach
+    void setUp() {
+        orderService = new OrderService(
+            productRepository,
+            stockRepository,
+            orderRepository,
+            paymentService,
+            orderMapper
+        );
+    }
 
     @Test
     @DisplayName("주문 생성")
