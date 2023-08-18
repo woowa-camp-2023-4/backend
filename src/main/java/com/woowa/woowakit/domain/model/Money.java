@@ -1,5 +1,6 @@
 package com.woowa.woowakit.domain.model;
 
+import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,5 +23,29 @@ public class Money {
 
     public Money add(final Money money) {
         return new Money(this.value + money.value);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Money)) {
+            return false;
+        }
+        Money money = (Money) o;
+        return Objects.equals(value, money.value);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(value);
+    }
+
+    @Override
+    public String toString() {
+        return "Money{" +
+            "value=" + value +
+            '}';
     }
 }
