@@ -3,9 +3,9 @@
 PROJECT_ROOT="$HOME/backend"
 JAR_FILE=build/libs/$(ls build/libs/*.jar*)
 
-APP_LOG="$PROJECT_ROOT/application.log"
-ERROR_LOG="$PROJECT_ROOT/error.log"
-DEPLOY_LOG="$PROJECT_ROOT/deploy.log"
+APP_LOG="application.log"
+ERROR_LOG="error.log"
+DEPLOY_LOG="deploy.log"
 
 TIME_NOW=$(date + %c)
 
