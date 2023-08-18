@@ -18,8 +18,10 @@ jobs:
   deploy:
     runs-on: dev
     steps:
-      - name: Clone code from repository
+      - name: Move to home directory
         run: cd ~
+
+      - name: Clone code from repository
         uses: actions/checkout@v3
 
       - name: Set up JDK 11
