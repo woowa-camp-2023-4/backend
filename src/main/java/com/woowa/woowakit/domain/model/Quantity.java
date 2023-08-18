@@ -7,11 +7,11 @@ import lombok.Getter;
 @Getter
 public class Quantity {
 
-    private final long quantity;
+    private final long value;
 
-    private Quantity(final long quantity) {
-        validNotNegative(quantity);
-        this.quantity = quantity;
+    private Quantity(final long value) {
+        validNotNegative(value);
+        this.value = value;
     }
 
     public static Quantity from(final long quantity) {
@@ -25,19 +25,19 @@ public class Quantity {
     }
 
     public Quantity add(final Quantity other) {
-        return Quantity.from(quantity + other.quantity);
+        return Quantity.from(value + other.value);
     }
 
     public Quantity subtract(final Quantity other) {
-        return Quantity.from(quantity - other.quantity);
+        return Quantity.from(value - other.value);
     }
 
     public boolean smallerThan(final Quantity other) {
-        return quantity < other.quantity;
+        return value < other.value;
     }
 
     public boolean smallerThanOrEqualTo(final Quantity other) {
-        return quantity <= other.quantity;
+        return value <= other.value;
     }
 
     @Override
@@ -49,18 +49,18 @@ public class Quantity {
             return false;
         }
         Quantity that = (Quantity) o;
-        return quantity == that.quantity;
+        return value == that.value;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(quantity);
+        return Objects.hash(value);
     }
 
     @Override
     public String toString() {
         return "Quantity{" +
-            "quantity=" + quantity +
+            "value=" + value +
             '}';
     }
 }

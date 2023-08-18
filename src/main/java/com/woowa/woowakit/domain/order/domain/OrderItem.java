@@ -87,7 +87,7 @@ public class OrderItem extends BaseEntity {
     }
 
     Money calculateTotalPrice() {
-        return price.multiply(quantity.getQuantity());
+        return price.multiply(quantity.getValue());
     }
 
     public void addOrderItemStocks(final List<ItemStock> itemStocks) {
