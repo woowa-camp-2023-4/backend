@@ -21,6 +21,9 @@ public class UserAuthorityInterceptor implements HandlerInterceptor {
 	@Override
 	public boolean preHandle(final HttpServletRequest request, final HttpServletResponse response,
 		final Object handler) {
+		if (!(handler instanceof HandlerMethod)) {
+			return true;
+		}
 		HandlerMethod handlerMethod = (HandlerMethod)handler;
 		User user = handlerMethod.getMethodAnnotation(User.class);
 		if (!Objects.isNull(user)) {

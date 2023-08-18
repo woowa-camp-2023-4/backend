@@ -25,3 +25,6 @@ security:
     token:
       secret-key: fjhbewhjbrfkelwdvhkewjkbwd
       expire-length: 3600000
+
+cors:
+  allowed-origin: http://localhost:3000
