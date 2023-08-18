@@ -4,6 +4,7 @@ drop table if exists STOCKS;
 drop table if exists ORDERS;
 drop table if exists ORDER_ITEMS;
 drop table if exists PAYMENTS;
+drop table if exists CART_ITEMS;
 
 create table if not exists MEMBERS
 (
@@ -69,4 +70,15 @@ create table if not exists PAYMENTS
     created_at datetime not null,
     updated_at datetime not null,
     primary key (id)
+);
+
+create table if not exists CART_ITEMS
+(
+    id bigint auto_increment not null,
+    member_id bigint not null,
+    product_id bigint not null,
+    quantity   bigint not null,
+    created_at datetime not null,
+    updated_at datetime not null,
+    primary key(id)
 );

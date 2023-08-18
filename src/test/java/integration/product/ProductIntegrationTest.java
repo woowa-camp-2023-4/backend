@@ -2,7 +2,6 @@ package integration.product;
 
 import static org.assertj.core.api.Assertions.*;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -83,8 +82,8 @@ class ProductIntegrationTest extends IntegrationTest {
 		String location = ProductHelper.createProduct(ProductHelper.createProductCreateRequest(), accessToken);
 
 		// when
-		StockCreateRequest stockRequest = StockCreateRequest.of(LocalDate.now().plusDays(1), 5L);
-		ExtractableResponse<Response> response = CommonRestAssuredUtils.post(location + "/stocks", stockRequest);
+		StockCreateRequest request = ProductHelper.createStockCreateRequest(5L);
+		ExtractableResponse<Response> response = ProductHelper.createStockOfProduct(location, request, accessToken);
 
 		//then
 		assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
