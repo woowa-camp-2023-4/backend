@@ -6,6 +6,9 @@ import com.woowa.woowakit.domain.order.domain.Order;
 import com.woowa.woowakit.domain.order.domain.OrderItem;
 import com.woowa.woowakit.domain.order.domain.OrderRepository;
 import com.woowa.woowakit.domain.order.dto.request.OrderCreateRequest;
+import com.woowa.woowakit.domain.order.dto.request.PreOrderCreateRequest;
+import com.woowa.woowakit.domain.order.dto.response.PreOrderResponse;
+import com.woowa.woowakit.domain.order.exception.OrderNotFoundException;
 import com.woowa.woowakit.domain.order.exception.ProductNotFoundException;
 import com.woowa.woowakit.domain.order.exception.QuantityNotEnoughException;
 import com.woowa.woowakit.domain.product.domain.product.Product;
@@ -24,27 +27,40 @@ public class OrderService {
     private final ProductRepository productRepository;
     private final StockRepository stockRepository;
     private final OrderRepository orderRepository;
-    
+
+    @Transactional
+    public PreOrderResponse preOrder(AuthPrincipal authPrincipal, PreOrderCreateRequest request) {
+        Product product = getProductById(request.getProductId());
+        Order order = orderMapper.mapFrom(authPrincipal.getId(), product, request.getQuantity());
+        return PreOrderResponse.from(orderRepository.save(order));
+    }
+
     @Transactional
     public Long order(AuthPrincipal authPrincipal, OrderCreateRequest request) {
-        Product product = productRepository.findById(request.getProductId())
-            .orElseThrow(ProductNotFoundException::new);
-
-        Order order = orderMapper.mapFrom(authPrincipal.getId(), product, request.getQuantity());
-        orderRepository.save(order);
-
-        validateEnoughProductQuantity(request);
+        Order order = getOrderById(request.getOrderId());
+        order.validateSameUser(authPrincipal.getId());
+        validateEnoughProductQuantity(order);
         takeStockOut(order);
 
         return order.getId();
     }
 
-    private void validateEnoughProductQuantity(OrderCreateRequest request) {
+    private Order getOrderById(Long orderId) {
+        return orderRepository.findById(orderId)
+            .orElseThrow(OrderNotFoundException::new);
+    }
+
+    private Product getProductById(Long productId) {
+        return productRepository.findById(productId)
+            .orElseThrow(ProductNotFoundException::new);
+    }
+
+    private void validateEnoughProductQuantity(Order order) {
         Quantity quantityCount = productRepository.findQuantityCountById(
-                request.getProductId())
+                order.getOrderItems().get(0).getProductId())
             .orElseThrow(ProductNotFoundException::new);
 
-        if (quantityCount.smallerThan(Quantity.from(request.getQuantity()))) {
+        if (quantityCount.smallerThan(order.getOrderItems().get(0).getQuantity())) {
             throw new QuantityNotEnoughException();
         }
     }

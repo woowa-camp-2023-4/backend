@@ -3,6 +3,7 @@ package com.woowa.woowakit.domain.order.domain;
 import com.woowa.woowakit.domain.model.BaseEntity;
 import com.woowa.woowakit.domain.model.Money;
 import com.woowa.woowakit.domain.model.converter.MoneyConverter;
+import com.woowa.woowakit.domain.order.exception.NotMyOrderException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -69,5 +70,15 @@ public class Order extends BaseEntity {
         return orderItems.stream()
             .map(OrderItem::calculateTotalPrice)
             .reduce(Money.ZERO, Money::add);
+    }
+
+    public void validateSameUser(Long id) {
+        if (!isSameUser(id)) {
+            throw new NotMyOrderException();
+        }
+    }
+
+    private boolean isSameUser(Long id) {
+        return this.memberId.equals(id);
     }
 }

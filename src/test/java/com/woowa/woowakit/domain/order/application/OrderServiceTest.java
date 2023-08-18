@@ -12,6 +12,8 @@ import com.woowa.woowakit.domain.order.domain.OrderItem;
 import com.woowa.woowakit.domain.order.domain.OrderItemStock;
 import com.woowa.woowakit.domain.order.domain.OrderRepository;
 import com.woowa.woowakit.domain.order.dto.request.OrderCreateRequest;
+import com.woowa.woowakit.domain.order.dto.request.PreOrderCreateRequest;
+import com.woowa.woowakit.domain.order.dto.response.PreOrderResponse;
 import com.woowa.woowakit.domain.product.domain.product.Product;
 import com.woowa.woowakit.domain.product.domain.product.ProductRepository;
 import com.woowa.woowakit.domain.product.domain.stock.Stock;
@@ -55,12 +57,15 @@ class OrderServiceTest {
         Stock stock2 = stockRepository.save(Stock.of(LocalDate.now().plusDays(200L), product));
         stock2.addQuantity(Quantity.from(20L));
 
+        PreOrderResponse preOrderResponse = orderService.preOrder(AuthPrincipal.from(member),
+            PreOrderCreateRequest.of(product.getId(), 20L));
+
         // when
-        Long orderId = orderService.order(AuthPrincipal.from(member),
-            OrderCreateRequest.of(product.getId(), 20L));
+        orderService.order(AuthPrincipal.from(member),
+            OrderCreateRequest.of(preOrderResponse.getId(), "paymentKey"));
 
         // then
-        Order order = orderRepository.findById(orderId).get();
+        Order order = orderRepository.findById(preOrderResponse.getId()).get();
         assertThat(order)
             .extracting(Order::getOrderItems).asList().hasSize(1);
         assertThat(order.getOrderItems().get(0))
