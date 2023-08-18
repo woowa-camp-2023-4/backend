@@ -9,7 +9,7 @@ DEPLOY_LOG="$PROJECT_ROOT/log/deploy.log"
 
 TIME_NOW=$(date + %c)
 
-mkdir $PROJECT_ROOT/log
+mkdir ~/backend/log
 
 echo "[ $TIME_NOW ] Run java application $JAR_FILE" >>$DEPLOY_LOG
 nohup java -jar $JAR_FILE >$APP_LOG 2>$ERROR_LOG &
