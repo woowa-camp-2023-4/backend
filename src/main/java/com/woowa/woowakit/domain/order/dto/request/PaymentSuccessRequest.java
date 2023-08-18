@@ -1,4 +1,4 @@
-package com.woowa.woowakit.domain.payment.dto.request;
+package com.woowa.woowakit.domain.order.dto.request;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -10,17 +10,13 @@ import lombok.NoArgsConstructor;
 @Getter
 public class PaymentSuccessRequest {
 
-	private Long orderId;
 	private String orderToken;
-	private Long totalPrice;
 	private String paymentKey;
 
 	public static PaymentSuccessRequest of(
-		final Long orderId,
 		final String orderToken,
-		final Long totalPrice,
 		final String paymentKey
 	) {
-		return new PaymentSuccessRequest(orderId, orderToken, totalPrice, paymentKey);
+		return new PaymentSuccessRequest(orderToken, paymentKey);
 	}
 }

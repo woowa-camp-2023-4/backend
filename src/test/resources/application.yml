@@ -22,3 +22,13 @@ security:
     token:
       secret-key: test
       expire-length: 3600000
+
+payment:
+  toss:
+    secret-key: test-key
+    confirm-url: http://localhost:8888
+    timeout: 100
+    max-retry: 3
+
+cors:
+  allowed-origin: http://localhost:3000

@@ -21,6 +21,9 @@ public class AdminAuthorityInterceptor implements HandlerInterceptor {
 	@Override
 	public boolean preHandle(final HttpServletRequest request, final HttpServletResponse response,
 		final Object handler) {
+		if (!(handler instanceof HandlerMethod)) {
+			return true;
+		}
 		HandlerMethod handlerMethod = (HandlerMethod)handler;
 		Admin admin = handlerMethod.getMethodAnnotation(Admin.class);
 		if (!Objects.isNull(admin)) {
