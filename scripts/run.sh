@@ -3,13 +3,11 @@
 PROJECT_ROOT="$HOME/backend"
 JAR_FILE=build/libs/$(ls build/libs/*.jar*)
 
-APP_LOG="$PROJECT_ROOT/log/application.log"
-ERROR_LOG="$PROJECT_ROOT/log/error.log"
-DEPLOY_LOG="$PROJECT_ROOT/log/deploy.log"
+APP_LOG="$PROJECT_ROOT/application.log"
+ERROR_LOG="$PROJECT_ROOT/error.log"
+DEPLOY_LOG="$PROJECT_ROOT/deploy.log"
 
 TIME_NOW=$(date + %c)
-
-mkdir ~/backend/log
 
 echo "[ $TIME_NOW ] Run java application $JAR_FILE" >>$DEPLOY_LOG
 nohup java -jar $JAR_FILE >$APP_LOG 2>$ERROR_LOG &
