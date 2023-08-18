@@ -1,6 +1,5 @@
 package com.woowa.woowakit.domain.product.domain.stock;
 
-import com.woowa.woowakit.domain.model.Image;
 import com.woowa.woowakit.domain.model.Quantity;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -42,11 +41,7 @@ public class Stocks {
     private ItemStock mapToItemStock(Stock stock, Quantity quantity) {
         return ItemStock.of(
             stock.getId(),
-            quantity,
-            stock.getProduct().getId(),
-            stock.getProduct().getName().getName(),
-            Image.from(stock.getProduct().getImageUrl().getPath()),
-            stock.getProduct().getPrice().getPrice()
+            quantity
         );
     }
 

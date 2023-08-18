@@ -43,13 +43,13 @@ public class Order extends BaseEntity {
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "order_id")
-    private List<OrderItem> orderItems = new ArrayList<>();
+    private final List<OrderItem> orderItems = new ArrayList<>();
 
     private Order(final Long memberId, final List<OrderItem> orderItems) {
         this.orderStatus = OrderStatus.ORDERED;
         this.totalPrice = calculateTotalPrice(orderItems);
         this.memberId = memberId;
-        this.orderItems = orderItems;
+        this.orderItems.addAll(orderItems);
     }
 
     public static Order of(

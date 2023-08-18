@@ -7,6 +7,7 @@ import com.woowa.woowakit.domain.model.Quantity;
 import com.woowa.woowakit.domain.model.converter.ImageConverter;
 import com.woowa.woowakit.domain.model.converter.MoneyConverter;
 import com.woowa.woowakit.domain.model.converter.QuantityConverter;
+import com.woowa.woowakit.domain.product.domain.stock.ItemStock;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -85,7 +86,12 @@ public class OrderItem extends BaseEntity {
             .build();
     }
 
-    public Money calculateTotalPrice() {
+    Money calculateTotalPrice() {
         return price.multiply(quantity.getQuantity());
+    }
+
+    public void addOrderItemStocks(final List<ItemStock> itemStocks) {
+        itemStocks.forEach(itemStock -> orderItemStocks.add(
+            OrderItemStock.of(itemStock.getStockId(), itemStock.getQuantity())));
     }
 }

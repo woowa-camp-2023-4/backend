@@ -32,6 +32,10 @@ public class Quantity {
         return Quantity.from(quantity - other.quantity);
     }
 
+    public boolean smallerThan(final Quantity other) {
+        return quantity < other.quantity;
+    }
+
     public boolean smallerThanOrEqualTo(final Quantity other) {
         return quantity <= other.quantity;
     }

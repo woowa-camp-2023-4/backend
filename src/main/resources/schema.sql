@@ -42,7 +42,7 @@ create table if not exists STOCKS
 CREATE TABLE if not exists ORDER_ITEMS
 (
     id bigint auto_increment not null,
-    order_id   bigint       not null,
+    order_id   bigint,
     product_id bigint       not null,
     name       varchar(20)  not null,
     image      varchar(255) not null,
@@ -57,7 +57,7 @@ CREATE TABLE if not exists ORDER_ITEMS
 CREATE TABLE if not exists ORDER_ITEM_STOCKS
 (
     id bigint auto_increment not null,
-    order_item_id bigint       not null,
+    order_item_id bigint,
     stock_id   bigint       not null,
     quantity   bigint         not null,
     created_at datetime not null,

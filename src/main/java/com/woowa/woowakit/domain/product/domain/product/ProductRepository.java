@@ -1,5 +1,6 @@
 package com.woowa.woowakit.domain.product.domain.product;
 
+import com.woowa.woowakit.domain.model.Quantity;
 import java.util.Optional;
 import javax.persistence.LockModeType;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -11,5 +12,5 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Query("select p.quantity from Product p where p.id = :id")
     @Lock(LockModeType.PESSIMISTIC_WRITE)
-    Optional<Long> findQuantityCountById(@Param("id") Long id);
+    Optional<Quantity> findQuantityCountById(@Param("id") Long id);
 }
