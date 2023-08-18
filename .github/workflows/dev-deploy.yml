@@ -35,5 +35,8 @@ jobs:
         with:
           arguments: bootJar
 
+      - name: Let script executable
+        run: chmod 755 scripts/run.sh
+
       - name: Run java application
         run: ./scripts/run.sh
