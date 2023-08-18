@@ -2,7 +2,9 @@ package com.woowa.woowakit.domain.model.converter;
 
 import com.woowa.woowakit.domain.model.Image;
 import javax.persistence.AttributeConverter;
+import javax.persistence.Converter;
 
+@Converter
 public class ImageConverter implements AttributeConverter<Image, String> {
 
     @Override
