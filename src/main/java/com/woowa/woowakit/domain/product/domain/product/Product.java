@@ -6,12 +6,14 @@ import com.woowa.woowakit.domain.model.converter.QuantityConverter;
 import com.woowa.woowakit.domain.product.domain.product.converter.ProductImageConverter;
 import com.woowa.woowakit.domain.product.domain.product.converter.ProductNameConverter;
 import com.woowa.woowakit.domain.product.domain.product.converter.ProductPriceConverter;
+import com.woowa.woowakit.domain.product.exception.UpdateProductStatusFailException;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Table(name = "PRODUCTS")
@@ -69,6 +71,14 @@ public class Product extends BaseEntity {
                 .status(ProductStatus.PRE_REGISTRATION)
                 .quantity(INITIAL_QUANTITY)
                 .build();
+    }
+
+    public void updateProductStatus(final ProductStatus productStatus) {
+        if (Objects.equals(quantity, INITIAL_QUANTITY)) {
+            throw new UpdateProductStatusFailException();
+        }
+
+        this.status = productStatus;
     }
 
     public boolean isAvailablePurchase() {
