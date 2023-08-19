@@ -28,7 +28,7 @@ payment:
     secret-key: test-key
     confirm-url: http://localhost:8888
     timeout: 500
-    max-retry: 1
+    max-retry: 3
 
 cors:
   allowed-origin: http://localhost:3000
