@@ -11,6 +11,8 @@ import com.woowa.woowakit.domain.order.domain.Order;
 import com.woowa.woowakit.domain.order.domain.OrderItem;
 import com.woowa.woowakit.domain.order.domain.OrderItemStock;
 import com.woowa.woowakit.domain.order.domain.OrderRepository;
+import com.woowa.woowakit.domain.order.domain.validator.OrderValidator;
+import com.woowa.woowakit.domain.order.domain.validator.OrderValidatorImpl;
 import com.woowa.woowakit.domain.order.dto.request.OrderCreateRequest;
 import com.woowa.woowakit.domain.order.dto.request.PreOrderCreateRequest;
 import com.woowa.woowakit.domain.order.dto.response.PreOrderResponse;
@@ -29,7 +31,7 @@ import org.springframework.context.annotation.Import;
 
 @DisplayName("OrderService 단위테스트")
 @DataJpaTest
-@Import({OrderMapper.class})
+@Import({OrderMapper.class, OrderValidatorImpl.class})
 class OrderServiceTest {
 
     @Autowired
@@ -48,11 +50,13 @@ class OrderServiceTest {
 
     @BeforeEach
     void setUp() {
+        OrderValidator orderValidator = new OrderValidatorImpl(productRepository);
         orderService = new OrderService(
             productRepository,
             stockRepository,
             orderRepository,
             paymentService,
+            orderValidator,
             orderMapper
         );
     }

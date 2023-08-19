@@ -3,10 +3,11 @@ package com.woowa.woowakit.domain.order.domain;
 import com.woowa.woowakit.domain.model.BaseEntity;
 import com.woowa.woowakit.domain.model.Money;
 import com.woowa.woowakit.domain.model.converter.MoneyConverter;
-import com.woowa.woowakit.domain.order.exception.NotMyOrderException;
+import com.woowa.woowakit.domain.order.domain.validator.OrderValidator;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Convert;
@@ -35,9 +36,6 @@ public class Order extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
-
-    // @Embedded
-    // private Payment payment;
 
     @Convert(converter = MoneyConverter.class)
     private Money totalPrice;
@@ -72,13 +70,18 @@ public class Order extends BaseEntity {
             .reduce(Money.ZERO, Money::add);
     }
 
-    public void validateSameUser(Long id) {
-        if (!isSameUser(id)) {
-            throw new NotMyOrderException();
-        }
+    public void order(Long requestMemberId, OrderValidator orderValidator) {
+        orderValidator.validate(requestMemberId, this);
+
     }
 
-    private boolean isSameUser(Long id) {
+    public boolean isSameUser(Long id) {
         return this.memberId.equals(id);
+    }
+
+    public List<Long> extractProductIds() {
+        return this.orderItems.stream()
+            .map(OrderItem::getProductId)
+            .collect(Collectors.toUnmodifiableList());
     }
 }

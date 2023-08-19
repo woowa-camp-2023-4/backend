@@ -1,16 +1,15 @@
 package com.woowa.woowakit.domain.order.application;
 
 import com.woowa.woowakit.domain.auth.domain.AuthPrincipal;
-import com.woowa.woowakit.domain.model.Quantity;
 import com.woowa.woowakit.domain.order.domain.Order;
 import com.woowa.woowakit.domain.order.domain.OrderItem;
 import com.woowa.woowakit.domain.order.domain.OrderRepository;
+import com.woowa.woowakit.domain.order.domain.validator.OrderValidator;
 import com.woowa.woowakit.domain.order.dto.request.OrderCreateRequest;
 import com.woowa.woowakit.domain.order.dto.request.PreOrderCreateRequest;
 import com.woowa.woowakit.domain.order.dto.response.PreOrderResponse;
 import com.woowa.woowakit.domain.order.exception.OrderNotFoundException;
 import com.woowa.woowakit.domain.order.exception.ProductNotFoundException;
-import com.woowa.woowakit.domain.order.exception.QuantityNotEnoughException;
 import com.woowa.woowakit.domain.product.domain.product.Product;
 import com.woowa.woowakit.domain.product.domain.product.ProductRepository;
 import com.woowa.woowakit.domain.product.domain.stock.StockRepository;
@@ -27,6 +26,7 @@ public class OrderService {
     private final StockRepository stockRepository;
     private final OrderRepository orderRepository;
     private final PaymentService paymentService;
+    private final OrderValidator orderValidator;
     private final OrderMapper orderMapper;
 
     @Transactional
@@ -39,16 +39,13 @@ public class OrderService {
     @Transactional
     public Long order(AuthPrincipal authPrincipal, OrderCreateRequest request) {
         Order order = getOrderById(request.getOrderId());
-        order.validateSameUser(authPrincipal.getId());
-        validateEnoughProductQuantity(order);
+        order.order(authPrincipal.getId(), orderValidator);
         takeStockOut(order);
-
         paymentService.validatePayment(
             request.getPaymentKey(),
             order.getUuid(),
             order.getTotalPrice()
         );
-        
         return order.getId();
     }
 
@@ -60,16 +57,6 @@ public class OrderService {
     private Product getProductById(Long productId) {
         return productRepository.findById(productId)
             .orElseThrow(ProductNotFoundException::new);
-    }
-
-    private void validateEnoughProductQuantity(Order order) {
-        Quantity quantityCount = productRepository.findQuantityCountById(
-                order.getOrderItems().get(0).getProductId())
-            .orElseThrow(ProductNotFoundException::new);
-
-        if (quantityCount.smallerThan(order.getOrderItems().get(0).getQuantity())) {
-            throw new QuantityNotEnoughException();
-        }
     }
 
     private void takeStockOut(Order order) {
