@@ -3,6 +3,8 @@ package com.woowa.woowakit.domain.product.domain.product;
 import com.woowa.woowakit.domain.model.Quantity;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -50,5 +52,32 @@ class ProductTest {
 
         // when , then
         assertThat(product.isEnoughQuantity(Quantity.from(99))).isTrue();
+    }
+
+    @Test
+    @DisplayName("Product 가 IN_STOCK 이라면 구매가능한 상태이므로 true 를 반환한다.")
+    void isAvailablePurchaseTest() {
+        // given
+        Product product = Product.builder()
+                .status(ProductStatus.IN_STOCK)
+                .quantity(Quantity.from(100))
+                .build();
+
+        // when , then
+        assertThat(product.isAvailablePurchase()).isTrue();
+    }
+
+    @ParameterizedTest
+    @EnumSource(value = ProductStatus.class, names = {"IN_STOCK"}, mode = EnumSource.Mode.EXCLUDE)
+    @DisplayName("Product 가 IN_STOCK 가 아니라면 구매가능한 상태이므로 false 를 반환한다.")
+    void isNotAvailablePurchaseTest(final ProductStatus productStatus) {
+        // given
+        Product product = Product.builder()
+                .status(productStatus)
+                .quantity(Quantity.from(100))
+                .build();
+
+        // when , then
+        assertThat(product.isAvailablePurchase()).isFalse();
     }
 }

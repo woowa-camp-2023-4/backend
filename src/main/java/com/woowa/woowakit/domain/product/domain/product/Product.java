@@ -71,6 +71,10 @@ public class Product extends BaseEntity {
                 .build();
     }
 
+    public boolean isAvailablePurchase() {
+        return status == ProductStatus.IN_STOCK;
+    }
+
     public void addQuantity(final Quantity quantity) {
         this.quantity = this.quantity.add(quantity);
     }
