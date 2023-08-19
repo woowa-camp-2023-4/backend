@@ -1,20 +1,14 @@
 package com.woowa.woowakit.domain.cart.domain;
 
-import javax.persistence.Convert;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
 import com.woowa.woowakit.domain.model.BaseEntity;
 import com.woowa.woowakit.domain.model.Quantity;
 import com.woowa.woowakit.domain.model.converter.QuantityConverter;
-
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
 
 @Entity
 @Table(name = "CART_ITEMS")
@@ -22,36 +16,47 @@ import lombok.NoArgsConstructor;
 @Getter
 public class CartItem extends BaseEntity {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+    private static final Quantity INITIAL_QUANTITY = Quantity.from(0);
 
-	private Long memberId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-	private Long productId;
+    private Long memberId;
 
-	@Convert(converter = QuantityConverter.class)
-	private Quantity quantity;
+    private Long productId;
 
-	@Builder
-	private CartItem(
-		final Long memberId,
-		final Long productId,
-		final Quantity quantity) {
-		this.memberId = memberId;
-		this.productId = productId;
-		this.quantity = quantity;
-	}
+    @Convert(converter = QuantityConverter.class)
+    private Quantity quantity;
 
-	public static CartItem of(
-		final Long memberId,
-		final Long productId,
-		final long quantity
-	) {
-		return new CartItem(memberId, productId, Quantity.from(quantity));
-	}
+    @Builder
+    private CartItem(
+            final Long memberId,
+            final Long productId,
+            final Quantity quantity
+    ) {
+        this.memberId = memberId;
+        this.productId = productId;
+        this.quantity = quantity;
+    }
 
-	public void addQuantity(final Quantity quantity) {
-		this.quantity = this.quantity.add(quantity);
-	}
+    public static CartItem of(
+            final Long memberId,
+            final Long productId,
+            final long quantity
+    ) {
+        return new CartItem(memberId, productId, Quantity.from(quantity));
+    }
+
+    public static CartItem of(
+            final Long memberId,
+            final Long productId
+    ) {
+        return new CartItem(memberId, productId, INITIAL_QUANTITY);
+    }
+
+    public void addQuantity(final Quantity requiredQuantity, final CartItemValidator cartItemValidator) {
+        quantity = quantity.add(requiredQuantity);
+        cartItemValidator.validate(this);
+    }
 }
