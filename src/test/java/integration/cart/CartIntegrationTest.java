@@ -1,6 +1,8 @@
 package integration.cart;
 
 import com.woowa.woowakit.domain.cart.dto.CartItemAddRequest;
+import com.woowa.woowakit.domain.product.domain.product.ProductStatus;
+import com.woowa.woowakit.domain.product.dto.request.ProductStatusUpdateRequest;
 import com.woowa.woowakit.domain.product.dto.request.StockCreateRequest;
 import integration.IntegrationTest;
 import integration.helper.CartItemHelper;
@@ -28,6 +30,9 @@ class CartIntegrationTest extends IntegrationTest {
         StockCreateRequest stockCreateRequest = ProductHelper.createStockCreateRequest(10);
         ProductHelper.createStockOfProduct(location, stockCreateRequest, adminAccessToken);
 
+        ProductStatusUpdateRequest productStatusUpdateRequest = ProductHelper.createProductStatusUpdateRequest(ProductStatus.IN_STOCK);
+        ProductHelper.updateProductStatus(location, productStatusUpdateRequest, adminAccessToken);
+
         MemberHelper.signup(MemberHelper.createSignUpRequest());
         String accessToken = MemberHelper.login(MemberHelper.createLoginRequest());
 
@@ -51,6 +56,9 @@ class CartIntegrationTest extends IntegrationTest {
 
         StockCreateRequest stockCreateRequest = ProductHelper.createStockCreateRequest(10);
         ProductHelper.createStockOfProduct(location, stockCreateRequest, adminAccessToken);
+
+        ProductStatusUpdateRequest productStatusUpdateRequest = ProductHelper.createProductStatusUpdateRequest(ProductStatus.IN_STOCK);
+        ProductHelper.updateProductStatus(location, productStatusUpdateRequest, adminAccessToken);
 
         MemberHelper.signup(MemberHelper.createSignUpRequest());
         String accessToken = MemberHelper.login(MemberHelper.createLoginRequest());
@@ -78,6 +86,9 @@ class CartIntegrationTest extends IntegrationTest {
         StockCreateRequest stockCreateRequest = ProductHelper.createStockCreateRequest(4);
         ProductHelper.createStockOfProduct(location, stockCreateRequest, adminAccessToken);
 
+        ProductStatusUpdateRequest productStatusUpdateRequest = ProductHelper.createProductStatusUpdateRequest(ProductStatus.IN_STOCK);
+        ProductHelper.updateProductStatus(location, productStatusUpdateRequest, adminAccessToken);
+
         MemberHelper.signup(MemberHelper.createSignUpRequest());
         String accessToken = MemberHelper.login(MemberHelper.createLoginRequest());
 
@@ -102,6 +113,9 @@ class CartIntegrationTest extends IntegrationTest {
         StockCreateRequest stockCreateRequest = ProductHelper.createStockCreateRequest(9);
         ProductHelper.createStockOfProduct(location, stockCreateRequest, adminAccessToken);
 
+        ProductStatusUpdateRequest productStatusUpdateRequest = ProductHelper.createProductStatusUpdateRequest(ProductStatus.IN_STOCK);
+        ProductHelper.updateProductStatus(location, productStatusUpdateRequest, adminAccessToken);
+
         MemberHelper.signup(MemberHelper.createSignUpRequest());
         String accessToken = MemberHelper.login(MemberHelper.createLoginRequest());
 
@@ -116,6 +130,32 @@ class CartIntegrationTest extends IntegrationTest {
         //then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
         assertThat(response.jsonPath().getString("message")).isEqualTo("상품 수량보다 많은 수량을 장바구니에 담을 수 없습니다.");
+    }
+
+    @Test
+    @DisplayName("상품의 상태가 IN_STOCK 가 아닌 경우 장바구니에 상품을 담을 수 없다.")
+    void addCartItemStatusFail() {
+        // given
+        String adminAccessToken = MemberHelper.login(MemberHelper.createAdminLoginRequest());
+        String location = ProductHelper.createProduct(ProductHelper.createProductCreateRequest(), adminAccessToken);
+
+        StockCreateRequest stockCreateRequest = ProductHelper.createStockCreateRequest(9);
+        ProductHelper.createStockOfProduct(location, stockCreateRequest, adminAccessToken);
+
+        ProductStatusUpdateRequest productStatusUpdateRequest = ProductHelper.createProductStatusUpdateRequest(ProductStatus.SOLD_OUT);
+        ProductHelper.updateProductStatus(location, productStatusUpdateRequest, adminAccessToken);
+
+        MemberHelper.signup(MemberHelper.createSignUpRequest());
+        String accessToken = MemberHelper.login(MemberHelper.createLoginRequest());
+
+        CartItemAddRequest cartItemAddRequest = CartItemHelper.createCartItemAddRequest(getIdFrom(location), 5);
+
+        // when
+        ExtractableResponse<Response> response = CartItemHelper.addCartItem(cartItemAddRequest, accessToken);
+
+        //then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        assertThat(response.jsonPath().getString("message")).isEqualTo("상품을 구매할 수 없는 상태입니다.");
     }
 
     private Long getIdFrom(String location) {
