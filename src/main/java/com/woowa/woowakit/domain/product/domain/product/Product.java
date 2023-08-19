@@ -81,7 +81,7 @@ public class Product extends BaseEntity {
         this.status = productStatus;
     }
 
-    public boolean isAvailablePurchase() {
+    public boolean isOnSale() {
         return status == ProductStatus.IN_STOCK;
     }
 

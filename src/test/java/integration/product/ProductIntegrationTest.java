@@ -109,7 +109,7 @@ class ProductIntegrationTest extends IntegrationTest {
         ExtractableResponse<Response> response = ProductHelper.updateProductStatus(location, productStatusUpdateRequest, accessToken);
 
         //then
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
         ProductDetailResponse productResponse = CommonRestAssuredUtils.get(location).as(ProductDetailResponse.class);
         assertThat(productResponse).extracting("status").isEqualTo("IN_STOCK");
     }
@@ -133,7 +133,7 @@ class ProductIntegrationTest extends IntegrationTest {
         ExtractableResponse<Response> response = ProductHelper.updateProductStatus(location, nextProductStatusUpdateRequest, accessToken);
 
         //then
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
         ProductDetailResponse productResponse = CommonRestAssuredUtils.get(location).as(ProductDetailResponse.class);
         assertThat(productResponse).extracting("status").isEqualTo("STOPPED");
     }
@@ -154,7 +154,7 @@ class ProductIntegrationTest extends IntegrationTest {
         ExtractableResponse<Response> response = ProductHelper.updateProductStatus(location, productStatusUpdateRequest, accessToken);
 
         //then
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR.value());
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
         assertThat(response.jsonPath().getString("message")).isEqualTo("재고가 0인 상태는 판매 중 상태로 변경할 수 없습니다.");
     }
 }

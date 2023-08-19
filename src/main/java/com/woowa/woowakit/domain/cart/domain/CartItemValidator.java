@@ -19,7 +19,7 @@ public class CartItemValidator {
     }
 
     void validate(final CartItem cartItem, final Product product) {
-        if (!product.isAvailablePurchase()) {
+        if (!product.isOnSale()) {
             throw new InvalidProductInCartItemException();
         }
 

@@ -29,7 +29,7 @@ public class ProductHelper {
             final String adminAccessToken
     ) {
 
-        return CommonRestAssuredUtils.post("/products/" + getIdFrom(location) + "/status", request, adminAccessToken);
+        return CommonRestAssuredUtils.patch("/products/" + getIdFrom(location) + "/status", request, adminAccessToken);
     }
 
     public static ProductCreateRequest createProductCreateRequest() {

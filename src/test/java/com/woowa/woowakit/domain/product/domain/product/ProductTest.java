@@ -40,6 +40,7 @@ class ProductTest {
         Product product = Product.builder()
                 .quantity(Quantity.from(100))
                 .build();
+
         // when , then
         assertThat(product.isEnoughQuantity(Quantity.from(101))).isFalse();
     }
@@ -66,7 +67,7 @@ class ProductTest {
                 .build();
 
         // when , then
-        assertThat(product.isAvailablePurchase()).isTrue();
+        assertThat(product.isOnSale()).isTrue();
     }
 
     @ParameterizedTest
@@ -80,7 +81,7 @@ class ProductTest {
                 .build();
 
         // when , then
-        assertThat(product.isAvailablePurchase()).isFalse();
+        assertThat(product.isOnSale()).isFalse();
     }
 
     @Test

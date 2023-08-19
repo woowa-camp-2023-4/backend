@@ -53,12 +53,12 @@ public class ProductController {
     }
 
     @Admin
-    @PostMapping("/{id}/status")
+    @PatchMapping("/{id}/status")
     public ResponseEntity<Void> updateStatus(
             @PathVariable final Long id,
             @Valid @RequestBody final ProductStatusUpdateRequest request
     ) {
         productService.updateStatus(id, request);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 }
