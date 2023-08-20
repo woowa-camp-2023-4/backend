@@ -1,24 +1,25 @@
 package com.woowa.woowakit.domain.order.domain;
 
+import com.woowa.woowakit.domain.model.BaseEntity;
+import com.woowa.woowakit.domain.model.Money;
+import com.woowa.woowakit.domain.model.converter.MoneyConverter;
+import com.woowa.woowakit.domain.order.domain.validator.OrderValidator;
+import java.util.ArrayList;
 import java.util.List;
-
-import javax.persistence.CollectionTable;
+import java.util.UUID;
+import java.util.stream.Collectors;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Convert;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OrderColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
-
-import com.woowa.woowakit.domain.model.BaseEntity;
-import com.woowa.woowakit.domain.order.domain.converter.TotalPriceConverter;
-
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,24 +30,58 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Order extends BaseEntity {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-	@Enumerated(EnumType.STRING)
-	private OrderStatus orderStatus;
+    @Enumerated(EnumType.STRING)
+    private OrderStatus orderStatus;
 
-	// @Embedded
-	// private Payment payment;
+    @Convert(converter = MoneyConverter.class)
+    private Money totalPrice;
 
-	@Convert(converter = TotalPriceConverter.class)
-	private TotalPrice totalPrice;
+    private Long memberId;
 
-	private Long memberId;
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "order_id")
+    private final List<OrderItem> orderItems = new ArrayList<>();
 
-	@ElementCollection(fetch = FetchType.EAGER)
-	@CollectionTable(name = "order_items", joinColumns = @JoinColumn(name = "order_id"))
-	@OrderColumn(name = "item_index")
-	private List<OrderItem> orderItems;
+    @Column(name = "uuid")
+    private String uuid;
 
+    private Order(final Long memberId, final List<OrderItem> orderItems) {
+        this.orderStatus = OrderStatus.ORDERED;
+        this.totalPrice = calculateTotalPrice(orderItems);
+        this.memberId = memberId;
+        this.orderItems.addAll(orderItems);
+        this.uuid = UUID.randomUUID().toString();
+    }
+
+    public static Order of(
+        final Long memberId,
+        final List<OrderItem> orderItems
+    ) {
+        return new Order(memberId, orderItems);
+    }
+
+    private Money calculateTotalPrice(final List<OrderItem> orderItems) {
+        return orderItems.stream()
+            .map(OrderItem::calculateTotalPrice)
+            .reduce(Money.ZERO, Money::add);
+    }
+
+    public void order(Long requestMemberId, OrderValidator orderValidator) {
+        orderValidator.validate(requestMemberId, this);
+
+    }
+
+    public boolean isSameUser(Long id) {
+        return this.memberId.equals(id);
+    }
+
+    public List<Long> extractProductIds() {
+        return this.orderItems.stream()
+            .map(OrderItem::getProductId)
+            .collect(Collectors.toUnmodifiableList());
+    }
 }

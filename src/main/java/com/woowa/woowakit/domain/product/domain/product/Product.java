@@ -7,13 +7,19 @@ import com.woowa.woowakit.domain.product.domain.product.converter.ProductImageCo
 import com.woowa.woowakit.domain.product.domain.product.converter.ProductNameConverter;
 import com.woowa.woowakit.domain.product.domain.product.converter.ProductPriceConverter;
 import com.woowa.woowakit.domain.product.exception.UpdateProductStatusFailException;
+import java.util.Objects;
+import javax.persistence.Convert;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import javax.persistence.*;
-import java.util.Objects;
 
 @Entity
 @Table(name = "PRODUCTS")
@@ -44,12 +50,12 @@ public class Product extends BaseEntity {
 
     @Builder
     private Product(
-            final Long id,
-            final ProductName name,
-            final ProductPrice price,
-            final ProductImage imageUrl,
-            final ProductStatus status,
-            final Quantity quantity
+        final Long id,
+        final ProductName name,
+        final ProductPrice price,
+        final ProductImage imageUrl,
+        final ProductStatus status,
+        final Quantity quantity
     ) {
         this.id = id;
         this.name = name;
@@ -60,17 +66,17 @@ public class Product extends BaseEntity {
     }
 
     public static Product of(
-            final String name,
-            final Long price,
-            final String imageUrl
+        final String name,
+        final Long price,
+        final String imageUrl
     ) {
         return Product.builder()
-                .name(ProductName.from(name))
-                .price(ProductPrice.from(price))
-                .imageUrl(ProductImage.from(imageUrl))
-                .status(ProductStatus.PRE_REGISTRATION)
-                .quantity(INITIAL_QUANTITY)
-                .build();
+            .name(ProductName.from(name))
+            .price(ProductPrice.from(price))
+            .imageUrl(ProductImage.from(imageUrl))
+            .status(ProductStatus.PRE_REGISTRATION)
+            .quantity(INITIAL_QUANTITY)
+            .build();
     }
 
     public void updateProductStatus(final ProductStatus productStatus) {
@@ -89,7 +95,11 @@ public class Product extends BaseEntity {
         this.quantity = this.quantity.add(quantity);
     }
 
+    public void subtractQuantity(final Quantity quantity) {
+        this.quantity = this.quantity.subtract(quantity);
+    }
+
     public boolean isEnoughQuantity(final Quantity requiredQuantity) {
-        return this.quantity.getQuantity() >= requiredQuantity.getQuantity();
+        return requiredQuantity.smallerThanOrEqualTo(this.quantity);
     }
 }
