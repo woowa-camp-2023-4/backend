@@ -6,6 +6,8 @@ import com.woowa.woowakit.domain.model.converter.QuantityConverter;
 import com.woowa.woowakit.domain.product.domain.product.converter.ProductImageConverter;
 import com.woowa.woowakit.domain.product.domain.product.converter.ProductNameConverter;
 import com.woowa.woowakit.domain.product.domain.product.converter.ProductPriceConverter;
+import com.woowa.woowakit.domain.product.exception.UpdateProductStatusFailException;
+import java.util.Objects;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -77,11 +79,27 @@ public class Product extends BaseEntity {
             .build();
     }
 
+    public void updateProductStatus(final ProductStatus productStatus) {
+        if (Objects.equals(quantity, INITIAL_QUANTITY)) {
+            throw new UpdateProductStatusFailException();
+        }
+
+        this.status = productStatus;
+    }
+
+    public boolean isOnSale() {
+        return status == ProductStatus.IN_STOCK;
+    }
+
     public void addQuantity(final Quantity quantity) {
         this.quantity = this.quantity.add(quantity);
     }
 
     public void subtractQuantity(final Quantity quantity) {
         this.quantity = this.quantity.subtract(quantity);
+    }
+
+    public boolean isEnoughQuantity(final Quantity requiredQuantity) {
+        return requiredQuantity.smallerThanOrEqualTo(this.quantity);
     }
 }
