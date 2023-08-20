@@ -21,6 +21,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -49,6 +50,7 @@ public class Order extends BaseEntity {
     @Column(name = "uuid")
     private String uuid;
 
+    @Builder
     private Order(final Long memberId, final List<OrderItem> orderItems) {
         this.orderStatus = OrderStatus.ORDERED;
         this.totalPrice = calculateTotalPrice(orderItems);
@@ -72,7 +74,6 @@ public class Order extends BaseEntity {
 
     public void order(Long requestMemberId, OrderValidator orderValidator) {
         orderValidator.validate(requestMemberId, this);
-
     }
 
     public boolean isSameUser(Long id) {
