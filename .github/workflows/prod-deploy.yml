@@ -5,18 +5,18 @@
 # This workflow will build a Java project with Gradle and cache/restore any dependencies to improve the workflow execution time
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-gradle
 
-name: Dev-Stage CD
+name: Prod-Stage CD
 
 on:
   push:
-    branches: [ "dev" ]
+    branches: [ "main" ]
 
 permissions:
   contents: read
 
 jobs:
   deploy:
-    runs-on: dev
+    runs-on: prod
     steps:
       - name: Clone code from repository
         uses: actions/checkout@v3
@@ -42,7 +42,7 @@ jobs:
           PAYMENT_SECRET_KEY: ${{secrets.PAYMENT_SECRET_KEY}}
           DB_HOST: ${{secrets.DB_HOST}}
           DB_PORT: ${{secrets.DB_PORT}}
-          DB_NAME: ${{secrets.DEV_DB_NAME}}
-          DB_USER: ${{secrets.DEV_USER}}
-          DB_PASSWORD: ${{secrets.DEV_PASSWORD}}
+          DB_NAME: ${{secrets.PROD_DB_NAME}}
+          DB_USER: ${{secrets.PROD_USER}}
+          DB_PASSWORD: ${{secrets.PROD_PASSWORD}}
           JWT_SECRET_KEY: ${{secrets.JWT_SECRET_KEY}}
