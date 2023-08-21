@@ -65,31 +65,11 @@ public class ProductHelper {
 	}
 
 	public static Long createProductAndSetUp() {
-		String adminAccessToken = MemberHelper.login(MemberHelper.createAdminLoginRequest());
-		String location = ProductHelper.createProduct(ProductHelper.createProductCreateRequest(),
-			adminAccessToken);
-
-		StockCreateRequest stockCreateRequest = ProductHelper.createStockCreateRequest(10);
-		ProductHelper.createStockOfProduct(location, stockCreateRequest, adminAccessToken);
-
-		ProductStatusUpdateRequest productStatusUpdateRequest = ProductHelper.createProductStatusUpdateRequest(
-			ProductStatus.IN_STOCK);
-		ProductHelper.updateProductStatus(location, productStatusUpdateRequest, adminAccessToken);
-		return getIdFrom(location);
+		return createProductAndSetUp(10L);
 	}
 
 	public static Long createProductAndSetUp(final long quantity) {
-		String adminAccessToken = MemberHelper.login(MemberHelper.createAdminLoginRequest());
-		String location = ProductHelper.createProduct(ProductHelper.createProductCreateRequest(),
-			adminAccessToken);
-
-		StockCreateRequest stockCreateRequest = ProductHelper.createStockCreateRequest(quantity);
-		ProductHelper.createStockOfProduct(location, stockCreateRequest, adminAccessToken);
-
-		ProductStatusUpdateRequest productStatusUpdateRequest = ProductHelper.createProductStatusUpdateRequest(
-			ProductStatus.IN_STOCK);
-		ProductHelper.updateProductStatus(location, productStatusUpdateRequest, adminAccessToken);
-		return getIdFrom(location);
+		return createProductAndSetUp(quantity, ProductStatus.IN_STOCK);
 	}
 
 	public static Long createProductAndSetUp(final long quantity, final ProductStatus productStatus) {
