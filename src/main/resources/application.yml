@@ -4,15 +4,15 @@ logging:
 security:
   jwt:
     token:
-      secret-key: ${secret-key}
-      expire-length: ${expire-length}
+      secret-key: ${JWT_SECRET_KEY}
+      expire-length: 3600000
 
 payment:
   toss:
-    secret-key: ${payment-secret-key}
+    secret-key: ${PAYMENT_SECRET_KEY}
     confirm-url: https://api.tosspayments.com/v1/payments/confirm
     timeout: 1000
     max-retry: 3
 
 cors:
-  allowed-origin: ${allowed-origin}
+  allowed-origin: ${ALLOWED_ORIGIN}
