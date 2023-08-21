@@ -20,7 +20,7 @@ fi
 chmod 755 $JAR_FILE
 
 echo "[ $TIME_NOW ] Run java application $JAR_FILE" >>$DEPLOY_LOG
-nohup java -jar -Dspring.profiles.active=prod $JAR_FILE >$APP_LOG 2>$ERROR_LOG &
+nohup java -jar -Dspring.profiles.active=prod $JAR_FILE &
 
 CURRENT_PID=$(pgrep -f $JAR_FILE)
 echo "[ $TIME_NOW ] Application running in PID $CURRENT_PID" >>$DEPLOY_LOG
