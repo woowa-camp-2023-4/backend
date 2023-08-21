@@ -56,7 +56,7 @@ public class OrderItem extends BaseEntity {
     private final List<OrderItemStock> orderItemStocks = new ArrayList<>();
 
     @Builder
-    private OrderItem(
+    public OrderItem(
         final Long productId,
         final String name,
         final Image image,
