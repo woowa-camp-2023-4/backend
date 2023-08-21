@@ -29,5 +29,4 @@ public class OrderFixture {
                     .name("해산물 밀키트")
                     .price(Money.from(2000L)).build()));
     }
-
 }

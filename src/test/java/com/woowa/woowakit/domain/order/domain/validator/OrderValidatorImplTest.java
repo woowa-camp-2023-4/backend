@@ -1,5 +1,7 @@
 package com.woowa.woowakit.domain.order.domain.validator;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
 import com.woowa.woowakit.domain.model.Quantity;
 import com.woowa.woowakit.domain.order.domain.Order;
 import com.woowa.woowakit.domain.order.domain.OrderItem;
@@ -7,7 +9,6 @@ import com.woowa.woowakit.domain.order.exception.NotMyOrderException;
 import com.woowa.woowakit.domain.order.exception.QuantityNotEnoughException;
 import com.woowa.woowakit.domain.order.fixture.OrderFixture;
 import com.woowa.woowakit.domain.product.domain.product.ProductRepository;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -34,7 +35,7 @@ class OrderValidatorImplTest {
             .memberId(2L).build();
 
         // when then
-        Assertions.assertThatThrownBy(() -> orderValidatorImpl.validate(requestMemberId, order))
+        assertThatThrownBy(() -> orderValidatorImpl.validate(requestMemberId, order))
             .isInstanceOf(NotMyOrderException.class);
     }
 
@@ -46,11 +47,11 @@ class OrderValidatorImplTest {
             .quantity(Quantity.from(4L)).build();
 
         // when then
-        Assertions.assertThatThrownBy(
-                () -> orderValidatorImpl.validateEnoughProductQuantity(
-                    orderItem,
-                    Quantity.from(3L)
-                ))
+        assertThatThrownBy(
+            () -> orderValidatorImpl.validateEnoughProductQuantity(
+                orderItem,
+                Quantity.from(3L)
+            ))
             .isInstanceOf(QuantityNotEnoughException.class);
     }
 }
