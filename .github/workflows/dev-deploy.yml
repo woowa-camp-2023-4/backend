@@ -29,11 +29,6 @@ jobs:
           java-version: '11'
           distribution: 'corretto'
 
-      - name: Set up env
-        run: export PAYMENT_SECRET_KEY=$PAY_SECRET
-        env:
-          PAY_SECRET: ${{secrets.payment-secret-key}}
-
       - name: Build with Gradle
         uses: gradle/gradle-build-action@bd5760595778326ba7f1441bcf7e88b49de61a25
         with:
@@ -46,3 +41,4 @@ jobs:
         run: ./scripts/run.sh
         env:
           RUNNER_TRACKING_ID: ""
+          PAYMENT_SECRET_KEY: ${{secrets.payment-secret-key}}
