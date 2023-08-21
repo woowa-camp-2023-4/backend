@@ -1,102 +1,87 @@
 package com.woowa.woowakit.domain.order.application;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 import com.woowa.woowakit.domain.auth.domain.AuthPrincipal;
 import com.woowa.woowakit.domain.auth.domain.EncodedPassword;
 import com.woowa.woowakit.domain.auth.domain.Member;
 import com.woowa.woowakit.domain.auth.domain.MemberRepository;
 import com.woowa.woowakit.domain.model.Quantity;
-import com.woowa.woowakit.domain.order.domain.Order;
-import com.woowa.woowakit.domain.order.domain.OrderItem;
-import com.woowa.woowakit.domain.order.domain.OrderItemStock;
-import com.woowa.woowakit.domain.order.domain.OrderRepository;
-import com.woowa.woowakit.domain.order.domain.validator.OrderValidator;
-import com.woowa.woowakit.domain.order.domain.validator.OrderValidatorImpl;
 import com.woowa.woowakit.domain.order.dto.request.OrderCreateRequest;
 import com.woowa.woowakit.domain.order.dto.request.PreOrderCreateRequest;
-import com.woowa.woowakit.domain.order.dto.response.PreOrderResponse;
+import com.woowa.woowakit.domain.payment.domain.PaymentService;
 import com.woowa.woowakit.domain.product.domain.product.Product;
+import com.woowa.woowakit.domain.product.domain.product.ProductImage;
+import com.woowa.woowakit.domain.product.domain.product.ProductName;
+import com.woowa.woowakit.domain.product.domain.product.ProductPrice;
 import com.woowa.woowakit.domain.product.domain.product.ProductRepository;
-import com.woowa.woowakit.domain.product.domain.stock.Stock;
-import com.woowa.woowakit.domain.product.domain.stock.StockRepository;
-import com.woowa.woowakit.global.config.QuerydslTestConfig;
+import com.woowa.woowakit.domain.product.domain.product.ProductStatus;
 
-import java.time.LocalDate;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.context.annotation.Import;
-
-@DisplayName("OrderService 단위테스트")
-@DataJpaTest
-@Import({OrderMapper.class, OrderValidatorImpl.class, QuerydslTestConfig.class})
+@SpringBootTest
 class OrderServiceTest {
 
-    @Autowired
-    private MemberRepository memberRepository;
-    @Autowired
-    private ProductRepository productRepository;
-    @Autowired
-    private StockRepository stockRepository;
-    @Autowired
-    private OrderRepository orderRepository;
-    private OrderService orderService;
-    @Autowired
-    private OrderMapper orderMapper;
-    @Mock
-    private PaymentService paymentService;
+	@Autowired
+	private MemberRepository memberRepository;
 
-    @BeforeEach
-    void setUp() {
-        OrderValidator orderValidator = new OrderValidatorImpl(productRepository);
-        orderService = new OrderService(
-            productRepository,
-            stockRepository,
-            orderRepository,
-            paymentService,
-            orderValidator,
-            orderMapper
-        );
-    }
+	@Autowired
+	private ProductRepository productRepository;
 
-    @Test
-    @DisplayName("주문 생성")
-    void test1() {
-        // given
-        Member member = memberRepository.save(Member.of(
-            "test@test.com",
-            EncodedPassword.from("test"),
-            "test"));
+	@Autowired
+	private OrderService orderService;
 
-        Product product = productRepository.save(Product.of("test", 1000L, "image"));
+	@MockBean
+	private PaymentService paymentService;
 
-        Stock stock1 = stockRepository.save(Stock.of(LocalDate.now().plusDays(100L), product));
-        stock1.addQuantity(Quantity.from(10L));
-        Stock stock2 = stockRepository.save(Stock.of(LocalDate.now().plusDays(200L), product));
-        stock2.addQuantity(Quantity.from(20L));
+	@Test
+	@DisplayName("주문 동시성 테스트")
+	void test1() throws Exception {
+		// given
+		Member member = memberRepository.save(Member.of(
+			"test@test.com",
+			EncodedPassword.from("test"),
+			"test"));
 
-        PreOrderResponse preOrderResponse = orderService.preOrder(AuthPrincipal.from(member),
-            PreOrderCreateRequest.of(product.getId(), 20L));
+		Product product = productRepository.save(Product.builder()
+			.price(ProductPrice.from(10000L))
+			.quantity(Quantity.from(100))
+			.imageUrl(ProductImage.from("/path"))
+			.name(ProductName.from("된장 밀키트"))
+			.status(ProductStatus.IN_STOCK)
+			.build());
 
-        // when
-        orderService.order(AuthPrincipal.from(member),
-            OrderCreateRequest.of(preOrderResponse.getId(), "paymentKey"));
+		int threadCount = 10;
+		for (int i = 0; i < threadCount; i++) {
+			PreOrderCreateRequest request = PreOrderCreateRequest.of(product.getId(), 10L);
+			orderService.preOrder(AuthPrincipal.from(member), request);
+		}
 
-        // then
-        Order order = orderRepository.findById(preOrderResponse.getId()).get();
-        assertThat(order)
-            .extracting(Order::getOrderItems).asList().hasSize(1);
-        assertThat(order.getOrderItems().get(0))
-            .extracting(OrderItem::getOrderItemStocks).asList().hasSize(2);
+		// when
+		ExecutorService executorService = Executors.newFixedThreadPool(32);
+		CountDownLatch countDownLatch = new CountDownLatch(threadCount);
+		for (int i = 0; i < threadCount; i++) {
+			OrderCreateRequest request = OrderCreateRequest.of((long)(i + 1), "test");
+			executorService.submit(() -> {
+				try {
+					orderService.order(AuthPrincipal.from(member), request);
+				} finally {
+					countDownLatch.countDown();
+				}
+			});
+		}
+		countDownLatch.await();
+		productRepository.flush();
 
-        assertThat(order.getOrderItems().get(0).getOrderItemStocks().get(0))
-            .extracting(OrderItemStock::getQuantity).isEqualTo(Quantity.from(10L));
-        assertThat(order.getOrderItems().get(0).getOrderItemStocks().get(1))
-            .extracting(OrderItemStock::getQuantity).isEqualTo(Quantity.from(10L));
-
-    }
+		// then
+		Product afterProduct = productRepository.findById(product.getId()).orElseThrow();
+		Assertions.assertThat(afterProduct.getQuantity()).isEqualTo(Quantity.from(0));
+	}
 }
