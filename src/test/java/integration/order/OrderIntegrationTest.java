@@ -2,14 +2,20 @@ package integration.order;
 
 import static org.assertj.core.api.Assertions.*;
 
+import java.util.List;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpStatus;
 
+import com.woowa.woowakit.domain.order.domain.OrderStatus;
+import com.woowa.woowakit.domain.order.dto.response.OrderDetailResponse;
 import com.woowa.woowakit.domain.order.dto.response.PreOrderResponse;
 import com.woowa.woowakit.domain.payment.domain.PaymentService;
 
 import integration.IntegrationTest;
+import integration.helper.CommonRestAssuredUtils;
 import integration.helper.MemberHelper;
 import integration.helper.OrderHelper;
 import integration.helper.ProductHelper;
@@ -56,10 +62,53 @@ class OrderIntegrationTest extends IntegrationTest {
 		ExtractableResponse<Response> response = OrderHelper.createOrder(
 			OrderHelper.createOrderCreateRequest(orderId), accessToken);
 
-		// then
-		assertThat(response.statusCode()).isEqualTo(200);
-		assertThat(response.as(Long.class)).isNotNull();
-		Long afterProductQuantity = ProductHelper.getProductDetail(productId).getQuantity();
-		assertThat(afterProductQuantity).isEqualTo(beforeProductQuantity - 1);
-	}
+        // then
+        assertThat(response.statusCode()).isEqualTo(200);
+        assertThat(response.as(Long.class)).isNotNull();
+        Long afterProductQuantity = ProductHelper.getProductDetail(productId).getQuantity();
+        assertThat(afterProductQuantity).isEqualTo(beforeProductQuantity - 1);
+    }
+
+    @Test
+    @DisplayName("회원이 주문 상세 정보를 조회한다.")
+    void findById() {
+        // given
+        Long productId = ProductHelper.createProductAndSetUp();
+        String accessToken = MemberHelper.signUpAndLogIn();
+        Long orderId = OrderHelper.createPreOrderAndGetId(productId, accessToken);
+
+        OrderHelper.createOrder(OrderHelper.createOrderCreateRequest(orderId), accessToken);
+
+        // when
+        ExtractableResponse<Response> response = CommonRestAssuredUtils.get("/orders/" + orderId, accessToken);
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+        OrderDetailResponse body = response.as(OrderDetailResponse.class);
+        assertThat(body).extracting(OrderDetailResponse::getOrderId).isEqualTo(orderId);
+        assertThat(body).extracting(OrderDetailResponse::getOrderStatus).isEqualTo(OrderStatus.ORDERED.name());
+        assertThat(body).extracting(OrderDetailResponse::getTotalPrice).isEqualTo(3000L);
+    }
+
+    @Test
+    @DisplayName("회원이 본인 주문 리스트를 조회한다.")
+    void findAll() {
+        // given
+        Long productId = ProductHelper.createProductAndSetUp();
+        String accessToken = MemberHelper.signUpAndLogIn();
+        Long orderId1 = OrderHelper.createPreOrderAndGetId(productId, accessToken);
+        Long orderId2 = OrderHelper.createPreOrderAndGetId(productId, accessToken);
+
+        OrderHelper.createOrder(OrderHelper.createOrderCreateRequest(orderId1), accessToken);
+        OrderHelper.createOrder(OrderHelper.createOrderCreateRequest(orderId2), accessToken);
+
+        // when
+        ExtractableResponse<Response> response = CommonRestAssuredUtils.get("/orders", accessToken);
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+        List body = response.as(List.class);
+        assertThat(body).hasSize(2);
+    }
+
 }
