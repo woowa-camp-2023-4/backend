@@ -33,8 +33,8 @@ public class OrderController {
         return ResponseEntity.status(HttpStatus.CREATED).body(preOrderResponse);
     }
 
-    @PostMapping()
     @User
+    @PostMapping()
     public ResponseEntity<Long> createOrder(
         @Authenticated AuthPrincipal authPrincipal,
         @Valid @RequestBody OrderCreateRequest request
