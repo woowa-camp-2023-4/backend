@@ -32,7 +32,7 @@ jobs:
       - name: Set up env
         run: export payment-secret-key=$PAY_SECRET
         env:
-          PAY_SECRET: {{secrets.payment-secret-key}}
+          PAY_SECRET: ${{secrets.payment-secret-key}}
 
       - name: Build with Gradle
         uses: gradle/gradle-build-action@bd5760595778326ba7f1441bcf7e88b49de61a25
