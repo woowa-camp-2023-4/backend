@@ -3,6 +3,7 @@ package com.woowa.woowakit.domain.product.application;
 import com.woowa.woowakit.domain.product.domain.product.Product;
 import com.woowa.woowakit.domain.product.domain.product.ProductRepository;
 import com.woowa.woowakit.domain.product.dto.request.ProductCreateRequest;
+import com.woowa.woowakit.domain.product.dto.request.ProductSearchRequest;
 import com.woowa.woowakit.domain.product.dto.request.ProductStatusUpdateRequest;
 import com.woowa.woowakit.domain.product.dto.response.ProductDetailResponse;
 import com.woowa.woowakit.domain.product.exception.ProductNotExistException;
@@ -31,11 +32,12 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public List<ProductDetailResponse> findAll() {
-        return productRepository.findAll()
-                .stream()
-                .map(ProductDetailResponse::from)
-                .collect(Collectors.toUnmodifiableList());
+    public List<ProductDetailResponse> searchProducts(final ProductSearchRequest productSearchRequest) {
+        List<Product> products = productRepository.searchProducts(productSearchRequest.toProductSearchCondition());
+
+        return products.stream()
+            .map(ProductDetailResponse::from)
+            .collect(Collectors.toUnmodifiableList());
     }
 
     @Transactional
