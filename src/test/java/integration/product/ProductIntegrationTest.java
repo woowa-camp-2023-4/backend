@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -57,21 +58,25 @@ class ProductIntegrationTest extends IntegrationTest {
     }
 
     @Test
-    @DisplayName("상품 리스트를 조회할 수 있다.")
+    @DisplayName("상품 리스트를 검색 조건에 따라 cursor 방식으로 조회할 수 있다.")
     void findAll() {
         // given
         String accessToken = MemberHelper.login(MemberHelper.createAdminLoginRequest());
         ProductHelper.createProduct(ProductHelper.createProductCreateRequest(), accessToken);
+        ProductHelper.createProduct(ProductHelper.createProductCreateRequest(), accessToken);
         ProductHelper.createProduct(ProductHelper.createProductCreateRequest2(), accessToken);
+        ProductHelper.createProduct(ProductHelper.createProductCreateRequest2(), accessToken);
+        ProductHelper.createProduct(ProductHelper.createProductCreateRequest3(), accessToken);
         ProductHelper.createProduct(ProductHelper.createProductCreateRequest3(), accessToken);
 
         // when
-        ExtractableResponse<Response> response = CommonRestAssuredUtils.get("/products");
+        ExtractableResponse<Response> response = CommonRestAssuredUtils.get("/products",
+            Map.of("pageSize", 5, "productKeyword", "2"));
 
         // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
         List<ProductDetailResponse> responses = response.as(ArrayList.class);
-        assertThat(responses).hasSize(3);
+        assertThat(responses).hasSize(2);
     }
 
     @Test

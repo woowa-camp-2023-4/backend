@@ -9,7 +9,9 @@ import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-public interface ProductRepository extends JpaRepository<Product, Long> {
+import com.woowa.woowakit.domain.product.dao.ProductRepositoryCustom;
+
+public interface ProductRepository extends JpaRepository<Product, Long>, ProductRepositoryCustom {
 
 	@Query("select p from Product p where p.id = :id")
 	@Lock(LockModeType.PESSIMISTIC_WRITE)

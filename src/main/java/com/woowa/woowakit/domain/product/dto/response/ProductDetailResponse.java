@@ -1,5 +1,8 @@
 package com.woowa.woowakit.domain.product.dto.response;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import com.woowa.woowakit.domain.product.domain.product.Product;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -43,5 +46,11 @@ public class ProductDetailResponse {
             .quantity(product.getQuantity().getValue())
             .status(product.getStatus().toString())
             .build();
+    }
+
+    public static List<ProductDetailResponse> listOf(final List<Product> products) {
+        return products.stream()
+            .map(ProductDetailResponse::from)
+            .collect(Collectors.toUnmodifiableList());
     }
 }

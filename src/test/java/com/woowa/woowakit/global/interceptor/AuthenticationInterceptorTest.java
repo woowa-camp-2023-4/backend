@@ -6,6 +6,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpHeaders;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -13,10 +14,12 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.woowa.woowakit.domain.auth.domain.MemberRepository;
 import com.woowa.woowakit.domain.auth.infra.TokenProvider;
+import com.woowa.woowakit.global.config.QuerydslTestConfig;
 import com.woowa.woowakit.global.error.TokenInvalidException;
 
 @DisplayName("AuthInterceptorTest 단위 테스트")
 @DataJpaTest
+@Import(QuerydslTestConfig.class)
 class AuthenticationInterceptorTest {
 
 	public static final String LONG_EXPIRED_TOKEN = "test";

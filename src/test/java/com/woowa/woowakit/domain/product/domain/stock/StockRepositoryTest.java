@@ -7,11 +7,14 @@ import java.time.LocalDate;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.Import;
 
 import com.woowa.woowakit.domain.product.domain.product.Product;
 import com.woowa.woowakit.domain.product.domain.product.ProductRepository;
+import com.woowa.woowakit.global.config.QuerydslTestConfig;
 
 @DataJpaTest
+@Import(QuerydslTestConfig.class)
 class StockRepositoryTest {
 
 	@Autowired
