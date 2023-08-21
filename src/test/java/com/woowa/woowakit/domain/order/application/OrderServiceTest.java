@@ -20,6 +20,8 @@ import com.woowa.woowakit.domain.product.domain.product.Product;
 import com.woowa.woowakit.domain.product.domain.product.ProductRepository;
 import com.woowa.woowakit.domain.product.domain.stock.Stock;
 import com.woowa.woowakit.domain.product.domain.stock.StockRepository;
+import com.woowa.woowakit.global.config.QuerydslTestConfig;
+
 import java.time.LocalDate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -31,7 +33,7 @@ import org.springframework.context.annotation.Import;
 
 @DisplayName("OrderService 단위테스트")
 @DataJpaTest
-@Import({OrderMapper.class, OrderValidatorImpl.class})
+@Import({OrderMapper.class, OrderValidatorImpl.class, QuerydslTestConfig.class})
 class OrderServiceTest {
 
     @Autowired

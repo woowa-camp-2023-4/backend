@@ -9,9 +9,10 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 
 import com.woowa.woowakit.domain.product.exception.ProductNotExistException;
+import com.woowa.woowakit.global.config.QuerydslTestConfig;
 
 @DataJpaTest
-@Import(ProductService.class)
+@Import({ProductService.class, QuerydslTestConfig.class})
 @DisplayName("ProductService 테스트")
 class ProductServiceTest {
 

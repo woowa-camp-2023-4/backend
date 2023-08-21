@@ -4,11 +4,11 @@ import com.woowa.woowakit.domain.model.BaseEntity;
 import com.woowa.woowakit.domain.model.Quantity;
 import com.woowa.woowakit.domain.model.converter.QuantityConverter;
 import com.woowa.woowakit.domain.product.domain.product.converter.ProductImageConverter;
-import com.woowa.woowakit.domain.product.domain.product.converter.ProductNameConverter;
 import com.woowa.woowakit.domain.product.domain.product.converter.ProductPriceConverter;
 import com.woowa.woowakit.domain.product.exception.UpdateProductStatusFailException;
 import java.util.Objects;
 import javax.persistence.Convert;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -33,7 +33,7 @@ public class Product extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Convert(converter = ProductNameConverter.class)
+    @Embedded
     private ProductName name;
 
     @Convert(converter = ProductPriceConverter.class)

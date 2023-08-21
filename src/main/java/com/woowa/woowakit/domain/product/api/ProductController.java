@@ -4,10 +4,12 @@ import com.woowa.woowakit.domain.auth.annotation.Admin;
 import com.woowa.woowakit.domain.product.application.ProductService;
 import com.woowa.woowakit.domain.product.application.StockService;
 import com.woowa.woowakit.domain.product.dto.request.ProductCreateRequest;
+import com.woowa.woowakit.domain.product.dto.request.ProductSearchRequest;
 import com.woowa.woowakit.domain.product.dto.request.ProductStatusUpdateRequest;
 import com.woowa.woowakit.domain.product.dto.request.StockCreateRequest;
 import com.woowa.woowakit.domain.product.dto.response.ProductDetailResponse;
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,8 +39,8 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ProductDetailResponse>> findAll() {
-        final List<ProductDetailResponse> response = productService.findAll();
+    public ResponseEntity<List<ProductDetailResponse>> searchProducts(ProductSearchRequest request) {
+        final List<ProductDetailResponse> response = productService.searchProducts(request);
         return ResponseEntity.ok(response);
     }
 

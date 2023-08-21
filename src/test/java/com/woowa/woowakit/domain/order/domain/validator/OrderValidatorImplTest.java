@@ -9,13 +9,17 @@ import com.woowa.woowakit.domain.order.exception.NotMyOrderException;
 import com.woowa.woowakit.domain.order.exception.QuantityNotEnoughException;
 import com.woowa.woowakit.domain.order.fixture.OrderFixture;
 import com.woowa.woowakit.domain.product.domain.product.ProductRepository;
+import com.woowa.woowakit.global.config.QuerydslTestConfig;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.Import;
 
 @DataJpaTest
+@Import(QuerydslTestConfig.class)
 @DisplayName("OrderValidatorImpl 단위테스트")
 class OrderValidatorImplTest {
 
