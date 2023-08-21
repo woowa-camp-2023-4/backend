@@ -3,7 +3,9 @@ drop table if exists PRODUCTS;
 drop table if exists STOCKS;
 drop table if exists ORDERS;
 drop table if exists ORDER_ITEMS;
+drop table if exists ORDER_ITEM_STOCKS;
 drop table if exists PAYMENTS;
+drop table if exists CART_ITEMS;
 
 create table if not exists MEMBERS
 (
@@ -39,15 +41,30 @@ create table if not exists STOCKS
     primary key (id)
 );
 
-CREATE TABLE ORDER_ITEMS
+CREATE TABLE if not exists ORDER_ITEMS
 (
-    order_id   bigint       not null,
+    id bigint auto_increment not null,
+    order_id   bigint,
     product_id bigint       not null,
     name       varchar(20)  not null,
     image      varchar(255) not null,
-    price      int          not null,
+    price      bigint          not null,
     quantity   bigint          not null,
-    item_index int
+    created_at datetime not null,
+    updated_at datetime not null,
+    item_index int,
+    primary key (id)
+);
+
+CREATE TABLE if not exists ORDER_ITEM_STOCKS
+(
+    id bigint auto_increment not null,
+    order_item_id bigint,
+    stock_id   bigint       not null,
+    quantity   bigint         not null,
+    created_at datetime not null,
+    updated_at datetime not null,
+    primary key (id)
 );
 
 create table if not exists ORDERS
@@ -56,7 +73,29 @@ create table if not exists ORDERS
     order_status varchar(255) not null,
     total_price bigint not null,
     member_id bigint not null,
+    uuid varchar(255) not null,
     created_at datetime not null,
     updated_at datetime not null,
     primary key (id)
+);
+
+create table if not exists PAYMENTS
+(
+    id bigint auto_increment not null,
+    order_id bigint auto_increment not null,
+    payment_key varchar(255) not null,
+    created_at datetime not null,
+    updated_at datetime not null,
+    primary key (id)
+);
+
+create table if not exists CART_ITEMS
+(
+    id bigint auto_increment not null,
+    member_id bigint not null,
+    product_id bigint not null,
+    quantity   bigint not null,
+    created_at datetime not null,
+    updated_at datetime not null,
+    primary key(id)
 );

@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -15,6 +16,7 @@ import javax.validation.constraints.NotBlank;
 public class LoginRequest {
 
     @Email
+    @NotNull
     private String email;
 
     @NotBlank

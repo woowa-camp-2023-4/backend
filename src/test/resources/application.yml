@@ -27,7 +27,7 @@ payment:
   toss:
     secret-key: test-key
     confirm-url: http://localhost:8888
-    timeout: 100
+    timeout: 500
     max-retry: 3
 
 cors:
