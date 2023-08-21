@@ -7,6 +7,8 @@ import com.woowa.woowakit.domain.auth.dto.request.LoginRequest;
 import com.woowa.woowakit.domain.auth.exception.LoginFailException;
 import com.woowa.woowakit.domain.auth.infra.PBKDF2PasswordEncoder;
 import com.woowa.woowakit.domain.auth.infra.TokenProvider;
+import com.woowa.woowakit.global.config.QuerydslTestConfig;
+
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,7 +22,8 @@ import org.springframework.context.annotation.Import;
     PBKDF2PasswordEncoder.class,
     PasswordValidator.class,
     TokenProvider.class,
-    ObjectMapper.class
+    ObjectMapper.class,
+    QuerydslTestConfig.class
 })
 class AuthServiceTest {
 

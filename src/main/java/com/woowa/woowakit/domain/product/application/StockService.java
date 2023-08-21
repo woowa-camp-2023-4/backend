@@ -35,6 +35,7 @@ public class StockService {
 	}
 
 	private Product findProductById(final Long id) {
-		return productRepository.findById(id).orElseThrow(ProductNotExistException::new);
+		return productRepository.findByIdWithPessimistic(id)
+			.orElseThrow(ProductNotExistException::new);
 	}
 }
