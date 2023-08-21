@@ -33,11 +33,8 @@ public class ProductService {
 
     @Transactional(readOnly = true)
     public List<ProductDetailResponse> searchProducts(final ProductSearchRequest productSearchRequest) {
-        List<Product> products = productRepository.searchProducts(productSearchRequest.toProductSearchCondition());
-
-        return products.stream()
-            .map(ProductDetailResponse::from)
-            .collect(Collectors.toUnmodifiableList());
+        final List<Product> products = productRepository.searchProducts(productSearchRequest.toProductSearchCondition());
+        return ProductDetailResponse.listOf(products);
     }
 
     @Transactional
