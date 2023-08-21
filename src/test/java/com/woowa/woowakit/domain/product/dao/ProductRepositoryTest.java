@@ -14,7 +14,7 @@ import com.woowa.woowakit.domain.product.domain.product.ProductRepository;
 import com.woowa.woowakit.domain.product.domain.product.ProductSearchCondition;
 import com.woowa.woowakit.global.config.QuerydslTestConfig;
 
-@DisplayName("ProductRepositoryCustomImpl 단위 테스트")
+@DisplayName("ProductRepository 단위 테스트")
 @DataJpaTest
 @Import(QuerydslTestConfig.class)
 class ProductRepositoryTest {
@@ -40,9 +40,9 @@ class ProductRepositoryTest {
 
 		// then
 		Assertions.assertThat(result).hasSize(3);
-		Assertions.assertThat(result.get(0)).extracting("id").isEqualTo(product1.getId());
-		Assertions.assertThat(result.get(1)).extracting("id").isEqualTo(product4.getId());
-		Assertions.assertThat(result.get(2)).extracting("id").isEqualTo(product5.getId());
+		Assertions.assertThat(result.get(0)).extracting(Product::getId).isEqualTo(product1.getId());
+		Assertions.assertThat(result.get(1)).extracting(Product::getId).isEqualTo(product4.getId());
+		Assertions.assertThat(result.get(2)).extracting(Product::getId).isEqualTo(product5.getId());
 	}
 
 	@Test
@@ -63,7 +63,7 @@ class ProductRepositoryTest {
 
 		// then
 		Assertions.assertThat(result).hasSize(2);
-		Assertions.assertThat(result.get(0)).extracting("id").isEqualTo(product3.getId());
-		Assertions.assertThat(result.get(1)).extracting("id").isEqualTo(product4.getId());
+		Assertions.assertThat(result.get(0)).extracting(Product::getId).isEqualTo(product3.getId());
+		Assertions.assertThat(result.get(1)).extracting(Product::getId).isEqualTo(product4.getId());
 	}
 }
