@@ -60,13 +60,3 @@ create table if not exists ORDERS
     updated_at datetime not null,
     primary key (id)
 );
-
-create table if not exists PAYMENTS
-(
-    id bigint auto_increment not null,
-    order_id bigint auto_increment not null,
-    payment_key varchar(255) not null,
-    created_at datetime not null,
-    updated_at datetime not null,
-    primary key (id)
-);
