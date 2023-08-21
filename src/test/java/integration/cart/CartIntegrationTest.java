@@ -31,17 +31,11 @@ class CartIntegrationTest extends IntegrationTest {
 	void addCartItem() {
 		// given
 		String adminAccessToken = MemberHelper.login(MemberHelper.createAdminLoginRequest());
-		String location = ProductHelper.createProduct(ProductHelper.createProductCreateRequest(), adminAccessToken);
 
-		StockCreateRequest stockCreateRequest = ProductHelper.createStockCreateRequest(10);
-		ProductHelper.createStockOfProduct(location, stockCreateRequest, adminAccessToken);
-
-		ProductStatusUpdateRequest productStatusUpdateRequest = ProductHelper.createProductStatusUpdateRequest(
+		String location = createProductAndCreateStockAndUpdateProductStatus(adminAccessToken, 10,
 			ProductStatus.IN_STOCK);
-		ProductHelper.updateProductStatus(location, productStatusUpdateRequest, adminAccessToken);
 
-		MemberHelper.signup(MemberHelper.createSignUpRequest());
-		String accessToken = MemberHelper.login(MemberHelper.createLoginRequest());
+		String accessToken = signUpMemberAndLogin();
 
 		CartItemAddRequest cartItemAddRequest = CartItemAddRequest.of(getIdFrom(location), 5L);
 
@@ -59,20 +53,12 @@ class CartIntegrationTest extends IntegrationTest {
 	void addCartItemPlus() {
 		// given
 		String adminAccessToken = MemberHelper.login(MemberHelper.createAdminLoginRequest());
-		String location = ProductHelper.createProduct(ProductHelper.createProductCreateRequest(), adminAccessToken);
-
-		StockCreateRequest stockCreateRequest = ProductHelper.createStockCreateRequest(10);
-		ProductHelper.createStockOfProduct(location, stockCreateRequest, adminAccessToken);
-
-		ProductStatusUpdateRequest productStatusUpdateRequest = ProductHelper.createProductStatusUpdateRequest(
+		String location = createProductAndCreateStockAndUpdateProductStatus(adminAccessToken, 10,
 			ProductStatus.IN_STOCK);
-		ProductHelper.updateProductStatus(location, productStatusUpdateRequest, adminAccessToken);
 
-		MemberHelper.signup(MemberHelper.createSignUpRequest());
-		String accessToken = MemberHelper.login(MemberHelper.createLoginRequest());
+		String accessToken = signUpMemberAndLogin();
 
-		CartItemAddRequest cartItemAddRequest = CartItemHelper.createCartItemAddRequest(getIdFrom(location), 5);
-		CartItemHelper.addCartItem(cartItemAddRequest, accessToken);
+		addCartItem(location, 5, accessToken);
 
 		CartItemAddRequest nextCartItemAddRequest = CartItemHelper.createCartItemAddRequest(getIdFrom(location), 2);
 
@@ -89,17 +75,10 @@ class CartIntegrationTest extends IntegrationTest {
 	void addCartItemFail() {
 		// given
 		String adminAccessToken = MemberHelper.login(MemberHelper.createAdminLoginRequest());
-		String location = ProductHelper.createProduct(ProductHelper.createProductCreateRequest(), adminAccessToken);
-
-		StockCreateRequest stockCreateRequest = ProductHelper.createStockCreateRequest(4);
-		ProductHelper.createStockOfProduct(location, stockCreateRequest, adminAccessToken);
-
-		ProductStatusUpdateRequest productStatusUpdateRequest = ProductHelper.createProductStatusUpdateRequest(
+		String location = createProductAndCreateStockAndUpdateProductStatus(adminAccessToken, 4,
 			ProductStatus.IN_STOCK);
-		ProductHelper.updateProductStatus(location, productStatusUpdateRequest, adminAccessToken);
 
-		MemberHelper.signup(MemberHelper.createSignUpRequest());
-		String accessToken = MemberHelper.login(MemberHelper.createLoginRequest());
+		String accessToken = signUpMemberAndLogin();
 
 		CartItemAddRequest cartItemAddRequest = CartItemAddRequest.of(getIdFrom(location), 5L);
 
@@ -117,20 +96,12 @@ class CartIntegrationTest extends IntegrationTest {
 	void addCartItemPlusFail() {
 		// given
 		String adminAccessToken = MemberHelper.login(MemberHelper.createAdminLoginRequest());
-		String location = ProductHelper.createProduct(ProductHelper.createProductCreateRequest(), adminAccessToken);
-
-		StockCreateRequest stockCreateRequest = ProductHelper.createStockCreateRequest(9);
-		ProductHelper.createStockOfProduct(location, stockCreateRequest, adminAccessToken);
-
-		ProductStatusUpdateRequest productStatusUpdateRequest = ProductHelper.createProductStatusUpdateRequest(
+		String location = createProductAndCreateStockAndUpdateProductStatus(adminAccessToken, 9,
 			ProductStatus.IN_STOCK);
-		ProductHelper.updateProductStatus(location, productStatusUpdateRequest, adminAccessToken);
 
-		MemberHelper.signup(MemberHelper.createSignUpRequest());
-		String accessToken = MemberHelper.login(MemberHelper.createLoginRequest());
+		String accessToken = signUpMemberAndLogin();
 
-		CartItemAddRequest cartItemAddRequest = CartItemHelper.createCartItemAddRequest(getIdFrom(location), 5);
-		CartItemHelper.addCartItem(cartItemAddRequest, accessToken);
+		addCartItem(location, 5, accessToken);
 
 		CartItemAddRequest nextCartItemAddRequest = CartItemHelper.createCartItemAddRequest(getIdFrom(location), 10);
 
@@ -147,17 +118,10 @@ class CartIntegrationTest extends IntegrationTest {
 	void addCartItemStatusFail() {
 		// given
 		String adminAccessToken = MemberHelper.login(MemberHelper.createAdminLoginRequest());
-		String location = ProductHelper.createProduct(ProductHelper.createProductCreateRequest(), adminAccessToken);
-
-		StockCreateRequest stockCreateRequest = ProductHelper.createStockCreateRequest(9);
-		ProductHelper.createStockOfProduct(location, stockCreateRequest, adminAccessToken);
-
-		ProductStatusUpdateRequest productStatusUpdateRequest = ProductHelper.createProductStatusUpdateRequest(
+		String location = createProductAndCreateStockAndUpdateProductStatus(adminAccessToken, 9,
 			ProductStatus.SOLD_OUT);
-		ProductHelper.updateProductStatus(location, productStatusUpdateRequest, adminAccessToken);
 
-		MemberHelper.signup(MemberHelper.createSignUpRequest());
-		String accessToken = MemberHelper.login(MemberHelper.createLoginRequest());
+		String accessToken = signUpMemberAndLogin();
 
 		CartItemAddRequest cartItemAddRequest = CartItemHelper.createCartItemAddRequest(getIdFrom(location), 5);
 
@@ -174,34 +138,16 @@ class CartIntegrationTest extends IntegrationTest {
 	void readCartItem() {
 		// given
 		String adminAccessToken = MemberHelper.login(MemberHelper.createAdminLoginRequest());
-		String location = ProductHelper.createProduct(ProductHelper.createProductCreateRequest(), adminAccessToken);
-
-		StockCreateRequest stockCreateRequest = ProductHelper.createStockCreateRequest(10);
-		ProductHelper.createStockOfProduct(location, stockCreateRequest, adminAccessToken);
-
-		ProductStatusUpdateRequest productStatusUpdateRequest = ProductHelper.createProductStatusUpdateRequest(
+		String location = createProductAndCreateStockAndUpdateProductStatus(adminAccessToken, 10,
 			ProductStatus.IN_STOCK);
-		ProductHelper.updateProductStatus(location, productStatusUpdateRequest, adminAccessToken);
 
-		MemberHelper.signup(MemberHelper.createSignUpRequest());
-		String accessToken = MemberHelper.login(MemberHelper.createLoginRequest());
-
-		CartItemAddRequest cartItemAddRequest = CartItemHelper.createCartItemAddRequest(getIdFrom(location), 5);
-		CartItemHelper.addCartItem(cartItemAddRequest, accessToken);
-
-		String otherLocation = ProductHelper.createProduct(ProductHelper.createProductCreateRequest(),
-			adminAccessToken);
-
-		StockCreateRequest otherStockCreateRequest = ProductHelper.createStockCreateRequest(50);
-		ProductHelper.createStockOfProduct(otherLocation, otherStockCreateRequest, adminAccessToken);
-
-		ProductStatusUpdateRequest otherProductStatusUpdateRequest = ProductHelper.createProductStatusUpdateRequest(
+		String otherLocation = createProductAndCreateStockAndUpdateProductStatus(adminAccessToken, 50,
 			ProductStatus.IN_STOCK);
-		ProductHelper.updateProductStatus(otherLocation, otherProductStatusUpdateRequest, adminAccessToken);
 
-		CartItemAddRequest otherCartItemAddRequest = CartItemHelper.createCartItemAddRequest(getIdFrom(otherLocation),
-			10);
-		CartItemHelper.addCartItem(otherCartItemAddRequest, accessToken);
+		String accessToken = signUpMemberAndLogin();
+
+		addCartItem(location, 5, accessToken);
+		addCartItem(otherLocation, 10, accessToken);
 
 		// when
 		ExtractableResponse<Response> response = CommonRestAssuredUtils.get("/cart-items", accessToken);
@@ -213,6 +159,26 @@ class CartIntegrationTest extends IntegrationTest {
 			.hasSize(2)
 			.extracting("quantity")
 			.contains(5, 10);
+	}
+
+	private void addCartItem(String location, int quantity, String accessToken) {
+		CartItemAddRequest cartItemAddRequest = CartItemHelper.createCartItemAddRequest(getIdFrom(location), quantity);
+		CartItemHelper.addCartItem(cartItemAddRequest, accessToken);
+	}
+
+	private String signUpMemberAndLogin() {
+		MemberHelper.signup(MemberHelper.createSignUpRequest());
+		return MemberHelper.login(MemberHelper.createLoginRequest());
+	}
+
+	private String createProductAndCreateStockAndUpdateProductStatus(String adminAccessToken, int quantity,
+		ProductStatus inStock) {
+		String location = ProductHelper.createProduct(ProductHelper.createProductCreateRequest(), adminAccessToken);
+		StockCreateRequest stockCreateRequest = ProductHelper.createStockCreateRequest(quantity);
+		ProductHelper.createStockOfProduct(location, stockCreateRequest, adminAccessToken);
+		ProductStatusUpdateRequest productStatusUpdateRequest = ProductHelper.createProductStatusUpdateRequest(inStock);
+		ProductHelper.updateProductStatus(location, productStatusUpdateRequest, adminAccessToken);
+		return location;
 	}
 
 	private Long getIdFrom(String location) {
