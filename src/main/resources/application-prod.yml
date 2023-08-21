@@ -1,7 +1,7 @@
 spring:
   jpa:
     hibernate:
-      ddl-auto: validate
+      ddl-auto: create
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
     show-sql: true
@@ -12,7 +12,7 @@ spring:
   sql:
     init:
       schema-locations: classpath:schema.sql
-      mode: always
+      mode: embedded
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://${DB_HOST}:${DB_PORT}/${DB_NAME}
