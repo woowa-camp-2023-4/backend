@@ -19,8 +19,7 @@ public class OrderItemResponse {
         return new OrderItemResponse(id, productId, quantity);
     }
 
-    //from orderItem
-    public static OrderItemResponse from(OrderItem orderItem) {
+    public static OrderItemResponse from(final OrderItem orderItem) {
         return OrderItemResponse.of(
             orderItem.getId(),
             orderItem.getProductId(),
