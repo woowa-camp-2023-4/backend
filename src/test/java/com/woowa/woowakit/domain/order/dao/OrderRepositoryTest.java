@@ -43,18 +43,10 @@ class OrderRepositoryTest {
 
 		OrderItem orderItem1 = OrderFixture.anOrderItem()
 			.productId(1L)
-			.name("강아지가 좋아하는 캥거루 꼬리 밀키트")
-			.image(Image.from("dogFood.img"))
-			.price(Money.from(10000L))
-			.quantity(Quantity.from(5L))
 			.build();
 
 		OrderItem orderItem2 = OrderFixture.anOrderItem()
 			.productId(2L)
-			.name("알러지 없는 강아지 밀키트 모음")
-			.image(Image.from("dogFood2.img"))
-			.price(Money.from(70000L))
-			.quantity(Quantity.from(4L))
 			.build();
 
 		Order order = OrderFixture.anOrder()
@@ -65,7 +57,7 @@ class OrderRepositoryTest {
 		Long orderId = orderRepository.save(order).getId();
 
 		// when
-		Order result = orderRepository.findOrderJoinOrderItemsById(orderId, member.getId()).get();
+		Order result = orderRepository.findOrderById(orderId, member.getId()).get();
 
 		// then
 		assertThat(result).extracting(Order::getId).isEqualTo(orderId);
@@ -83,18 +75,10 @@ class OrderRepositoryTest {
 
 		OrderItem orderItem1 = OrderFixture.anOrderItem()
 			.productId(1L)
-			.name("강아지가 좋아하는 캥거루 꼬리 밀키트")
-			.image(Image.from("dogFood.img"))
-			.price(Money.from(10000L))
-			.quantity(Quantity.from(5L))
 			.build();
 
 		OrderItem orderItem2 = OrderFixture.anOrderItem()
 			.productId(2L)
-			.name("알러지 없는 강아지 밀키트 모음")
-			.image(Image.from("dogFood2.img"))
-			.price(Money.from(70000L))
-			.quantity(Quantity.from(4L))
 			.build();
 
 		Order order1 = OrderFixture.anOrder()
@@ -111,7 +95,7 @@ class OrderRepositoryTest {
 		orderRepository.save(order2);
 
 		// when
-		List<Order> result = orderRepository.findAllOrdersJoinOrderItemsByMemberId(member.getId());
+		List<Order> result = orderRepository.findAllByMemberId(member.getId());
 
 		// then
 		assertThat(result).hasSize(2);

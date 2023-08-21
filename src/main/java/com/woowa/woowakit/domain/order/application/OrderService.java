@@ -35,17 +35,17 @@ public class OrderService {
     @Transactional(readOnly = true)
     public OrderDetailResponse findOrderByOrderIdAndMemberId(final AuthPrincipal authPrincipal, final Long orderId) {
         Order order = getOrderByOrderIdAndMemberId(authPrincipal, orderId);
-        return OrderDetailResponse.of(order);
+        return OrderDetailResponse.from(order);
     }
 
     private Order getOrderByOrderIdAndMemberId(final AuthPrincipal authPrincipal, final Long orderId) {
-        return orderRepository.findOrderJoinOrderItemsById(orderId, authPrincipal.getId())
+        return orderRepository.findOrderById(orderId, authPrincipal.getId())
             .orElseThrow(OrderNotFoundException::new);
     }
 
     @Transactional(readOnly = true)
     public List<OrderDetailResponse> findAllOrderByMemberId(final AuthPrincipal authPrincipal) {
-        List<Order> orders = orderRepository.findAllOrdersJoinOrderItemsByMemberId(authPrincipal.getId());
+        List<Order> orders = orderRepository.findAllByMemberId(authPrincipal.getId());
         return OrderDetailResponse.listOf(orders);
     }
 

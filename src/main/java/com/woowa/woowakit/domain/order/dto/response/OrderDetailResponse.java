@@ -20,7 +20,7 @@ public class OrderDetailResponse {
 	private Long totalPrice;
 	private List<OrderItemResponse> orderItems;
 
-	public static OrderDetailResponse of(final Order order) {
+	public static OrderDetailResponse from(final Order order) {
 		return new OrderDetailResponse(
 			order.getId(),
 			order.getOrderStatus().name(),
@@ -33,7 +33,7 @@ public class OrderDetailResponse {
 
 	public static List<OrderDetailResponse> listOf(final List<Order> orders) {
 		return orders.stream()
-			.map(OrderDetailResponse::of)
+			.map(OrderDetailResponse::from)
 			.collect(Collectors.toUnmodifiableList());
 	}
 }
