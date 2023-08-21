@@ -8,10 +8,11 @@ import io.restassured.response.Response;
 public class CartItemHelper {
 
 	public static ExtractableResponse<Response> addCartItem(
-		final CartItemAddRequest request,
+		final long productId,
+		final long quantity,
 		final String accessToken
 	) {
-		return CommonRestAssuredUtils.post("/cart-items", request, accessToken);
+		return CommonRestAssuredUtils.post("/cart-items", createCartItemAddRequest(productId, quantity), accessToken);
 	}
 
 	public static CartItemAddRequest createCartItemAddRequest(long productId, long quantity) {
