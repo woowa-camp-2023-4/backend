@@ -5,7 +5,7 @@ spring:
     show-sql: true
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.MySQL8InnoDBDialect
+        dialect: org.hibernate.dialect.MySQL8Dialect
         format_sql: true
   sql:
     init:
