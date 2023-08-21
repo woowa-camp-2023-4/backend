@@ -4,8 +4,8 @@ logging:
 security:
   jwt:
     token:
-      secret-key: ${secret-key}
-      expire-length: ${expire-length}
+      secret-key: ${JWT_SECRET_KEY}
+      expire-length: 3600000
 
 payment:
   toss:
@@ -15,4 +15,4 @@ payment:
     max-retry: 3
 
 cors:
-  allowed-origin: ${allowed-origin}
+  allowed-origin: ${ALLOWED_ORIGIN}
