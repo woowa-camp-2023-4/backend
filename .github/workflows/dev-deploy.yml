@@ -30,7 +30,7 @@ jobs:
           distribution: 'corretto'
 
       - name: Set up env
-        run: export payment-secret-key=$PAY_SECRET
+        run: export $payment-secret-key=$PAY_SECRET
         env:
           PAY_SECRET: ${{secrets.payment-secret-key}}
 
