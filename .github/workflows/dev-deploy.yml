@@ -44,3 +44,5 @@ jobs:
 
       - name: Run java application
         run: ./scripts/run.sh
+        env:
+          RUNNER_TRACKING_ID: ""
