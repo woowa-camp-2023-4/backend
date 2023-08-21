@@ -9,7 +9,7 @@ security:
 
 payment:
   toss:
-    secret-key: ${payment-secret-key}
+    secret-key: ${PAYMENT_SECRET_KEY}
     confirm-url: https://api.tosspayments.com/v1/payments/confirm
     timeout: 1000
     max-retry: 3
