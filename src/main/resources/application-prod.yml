@@ -21,3 +21,8 @@ spring:
 
 cors:
   allowed-origin: http://localhost:3000
+
+cloud:
+  aws:
+    credentials:
+      instanceProfile: true
