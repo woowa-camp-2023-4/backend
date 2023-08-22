@@ -25,7 +25,6 @@ import com.woowa.woowakit.domain.order.dto.response.PreOrderResponse;
 
 import lombok.RequiredArgsConstructor;
 
-
 @RestController
 @RequestMapping("/orders")
 @RequiredArgsConstructor
@@ -33,49 +32,48 @@ public class OrderController {
 
 	private final OrderService orderService;
 
-    @PostMapping("/pre")
-    @User
-    public ResponseEntity<PreOrderResponse> createPreOrder(
-        @Authenticated final AuthPrincipal authPrincipal,
-        @Valid @RequestBody final PreOrderCreateRequest request
-    ) {
-        PreOrderResponse preOrderResponse = orderService.preOrder(authPrincipal, request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(preOrderResponse);
-    }
+	@PostMapping("/pre")
+	@User
+	public ResponseEntity<PreOrderResponse> createPreOrder(
+		@Authenticated final AuthPrincipal authPrincipal,
+		@Valid @RequestBody final PreOrderCreateRequest request
+	) {
+		PreOrderResponse preOrderResponse = orderService.preOrder(authPrincipal, request);
+		return ResponseEntity.status(HttpStatus.CREATED).body(preOrderResponse);
+	}
 
-    @PostMapping("/pre-cart-item")
-    @User
-    public ResponseEntity<PreOrderResponse> createPreOrderByCartItems(
-        @Authenticated final AuthPrincipal authPrincipal,
-        @Valid @RequestBody final List<PreOrderCreateCartItemRequest> requests
-    ) {
-        PreOrderResponse preOrderResponse = orderService.preOrderCartItems(authPrincipal, requests);
-        return ResponseEntity.status(HttpStatus.CREATED).body(preOrderResponse);
-    }
+	@PostMapping("/pre-cart-item")
+	@User
+	public ResponseEntity<PreOrderResponse> createPreOrderByCartItems(
+		@Authenticated final AuthPrincipal authPrincipal,
+		@Valid @RequestBody final List<PreOrderCreateCartItemRequest> requests
+	) {
+		PreOrderResponse preOrderResponse = orderService.preOrderCartItems(authPrincipal, requests);
+		return ResponseEntity.status(HttpStatus.CREATED).body(preOrderResponse);
+	}
 
-    @User
-    @PostMapping
-    public ResponseEntity<Long> createOrder(
-        @Authenticated final AuthPrincipal authPrincipal,
-        @Valid @RequestBody final OrderCreateRequest request
-    ) {
-        Long orderId = orderService.order(authPrincipal, request);
-        return ResponseEntity.status(HttpStatus.OK).body(orderId);
-    }
+	@User
+	@PostMapping
+	public ResponseEntity<Long> createOrder(
+		@Authenticated final AuthPrincipal authPrincipal,
+		@Valid @RequestBody final OrderCreateRequest request
+	) {
+		Long orderId = orderService.order(authPrincipal, request);
+		return ResponseEntity.status(HttpStatus.OK).body(orderId);
+	}
 
-    @User
-    @GetMapping("/{id}")
-    public ResponseEntity<OrderDetailResponse> getOrderDetail(
-        @Authenticated final AuthPrincipal authPrincipal,
-        @PathVariable final Long id
-    ) {
-        return ResponseEntity.ok(orderService.findOrderByOrderIdAndMemberId(authPrincipal, id));
-    }
+	@User
+	@GetMapping("/{id}")
+	public ResponseEntity<OrderDetailResponse> getOrderDetail(
+		@Authenticated final AuthPrincipal authPrincipal,
+		@PathVariable final Long id
+	) {
+		return ResponseEntity.ok(orderService.findOrderByOrderIdAndMemberId(authPrincipal, id));
+	}
 
-    @User
-    @GetMapping
-    public ResponseEntity<List<OrderDetailResponse>> getOrderDetail(@Authenticated final AuthPrincipal authPrincipal) {
-        return ResponseEntity.ok(orderService.findAllOrderByMemberId(authPrincipal));
-    }
-
+	@User
+	@GetMapping
+	public ResponseEntity<List<OrderDetailResponse>> getOrderDetail(@Authenticated final AuthPrincipal authPrincipal) {
+		return ResponseEntity.ok(orderService.findAllOrderByMemberId(authPrincipal));
+	}
 }

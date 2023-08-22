@@ -22,7 +22,7 @@ public class StockScheduler {
 
 	@Scheduled(zone = "Asia/Seoul", cron = "0 0 0 * * ?")
 	public void trigger() {
-		List<Long> productIds = productRepository.findIdAll();
+		List<Long> productIds = productRepository.findAllIds();
 
 		for (Long productId : productIds) {
 			stockProcessingService.doProcess(productId, LocalDate.now(ZoneId.of("Asia/Seoul")));

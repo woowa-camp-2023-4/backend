@@ -81,5 +81,4 @@ public class OrderItem extends BaseEntity {
 	Money calculateTotalPrice() {
 		return price.multiply(quantity.getValue());
 	}
-
 }

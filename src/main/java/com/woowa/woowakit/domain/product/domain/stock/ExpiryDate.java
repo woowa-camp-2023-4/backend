@@ -28,7 +28,7 @@ public class ExpiryDate implements Comparable<ExpiryDate> {
 	}
 
 	@Override
-	public int compareTo(ExpiryDate o) {
+	public int compareTo(final ExpiryDate o) {
 		return this.date.compareTo(o.date);
 	}
 }

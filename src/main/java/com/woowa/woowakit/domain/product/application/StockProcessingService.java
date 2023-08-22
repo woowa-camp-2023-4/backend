@@ -28,7 +28,7 @@ public class StockProcessingService {
 		expirationDateProcessor.doProcess(productId, currentDate);
 	}
 
-	private Product getProductById(Long productId) {
+	private Product getProductById(final Long productId) {
 		return productRepository.findByIdWithPessimistic(productId)
 			.orElseThrow(ProductNotExistException::new);
 	}

@@ -21,11 +21,11 @@ public class StockConsistencyProcessor {
 	@Transactional
 	public void doProcess(final Product product) {
 		List<Stock> stocks = stockRepository.findAllByProductId(product.getId(), StockType.NORMAL);
-		Quantity differentQuantity = getTotalStockQuantity(stocks).subtract(product.getQuantity());
+		Quantity difference = getTotalStockQuantity(stocks).subtract(product.getQuantity());
 
 		for (Stock stock : stocks) {
-			Quantity removalQuantity = computeRemovalQuantity(differentQuantity, stock);
-			differentQuantity = differentQuantity.subtract(removalQuantity);
+			Quantity removalQuantity = computeRemovalQuantity(difference, stock);
+			difference = difference.subtract(removalQuantity);
 			stock.subtractQuantity(removalQuantity);
 			removeStockIfEmpty(stock);
 		}
@@ -41,7 +41,7 @@ public class StockConsistencyProcessor {
 		return Quantity.from(Math.min(stock.getQuantity().getValue(), removingQuantity.getValue()));
 	}
 
-	private void removeStockIfEmpty(Stock stock) {
+	private void removeStockIfEmpty(final Stock stock) {
 		if (stock.isEmpty()) {
 			stockRepository.delete(stock);
 		}

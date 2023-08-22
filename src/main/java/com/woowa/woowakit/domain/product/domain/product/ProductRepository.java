@@ -19,5 +19,5 @@ public interface ProductRepository extends JpaRepository<Product, Long>, Product
 	Optional<Product> findByIdWithPessimistic(@Param("id") Long id);
 
 	@Query("select p.id from Product p ")
-	List<Long> findIdAll();
+	List<Long> findAllIds();
 }

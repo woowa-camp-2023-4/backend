@@ -82,7 +82,7 @@ public class Stock extends BaseEntity {
 		}
 	}
 
-	private boolean isExpiredExpiryDate(LocalDate expiredExpiryDate) {
+	private boolean isExpiredExpiryDate(final LocalDate expiredExpiryDate) {
 		return expiredExpiryDate.isAfter(expiryDate.getDate())
 			|| expiredExpiryDate.isEqual(expiryDate.getDate());
 	}
