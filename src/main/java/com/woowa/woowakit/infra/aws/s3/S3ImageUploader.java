@@ -17,7 +17,7 @@ public class S3ImageUploader implements ImageUploader {
         try {
             return s3Uploader.upload(multipartFile, IMAGES_DIR_NAME);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new IllegalStateException(e);
         }
     }
 }
