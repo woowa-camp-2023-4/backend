@@ -5,7 +5,6 @@ import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -19,12 +18,6 @@ import org.springframework.web.multipart.MultipartFile;
 public class ProductImageController {
 
     private final ImageUploader imageUploader;
-
-    @GetMapping
-    public String index() {
-        log.info("호출");
-        return "index";
-    }
 
     @PostMapping
     @ResponseBody
