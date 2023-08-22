@@ -13,7 +13,7 @@ public class S3ImageUploader implements ImageUploader {
     public static final String IMAGES_DIR_NAME = "images";
     private final S3Uploader s3Uploader;
 
-    public String upload(MultipartFile multipartFile) {
+    public String upload(final MultipartFile multipartFile) {
         try {
             return s3Uploader.upload(multipartFile, IMAGES_DIR_NAME);
         } catch (IOException e) {

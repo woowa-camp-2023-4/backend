@@ -20,7 +20,7 @@ public class ProductImageController {
 
     @Admin
     @PostMapping
-    public String upload(@RequestPart("data") MultipartFile multipartFile) {
+    public String upload(@RequestPart("data") final MultipartFile multipartFile) {
         log.info("이미지 저장");
         return imageUploader.upload(multipartFile);
     }

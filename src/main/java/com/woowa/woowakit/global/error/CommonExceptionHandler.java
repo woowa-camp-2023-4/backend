@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class CommonExceptionHandler {
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> exceptionHandler(RuntimeException exception) {
+    public ResponseEntity<ErrorResponse> exceptionHandler(final RuntimeException exception) {
         log.error("예상하지 못한 에러입니다.", exception);
         return ResponseEntity
             .status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -25,7 +25,7 @@ public class CommonExceptionHandler {
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ErrorResponse> illegalArgumentExceptionHandler(
-        IllegalArgumentException exception) {
+        final IllegalArgumentException exception) {
         log.warn("잘못된 요청입니다.", exception);
         return ResponseEntity
             .status(HttpStatus.BAD_REQUEST)
@@ -34,7 +34,7 @@ public class CommonExceptionHandler {
     }
 
     @ExceptionHandler(WooWaException.class)
-    public ResponseEntity<ErrorResponse> wooWaExceptionHandler(WooWaException exception) {
+    public ResponseEntity<ErrorResponse> wooWaExceptionHandler(final WooWaException exception) {
         log.info(exception.getMessage(), exception);
         return ResponseEntity
             .status(exception.getHttpStatus())
@@ -43,7 +43,7 @@ public class CommonExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleValidationExceptions(
-        MethodArgumentNotValidException exception) {
+        final MethodArgumentNotValidException exception) {
         String errorMessage = "입력값이 잘못되었습니다.\n";
 
         return ResponseEntity
@@ -54,7 +54,7 @@ public class CommonExceptionHandler {
             ));
     }
 
-    private List<String> getFieldErrorMessages(MethodArgumentNotValidException ex) {
+    private List<String> getFieldErrorMessages(final MethodArgumentNotValidException ex) {
         return ex.getBindingResult().getAllErrors().stream().map(error -> {
             String fieldName = ((FieldError) error).getField();
             String message = error.getDefaultMessage();

@@ -57,10 +57,10 @@ public class S3Uploader {
     }
 
     private void removeNewFile(File targetFile) {
-        if (targetFile.delete()) {
-            log.info("파일이 삭제되었습니다.");
-        } else {
+        if (!targetFile.delete()) {
             log.warn("파일이 삭제되지 못했습니다.");
+            return;
         }
+        log.info("파일이 삭제되었습니다.");
     }
 }
