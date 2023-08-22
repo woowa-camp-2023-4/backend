@@ -53,7 +53,7 @@ public class OrderService {
 		final AuthPrincipal authPrincipal,
 		final List<PreOrderCreateCartItemRequest> requests
 	) {
-		List<Long> cartItemIds = PreOrderCreateCartItemRequest.listOf(requests);
+		List<Long> cartItemIds = PreOrderCreateCartItemRequest.toCartItemIds(requests);
 		Order order = orderMapper.mapFrom(authPrincipal.getId(), cartItemIds);
 		return PreOrderResponse.from(orderRepository.save(order));
 	}
