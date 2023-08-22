@@ -18,6 +18,7 @@ public class OrderDetailResponse {
 	private Long orderId;
 	private String orderStatus;
 	private Long totalPrice;
+	private String uuid;
 	private List<OrderItemResponse> orderItems;
 
 	public static OrderDetailResponse from(final Order order) {
@@ -25,6 +26,7 @@ public class OrderDetailResponse {
 			order.getId(),
 			order.getOrderStatus().name(),
 			order.getTotalPrice().getValue(),
+			order.getUuid(),
 			order.getOrderItems().stream()
 				.map(OrderItemResponse::from)
 				.collect(Collectors.toUnmodifiableList())
