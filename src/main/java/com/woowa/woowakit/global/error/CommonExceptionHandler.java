@@ -28,7 +28,7 @@ public class CommonExceptionHandler {
         IllegalArgumentException exception) {
         log.warn("잘못된 요청입니다.", exception);
         return ResponseEntity
-            .status(HttpStatus.INTERNAL_SERVER_ERROR)
+            .status(HttpStatus.BAD_REQUEST)
             .body(new ErrorResponse(HttpStatus.BAD_REQUEST.value(),
                 "잘못된 요청입니다."));
     }
