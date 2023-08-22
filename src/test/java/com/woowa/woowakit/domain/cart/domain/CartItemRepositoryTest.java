@@ -13,9 +13,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 
-import com.woowa.woowakit.domain.auth.domain.EncodedPassword;
 import com.woowa.woowakit.domain.auth.domain.Member;
+import com.woowa.woowakit.domain.member.fixture.MemberFixture;
 import com.woowa.woowakit.domain.product.domain.product.Product;
+import com.woowa.woowakit.domain.product.domain.product.ProductName;
+import com.woowa.woowakit.domain.product.fixture.ProductFixture;
 import com.woowa.woowakit.global.config.QuerydslTestConfig;
 
 @DisplayName("CartItemRepository 단위 테스트")
@@ -33,8 +35,8 @@ class CartItemRepositoryTest {
 	@DisplayName("장바구니 id와 회원 id를 바탕으로 장바구니와 상품을 Projection한 클래스를 찾는다.")
 	void findCartItemByIdAndMemberId() {
 		// given
-		Member member = Member.of("jiwonjjang@abcd.com", EncodedPassword.from("jiwonjjang"), "탐탐");
-		Product product = Product.of("상품1", 15000L, "product.img");
+		Member member = MemberFixture.anMember().build();
+		Product product = ProductFixture.anProduct().build();
 
 		entityManager.persist(member);
 		entityManager.persist(product);
@@ -55,10 +57,10 @@ class CartItemRepositoryTest {
 	@DisplayName("장바구니 id와 회원 id를 바탕으로 장바구니를 삭제한다.")
 	void deleteAll() {
 		// given
-		Member member = Member.of("jiwonjjang@abcd.com", EncodedPassword.from("jiwonjjang"), "탐탐");
-		Product product1 = Product.of("상품1", 15000L, "product.img");
-		Product product2 = Product.of("상품2", 15000L, "product.img");
-		Product product3 = Product.of("상품3", 15000L, "product.img");
+		Member member = MemberFixture.anMember().build();
+		Product product1 = ProductFixture.anProduct().name(ProductName.from("상품1")).build();
+		Product product2 = ProductFixture.anProduct().name(ProductName.from("상품2")).build();
+		Product product3 = ProductFixture.anProduct().name(ProductName.from("상품3")).build();
 
 		entityManager.persist(member);
 		entityManager.persist(product1);

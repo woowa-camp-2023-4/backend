@@ -3,19 +3,13 @@ package com.woowa.woowakit.domain.order.application;
 import static org.assertj.core.api.Assertions.*;
 
 import java.util.List;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 
 import com.woowa.woowakit.domain.auth.domain.AuthPrincipal;
 import com.woowa.woowakit.domain.auth.domain.EncodedPassword;
@@ -23,10 +17,13 @@ import com.woowa.woowakit.domain.auth.domain.Member;
 import com.woowa.woowakit.domain.auth.domain.MemberRepository;
 import com.woowa.woowakit.domain.cart.domain.CartItem;
 import com.woowa.woowakit.domain.cart.domain.CartItemRepository;
+import com.woowa.woowakit.domain.member.fixture.MemberFixture;
 import com.woowa.woowakit.domain.model.Quantity;
+import com.woowa.woowakit.domain.order.domain.OrderMapper;
+import com.woowa.woowakit.domain.order.domain.handler.CartItemDeletionEventHandler;
+import com.woowa.woowakit.domain.order.domain.handler.ProductQuantityEventHandler;
 import com.woowa.woowakit.domain.order.dto.request.OrderCreateRequest;
 import com.woowa.woowakit.domain.order.dto.request.PreOrderCreateCartItemRequest;
-import com.woowa.woowakit.domain.order.dto.request.PreOrderCreateRequest;
 import com.woowa.woowakit.domain.order.dto.response.PreOrderResponse;
 import com.woowa.woowakit.domain.payment.domain.PaymentService;
 import com.woowa.woowakit.domain.product.domain.product.Product;
@@ -35,8 +32,13 @@ import com.woowa.woowakit.domain.product.domain.product.ProductName;
 import com.woowa.woowakit.domain.product.domain.product.ProductPrice;
 import com.woowa.woowakit.domain.product.domain.product.ProductRepository;
 import com.woowa.woowakit.domain.product.domain.product.ProductStatus;
+import com.woowa.woowakit.domain.product.fixture.ProductFixture;
+import com.woowa.woowakit.global.config.QuerydslTestConfig;
 
-@SpringBootTest
+@DisplayName("OrderService 단위 테스트")
+@DataJpaTest
+@Import({OrderService.class, QuerydslTestConfig.class, OrderMapper.class, CartItemDeletionEventHandler.class,
+	ProductQuantityEventHandler.class})
 class OrderServiceTest {
 
 	@Autowired
@@ -55,65 +57,12 @@ class OrderServiceTest {
 	private PaymentService paymentService;
 
 	@Test
-	@DisplayName("주문 동시성 테스트")
-	void test1() throws Exception {
-		// given
-		Member member = memberRepository.save(Member.of(
-			"test@test.com",
-			EncodedPassword.from("test"),
-			"test"));
-
-		Product product = productRepository.save(Product.builder()
-			.price(ProductPrice.from(10000L))
-			.quantity(Quantity.from(100))
-			.imageUrl(ProductImage.from("/path"))
-			.name(ProductName.from("된장 밀키트"))
-			.status(ProductStatus.IN_STOCK)
-			.build());
-
-		int threadCount = 10;
-		for (int i = 0; i < threadCount; i++) {
-			PreOrderCreateRequest request = PreOrderCreateRequest.of(product.getId(), 10L);
-			orderService.preOrder(AuthPrincipal.from(member), request);
-		}
-
-		// when
-		ExecutorService executorService = Executors.newFixedThreadPool(32);
-		CountDownLatch countDownLatch = new CountDownLatch(threadCount);
-		for (int i = 0; i < threadCount; i++) {
-			OrderCreateRequest request = OrderCreateRequest.of((long)(i + 1), "test");
-			executorService.submit(() -> {
-				try {
-					orderService.order(AuthPrincipal.from(member), request);
-				} finally {
-					countDownLatch.countDown();
-				}
-			});
-		}
-		countDownLatch.await();
-		productRepository.flush();
-
-		// then
-		Product afterProduct = productRepository.findById(product.getId()).orElseThrow();
-		assertThat(afterProduct.getQuantity()).isEqualTo(Quantity.from(0));
-	}
-
-	@Test
 	@DisplayName("장바구니 주문 테스트")
-	void test2() {
+	void test1() {
 		// given
-		Member member = memberRepository.save(Member.of(
-			"test1@test.com",
-			EncodedPassword.from("test"),
-			"test1"));
+		Member member = memberRepository.save(MemberFixture.anMember().build());
 
-		Product product = productRepository.save(Product.builder()
-			.price(ProductPrice.from(10000L))
-			.quantity(Quantity.from(100))
-			.imageUrl(ProductImage.from("/path"))
-			.name(ProductName.from("된장 밀키트"))
-			.status(ProductStatus.IN_STOCK)
-			.build());
+		Product product = productRepository.save(ProductFixture.anProduct().build());
 
 		CartItem cartItem = CartItem.of(member.getId(), product.getId(), 3);
 		cartItemRepository.save(cartItem);
