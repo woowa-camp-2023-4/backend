@@ -23,8 +23,7 @@ public class PreOrderResponse {
 		final String uuid) {
 		return new PreOrderResponse(id, orderItems, uuid);
 	}
-
-	//from order
+	
 	public static PreOrderResponse from(final Order order) {
 		List<OrderItemResponse> orderItemResponses = order.getOrderItems().stream()
 			.map(OrderItemResponse::from)
