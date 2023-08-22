@@ -18,14 +18,14 @@ import lombok.RequiredArgsConstructor;
 public class StockProcessingService {
 
 	private final ProductRepository productRepository;
-	private final StockConsistencyProcessor stockConsistencyProcessor;
 	private final ExpirationDateProcessor expirationDateProcessor;
+	private final StockConsistencyProcessor stockConsistencyProcessor;
 
 	@Transactional
 	public void doProcess(final Long productId, final LocalDate currentDate) {
 		Product product = getProductById(productId);
-		stockConsistencyProcessor.doProcess(product);
-		expirationDateProcessor.doProcess(productId, currentDate);
+		expirationDateProcessor.run(productId, currentDate);
+		stockConsistencyProcessor.run(product);
 	}
 
 	private Product getProductById(final Long productId) {

@@ -8,17 +8,17 @@ import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.Import;
 
 import com.woowa.woowakit.domain.model.Quantity;
 import com.woowa.woowakit.domain.product.domain.product.Product;
-import com.woowa.woowakit.domain.product.domain.product.ProductImage;
-import com.woowa.woowakit.domain.product.domain.product.ProductName;
-import com.woowa.woowakit.domain.product.domain.product.ProductPrice;
 import com.woowa.woowakit.domain.product.domain.product.ProductRepository;
-import com.woowa.woowakit.domain.product.domain.product.ProductStatus;
+import com.woowa.woowakit.domain.product.fixture.ProductFixture;
+import com.woowa.woowakit.global.config.QuerydslTestConfig;
 
-@SpringBootTest
+@DataJpaTest
+@Import({StockConsistencyProcessor.class, QuerydslTestConfig.class})
 class StockConsistencyProcessorTest {
 
 	@Autowired
@@ -34,20 +34,16 @@ class StockConsistencyProcessorTest {
 	@DisplayName("상품 수량과 재고 테이블의 정합성을 맞춘다.")
 	void doProcessTest() {
 		// given
-		Product product = productRepository.save(Product.builder()
-			.price(ProductPrice.from(10000L))
+		Product product = productRepository.save(ProductFixture.anProduct()
 			.quantity(Quantity.from(35))
-			.imageUrl(ProductImage.from("/path"))
-			.name(ProductName.from("된장 밀키트"))
-			.status(ProductStatus.IN_STOCK)
 			.build());
 
-		stockRepository.save(createStock(product, LocalDate.of(2023, 9, 22), 10));
-		stockRepository.save(createStock(product, LocalDate.of(2023, 9, 25), 20));
-		stockRepository.save(createStock(product, LocalDate.of(2023, 9, 28), 30));
+		stockRepository.save(createStock(product, LocalDate.of(3023, 9, 22), 10));
+		stockRepository.save(createStock(product, LocalDate.of(3023, 9, 25), 20));
+		stockRepository.save(createStock(product, LocalDate.of(3023, 9, 28), 30));
 
 		// when
-		stockConsistencyProcessor.doProcess(product);
+		stockConsistencyProcessor.run(product);
 
 		// then
 		List<Stock> stocks = stockRepository.findAllByProductId(product.getId(), StockType.NORMAL);

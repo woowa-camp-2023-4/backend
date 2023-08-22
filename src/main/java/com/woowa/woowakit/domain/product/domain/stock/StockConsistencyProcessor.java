@@ -19,7 +19,7 @@ public class StockConsistencyProcessor {
 	private final StockRepository stockRepository;
 
 	@Transactional
-	public void doProcess(final Product product) {
+	public void run(final Product product) {
 		List<Stock> stocks = stockRepository.findAllByProductId(product.getId(), StockType.NORMAL);
 		Quantity difference = getTotalStockQuantity(stocks).subtract(product.getQuantity());
 

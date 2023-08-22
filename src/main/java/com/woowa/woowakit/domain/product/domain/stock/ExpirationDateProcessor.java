@@ -17,7 +17,7 @@ public class ExpirationDateProcessor {
 	private final StockRepository stockRepository;
 
 	@Transactional
-	public void doProcess(final Long productId, final LocalDate currentDate) {
+	public void run(final Long productId, final LocalDate currentDate) {
 		List<Stock> stocks = stockRepository.findAllByProductId(productId, StockType.NORMAL);
 		for (Stock stock : stocks) {
 			stock.CheckExpiredExpiryDate(currentDate);

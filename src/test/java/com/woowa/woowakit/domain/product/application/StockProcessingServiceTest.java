@@ -10,15 +10,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import com.woowa.woowakit.domain.model.Quantity;
 import com.woowa.woowakit.domain.product.domain.product.Product;
-import com.woowa.woowakit.domain.product.domain.product.ProductImage;
-import com.woowa.woowakit.domain.product.domain.product.ProductName;
-import com.woowa.woowakit.domain.product.domain.product.ProductPrice;
 import com.woowa.woowakit.domain.product.domain.product.ProductRepository;
-import com.woowa.woowakit.domain.product.domain.product.ProductStatus;
 import com.woowa.woowakit.domain.product.domain.stock.ExpiryDate;
 import com.woowa.woowakit.domain.product.domain.stock.Stock;
 import com.woowa.woowakit.domain.product.domain.stock.StockRepository;
 import com.woowa.woowakit.domain.product.domain.stock.StockType;
+import com.woowa.woowakit.domain.product.fixture.ProductFixture;
 
 @SpringBootTest
 class StockProcessingServiceTest {
@@ -36,12 +33,8 @@ class StockProcessingServiceTest {
 	@DisplayName("재고의 정합성 , 유통기한 테스트")
 	void doProcessTest() {
 		// given
-		Product product = productRepository.save(Product.builder()
-			.price(ProductPrice.from(10000L))
+		Product product = productRepository.save(ProductFixture.anProduct()
 			.quantity(Quantity.from(75))
-			.imageUrl(ProductImage.from("/pat트"))
-			.name(ProductName.from("된장 밀키트"))
-			.status(ProductStatus.IN_STOCK)
 			.build());
 
 		stockRepository.save(createStock(product, LocalDate.of(2023, 9, 22), 10));
