@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 
 import com.woowa.woowakit.domain.cart.domain.CartItemSpecification;
 import com.woowa.woowakit.domain.cart.dto.CartItemAddRequest;
+import com.woowa.woowakit.domain.cart.dto.CartItemUpdateQuantityRequest;
 import com.woowa.woowakit.domain.product.domain.product.ProductStatus;
 
 import integration.IntegrationTest;
@@ -134,5 +135,48 @@ class CartIntegrationTest extends IntegrationTest {
 			.hasSize(2)
 			.extracting("quantity")
 			.contains(5, 10);
+	}
+
+	@Test
+	@DisplayName("사용자는 장바구니 상품의 수량을 조절할 수 있다.")
+	void updateQuantity() {
+		// given
+		Long productId = ProductHelper.createProductAndSetUp(50);
+
+		String accessToken = MemberHelper.signUpAndLogIn();
+
+		Long cartItemId = CartItemHelper.addCartItemAndGetID(productId, 5, accessToken);
+
+		// when
+		CommonRestAssuredUtils.patch(
+			"/cart-items/" + cartItemId + "/quantity", new CartItemUpdateQuantityRequest(30L), accessToken);
+
+		// then
+		ExtractableResponse<Response> response = CommonRestAssuredUtils.get("/cart-items", accessToken);
+		List<CartItemSpecification> cartItemResponses = response.as(ArrayList.class);
+		assertThat(cartItemResponses)
+			.hasSize(1)
+			.extracting("quantity")
+			.contains(30);
+	}
+
+	@Test
+	@DisplayName("사용자는 장바구니 상품을 삭제할 수 있다.")
+	void deleteCartItem() {
+		// given
+		Long productId = ProductHelper.createProductAndSetUp(10);
+
+		String accessToken = MemberHelper.signUpAndLogIn();
+
+		Long cartItemId = CartItemHelper.addCartItemAndGetID(productId, 5, accessToken);
+
+		// when
+		CommonRestAssuredUtils.delete("/cart-items/" + cartItemId, accessToken);
+
+		// then
+		ExtractableResponse<Response> response = CommonRestAssuredUtils.get("/cart-items", accessToken);
+		List<CartItemSpecification> cartItemResponses = response.as(ArrayList.class);
+		assertThat(cartItemResponses)
+			.isEmpty();
 	}
 }
