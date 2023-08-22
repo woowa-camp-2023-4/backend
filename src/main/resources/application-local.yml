@@ -26,5 +26,12 @@ security:
       secret-key: fjhbewhjbrfkelwdvhkewjkbwd
       expire-length: 3600000
 
+payment:
+  toss:
+    secret-key: test
+    confirm-url: https://api.tosspayments.com/v1/payments/confirm
+    timeout: 100
+    max-retry: 3
+
 cors:
   allowed-origin: http://localhost:3000

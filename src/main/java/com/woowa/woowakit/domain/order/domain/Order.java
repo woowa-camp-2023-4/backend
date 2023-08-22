@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.UUID;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -31,17 +32,23 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Order extends BaseEntity {
 
-	@OneToMany(cascade = CascadeType.ALL)
-	@JoinColumn(name = "order_id")
-	private final List<OrderItem> orderItems = new ArrayList<>();
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+
 	@Enumerated(EnumType.STRING)
 	private OrderStatus orderStatus;
+
 	@Convert(converter = MoneyConverter.class)
 	private Money totalPrice;
+
 	private Long memberId;
+
+	@OneToMany(cascade = CascadeType.ALL)
+	@JoinColumn(name = "order_id")
+	private final List<OrderItem> orderItems = new ArrayList<>();
+
+	@Column(name = "uuid")
 	private String uuid;
 
 	@Builder
@@ -69,4 +76,6 @@ public class Order extends BaseEntity {
 	public void order(final String paymentKey) {
 		registerEvent(new OrderCompleteEvent(this, paymentKey));
 	}
+
+
 }

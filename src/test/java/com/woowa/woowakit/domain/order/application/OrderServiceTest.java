@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import com.woowa.woowakit.domain.auth.domain.AuthPrincipal;
 import com.woowa.woowakit.domain.auth.domain.EncodedPassword;
 import com.woowa.woowakit.domain.auth.domain.Member;
 import com.woowa.woowakit.domain.auth.domain.MemberRepository;
@@ -60,7 +61,7 @@ class OrderServiceTest {
 		int threadCount = 10;
 		for (int i = 0; i < threadCount; i++) {
 			PreOrderCreateRequest request = PreOrderCreateRequest.of(product.getId(), 10L);
-			orderService.preOrder(member.getId(), request);
+			orderService.preOrder(AuthPrincipal.from(member), request);
 		}
 
 		// when
@@ -70,7 +71,7 @@ class OrderServiceTest {
 			OrderCreateRequest request = OrderCreateRequest.of((long)(i + 1), "test");
 			executorService.submit(() -> {
 				try {
-					orderService.order(member.getId(), request);
+					orderService.order(AuthPrincipal.from(member), request);
 				} finally {
 					countDownLatch.countDown();
 				}
