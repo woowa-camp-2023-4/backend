@@ -1,9 +1,12 @@
 package com.woowa.woowakit.domain.order.domain;
 
+import com.woowa.woowakit.domain.model.BaseEntity;
+import com.woowa.woowakit.domain.model.Money;
+import com.woowa.woowakit.domain.model.converter.MoneyConverter;
+import com.woowa.woowakit.domain.order.domain.event.OrderCompleteEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Convert;
@@ -16,11 +19,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-
-import com.woowa.woowakit.domain.model.BaseEntity;
-import com.woowa.woowakit.domain.model.Money;
-import com.woowa.woowakit.domain.model.converter.MoneyConverter;
-
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -32,50 +30,50 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Order extends BaseEntity {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-	@Enumerated(EnumType.STRING)
-	private OrderStatus orderStatus;
+    @Enumerated(EnumType.STRING)
+    private OrderStatus orderStatus;
 
-	@Convert(converter = MoneyConverter.class)
-	private Money totalPrice;
+    @Convert(converter = MoneyConverter.class)
+    private Money totalPrice;
 
-	private Long memberId;
+    private Long memberId;
 
-	@OneToMany(cascade = CascadeType.ALL)
-	@JoinColumn(name = "order_id")
-	private final List<OrderItem> orderItems = new ArrayList<>();
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "order_id")
+    private final List<OrderItem> orderItems = new ArrayList<>();
 
-	@Column(name = "uuid")
-	private String uuid;
+    @Column(name = "uuid")
+    private String uuid;
 
-	@Builder
-	private Order(final Long memberId, final List<OrderItem> orderItems) {
-		this.orderStatus = OrderStatus.ORDERED;
-		this.totalPrice = calculateTotalPrice(orderItems);
-		this.memberId = memberId;
-		this.orderItems.addAll(orderItems);
-		this.uuid = UUID.randomUUID().toString();
-	}
+    @Builder
+    private Order(final Long memberId, final List<OrderItem> orderItems) {
+        this.orderStatus = OrderStatus.ORDERED;
+        this.totalPrice = calculateTotalPrice(orderItems);
+        this.memberId = memberId;
+        this.orderItems.addAll(orderItems);
+        this.uuid = UUID.randomUUID().toString();
+    }
 
-	public static Order of(
-		final Long memberId,
-		final List<OrderItem> orderItems
-	) {
-		return new Order(memberId, orderItems);
-	}
+    public static Order of(
+        final Long memberId,
+        final List<OrderItem> orderItems
+    ) {
+        return new Order(memberId, orderItems);
+    }
 
-	private Money calculateTotalPrice(final List<OrderItem> orderItems) {
-		return orderItems.stream()
-			.map(OrderItem::calculateTotalPrice)
-			.reduce(Money.ZERO, Money::add);
-	}
+    private Money calculateTotalPrice(final List<OrderItem> orderItems) {
+        return orderItems.stream()
+            .map(OrderItem::calculateTotalPrice)
+            .reduce(Money.ZERO, Money::add);
+    }
 
-	public void order(final String paymentKey) {
-		registerEvent(new OrderCompleteEvent(this, paymentKey));
-	}
+    public void order(final String paymentKey) {
+        registerEvent(new OrderCompleteEvent(this, paymentKey));
+    }
 
 
 }
