@@ -18,6 +18,10 @@ public interface ProductRepository extends JpaRepository<Product, Long>, Product
 	@Lock(LockModeType.PESSIMISTIC_WRITE)
 	Optional<Product> findByIdWithPessimistic(@Param("id") Long id);
 
+	@Query("select p from Product p where p.id in :ids")
+	@Lock(LockModeType.PESSIMISTIC_WRITE)
+	List<Product> findByIdsWithPessimistic(@Param("ids") List<Long> ids);
+
 	@Query("select p.id from Product p ")
 	List<Long> findAllIds();
 }
