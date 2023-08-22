@@ -56,7 +56,7 @@ class OrderIntegrationTest extends IntegrationTest {
 		// given
 		Long productId = ProductHelper.createProductAndSetUp();
 		String accessToken = MemberHelper.signUpAndLogIn();
-		Long cartItemId = Long.parseLong(CartItemHelper.addCartItem(productId, 10L, accessToken).header("Location").split("/")[2]);
+		Long cartItemId = CartItemHelper.addCartItemAndGetID(productId, 10L, accessToken);
 
 		// when
 		ExtractableResponse<Response> response = OrderHelper.createPreOrder(
