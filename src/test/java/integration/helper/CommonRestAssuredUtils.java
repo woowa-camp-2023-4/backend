@@ -116,6 +116,16 @@ public class CommonRestAssuredUtils {
                 .extract();
     }
 
+    public static <T> ExtractableResponse<Response> delete(String url, String token) {
+        return RestAssured.given().log().all()
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .header("Authorization", "Bearer " + token)
+            .when()
+            .delete(url)
+            .then().log().all()
+            .extract();
+    }
+
     public static <T> ExtractableResponse<Response> delete(String url, T pathParam, String token) {
         return RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)

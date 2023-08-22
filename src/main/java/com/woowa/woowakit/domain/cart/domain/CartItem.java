@@ -1,5 +1,7 @@
 package com.woowa.woowakit.domain.cart.domain;
 
+import java.util.Objects;
+
 import com.woowa.woowakit.domain.model.BaseEntity;
 import com.woowa.woowakit.domain.model.Quantity;
 import com.woowa.woowakit.domain.model.converter.QuantityConverter;
@@ -58,5 +60,14 @@ public class CartItem extends BaseEntity {
     public void addQuantity(final Quantity requiredQuantity, final CartItemValidator cartItemValidator) {
         quantity = quantity.add(requiredQuantity);
         cartItemValidator.validate(this);
+    }
+
+    public void updateQuantity(final long quantity, final CartItemValidator cartItemValidator) {
+        this.quantity = Quantity.from(quantity);
+        cartItemValidator.validate(this);
+    }
+
+    public boolean isMyCartItem(final Long memberId) {
+        return Objects.equals(this.memberId, memberId);
     }
 }
