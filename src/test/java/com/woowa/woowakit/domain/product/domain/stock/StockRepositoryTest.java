@@ -26,7 +26,7 @@ class StockRepositoryTest {
 	@Test
 	void findByProductIdAndExpiryDate() {
 		// given
-		LocalDate expiryDate = LocalDate.now().plusDays(1);
+		LocalDate expiryDate = LocalDate.of(2223, 12, 31);
 		Product product = productRepository.save(Product.of("product", 1000L, "test.jpg"));
 		Stock stock = stockRepository.save(Stock.of(expiryDate, product));
 

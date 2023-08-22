@@ -28,7 +28,6 @@ public class StockService {
 		final Stock stock = stockRepository
 			.findByProductIdAndExpiryDate(productId, ExpiryDate.from(request.getExpiryDate()))
 			.orElse(Stock.of(request.getExpiryDate(), product));
-
 		stock.addQuantity(Quantity.from(request.getQuantity()));
 
 		return stockRepository.save(stock).getId();

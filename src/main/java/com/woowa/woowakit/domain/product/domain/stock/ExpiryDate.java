@@ -1,13 +1,14 @@
 package com.woowa.woowakit.domain.product.domain.stock;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
 
 import com.woowa.woowakit.domain.product.exception.StockExpiredException;
 
 import lombok.Getter;
 
 @Getter
-public class ExpiryDate {
+public class ExpiryDate implements Comparable<ExpiryDate> {
 
 	private final LocalDate date;
 
@@ -21,8 +22,13 @@ public class ExpiryDate {
 	}
 
 	private void validExpiryDate(final LocalDate date) {
-		if (date.isBefore(LocalDate.now())) {
+		if (date.isBefore(LocalDate.now(ZoneId.of("Asia/Seoul")))) {
 			throw new StockExpiredException();
 		}
+	}
+
+	@Override
+	public int compareTo(ExpiryDate o) {
+		return this.date.compareTo(o.date);
 	}
 }
