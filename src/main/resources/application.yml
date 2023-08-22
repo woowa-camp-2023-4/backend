@@ -16,3 +16,12 @@ payment:
 
 cors:
   allowed-origin: ${ALLOWED_ORIGIN}
+
+cloud:
+  aws:
+    s3:
+      bucket: woowa-camp-4
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false

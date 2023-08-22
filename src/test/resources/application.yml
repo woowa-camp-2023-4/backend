@@ -32,3 +32,12 @@ payment:
 
 cors:
   allowed-origin: http://localhost:3000
+
+cloud:
+  aws:
+    s3:
+      bucket: woowa-camp-4
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
