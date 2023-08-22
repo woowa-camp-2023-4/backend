@@ -15,18 +15,21 @@ public class CartItemSpecification {
 	private final String productName;
 	private final String productImage;
 	private final Long productId;
+	private final Long cartItemId;
 
 	public CartItemSpecification(
 		final Quantity quantity,
 		final ProductPrice productPrice,
 		final ProductName productName,
 		final ProductImage productImage,
-		final Long productId
+		final Long productId,
+		final Long cartItemId
 	) {
 		this.quantity = quantity.getValue();
 		this.productPrice = productPrice.getPrice().getValue();
 		this.productName = productName.getName();
 		this.productImage = productImage.getPath();
 		this.productId = productId;
+		this.cartItemId = cartItemId;
 	}
 }
