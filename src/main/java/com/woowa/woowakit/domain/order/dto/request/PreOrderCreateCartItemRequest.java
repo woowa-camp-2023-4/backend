@@ -18,7 +18,7 @@ public class PreOrderCreateCartItemRequest {
 	@NotNull(message = "장바구니는 필수 입니다.")
 	private Long cartItemId;
 
-	public static List<Long> toCartItemIds(List<PreOrderCreateCartItemRequest> requests) {
+	public static List<Long> toCartItemIds(final List<PreOrderCreateCartItemRequest> requests) {
 		return requests.stream()
 			.mapToLong(PreOrderCreateCartItemRequest::getCartItemId)
 			.boxed()

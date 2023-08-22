@@ -84,4 +84,37 @@ class CartItemRepositoryTest {
 		assertThat(result).isEmpty();
 	}
 
+	@Test
+	@DisplayName("장바구니 항목을 삭제할 수 있다.")
+	void deleteAllCartItems() {
+		// given
+		Member member = MemberFixture.anMember().build();
+		Product product1 = ProductFixture.anProduct().name(ProductName.from("상품1")).build();
+		Product product2 = ProductFixture.anProduct().name(ProductName.from("상품2")).build();
+		Product product3 = ProductFixture.anProduct().name(ProductName.from("상품3")).build();
+
+		entityManager.persist(member);
+		entityManager.persist(product1);
+		entityManager.persist(product2);
+		entityManager.persist(product3);
+
+		CartItem cartItem1 = CartItem.of(member.getId(), product1.getId());
+		CartItem cartItem2 = CartItem.of(member.getId(), product2.getId());
+		CartItem cartItem3 = CartItem.of(member.getId(), product3.getId());
+
+		entityManager.persist(cartItem1);
+		entityManager.persist(cartItem2);
+		entityManager.persist(cartItem3);
+
+		// when
+		cartItemRepository.deleteCartItems(member.getId(), List.of(cartItem3.getId(), cartItem2.getId()));
+
+		entityManager.flush();
+		entityManager.clear();
+
+		// then
+		assertThat(cartItemRepository.findById(cartItem1.getId())).isPresent();
+		assertThat(cartItemRepository.findById(cartItem2.getId())).isNotPresent();
+		assertThat(cartItemRepository.findById(cartItem3.getId())).isNotPresent();
+	}
 }

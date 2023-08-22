@@ -48,12 +48,12 @@ public class OrderMapper {
 		return Order.of(memberId, orderItems);
 	}
 
-	private CartItemSpecification cartItemSpecificationOf(Long memberId, Long id) {
+	private CartItemSpecification cartItemSpecificationOf(final Long memberId, final Long id) {
 		return cartItemRepository.findCartItemByIdAndMemberId(memberId, id)
 			.orElseThrow(CartItemNotFoundException::new);
 	}
 
-	private OrderItem orderItemOf(CartItemSpecification cartItem) {
+	private OrderItem orderItemOf(final CartItemSpecification cartItem) {
 		return OrderItem.of(cartItem.getProductId(),
 			cartItem.getProductName(),
 			Image.from(cartItem.getProductImage()),
