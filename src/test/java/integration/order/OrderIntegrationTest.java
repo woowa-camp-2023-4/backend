@@ -15,6 +15,7 @@ import com.woowa.woowakit.domain.order.dto.response.PreOrderResponse;
 import com.woowa.woowakit.domain.payment.domain.PaymentService;
 
 import integration.IntegrationTest;
+import integration.helper.CartItemHelper;
 import integration.helper.CommonRestAssuredUtils;
 import integration.helper.MemberHelper;
 import integration.helper.OrderHelper;
@@ -38,6 +39,28 @@ class OrderIntegrationTest extends IntegrationTest {
 		// when
 		ExtractableResponse<Response> response = OrderHelper.createPreOrder(
 			OrderHelper.createPreOrderCreateRequest(productId), accessToken);
+
+		// then
+		PreOrderResponse preOrderResponse = response.as(PreOrderResponse.class);
+		assertThat(response.statusCode()).isEqualTo(201);
+		assertThat(preOrderResponse).extracting(PreOrderResponse::getId,
+				PreOrderResponse::getUuid)
+			.isNotNull();
+		assertThat(preOrderResponse).extracting(PreOrderResponse::getOrderItems).asList()
+			.hasSize(1);
+	}
+
+	@Test
+	@DisplayName("장바구니 상품을 바탕으로 가주문을 생성한다")
+	void preOrderByCartItems() {
+		// given
+		Long productId = ProductHelper.createProductAndSetUp();
+		String accessToken = MemberHelper.signUpAndLogIn();
+		Long cartItemId = Long.parseLong(CartItemHelper.addCartItem(productId, 10L, accessToken).header("Location").split("/")[2]);
+
+		// when
+		ExtractableResponse<Response> response = OrderHelper.createPreOrder(
+			OrderHelper.createPreOrderCreateCartItemRequest(cartItemId), accessToken);
 
 		// then
 		PreOrderResponse preOrderResponse = response.as(PreOrderResponse.class);
