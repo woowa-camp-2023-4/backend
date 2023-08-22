@@ -10,6 +10,7 @@ import com.woowa.woowakit.domain.order.domain.Order;
 import com.woowa.woowakit.domain.order.domain.OrderMapper;
 import com.woowa.woowakit.domain.order.domain.OrderRepository;
 import com.woowa.woowakit.domain.order.dto.request.OrderCreateRequest;
+import com.woowa.woowakit.domain.order.dto.request.PreOrderCreateCartItemRequest;
 import com.woowa.woowakit.domain.order.dto.request.PreOrderCreateRequest;
 import com.woowa.woowakit.domain.order.dto.response.OrderDetailResponse;
 import com.woowa.woowakit.domain.order.dto.response.PreOrderResponse;
@@ -44,6 +45,16 @@ public class OrderService {
 	@Transactional
 	public PreOrderResponse preOrder(final AuthPrincipal authPrincipal, final PreOrderCreateRequest request) {
 		Order order = orderMapper.mapFrom(authPrincipal.getId(), request.getProductId(), request.getQuantity());
+		return PreOrderResponse.from(orderRepository.save(order));
+	}
+
+	@Transactional
+	public PreOrderResponse preOrderCartItems(
+		final AuthPrincipal authPrincipal,
+		final List<PreOrderCreateCartItemRequest> requests
+	) {
+		List<Long> cartItemIds = PreOrderCreateCartItemRequest.toCartItemIds(requests);
+		Order order = orderMapper.mapFrom(authPrincipal.getId(), cartItemIds);
 		return PreOrderResponse.from(orderRepository.save(order));
 	}
 

@@ -18,6 +18,7 @@ import com.woowa.woowakit.domain.auth.annotation.User;
 import com.woowa.woowakit.domain.auth.domain.AuthPrincipal;
 import com.woowa.woowakit.domain.order.application.OrderService;
 import com.woowa.woowakit.domain.order.dto.request.OrderCreateRequest;
+import com.woowa.woowakit.domain.order.dto.request.PreOrderCreateCartItemRequest;
 import com.woowa.woowakit.domain.order.dto.request.PreOrderCreateRequest;
 import com.woowa.woowakit.domain.order.dto.response.OrderDetailResponse;
 import com.woowa.woowakit.domain.order.dto.response.PreOrderResponse;
@@ -39,6 +40,16 @@ public class OrderController {
         @Valid @RequestBody final PreOrderCreateRequest request
     ) {
         PreOrderResponse preOrderResponse = orderService.preOrder(authPrincipal, request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(preOrderResponse);
+    }
+
+    @PostMapping("/pre-cart-item")
+    @User
+    public ResponseEntity<PreOrderResponse> createPreOrderByCartItems(
+        @Authenticated final AuthPrincipal authPrincipal,
+        @Valid @RequestBody final List<PreOrderCreateCartItemRequest> requests
+    ) {
+        PreOrderResponse preOrderResponse = orderService.preOrderCartItems(authPrincipal, requests);
         return ResponseEntity.status(HttpStatus.CREATED).body(preOrderResponse);
     }
 
