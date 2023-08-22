@@ -26,7 +26,7 @@ public class ProductImageController {
         return "index";
     }
 
-    @PostMapping("/upload")
+    @PostMapping
     @ResponseBody
     public String upload(@RequestParam("data") MultipartFile multipartFile) throws IOException {
         log.info("이미지 저장");
