@@ -1,6 +1,9 @@
 package integration.helper;
 
+import java.util.List;
+
 import com.woowa.woowakit.domain.order.dto.request.OrderCreateRequest;
+import com.woowa.woowakit.domain.order.dto.request.PreOrderCreateCartItemRequest;
 import com.woowa.woowakit.domain.order.dto.request.PreOrderCreateRequest;
 import com.woowa.woowakit.domain.order.dto.response.PreOrderResponse;
 import io.restassured.response.ExtractableResponse;
@@ -9,12 +12,23 @@ import io.restassured.response.Response;
 public class OrderHelper {
 
     public static ExtractableResponse<Response> createPreOrder(
-        final PreOrderCreateRequest request, final String accessToken) {
+        final PreOrderCreateRequest request, final String accessToken
+    ) {
         return CommonRestAssuredUtils.post("/orders/pre", request, accessToken);
+    }
+
+    public static ExtractableResponse<Response> createPreOrder(
+        final PreOrderCreateCartItemRequest request, final String accessToken
+    ) {
+        return CommonRestAssuredUtils.post("/orders/pre-cart-item", List.of(request), accessToken);
     }
 
     public static PreOrderCreateRequest createPreOrderCreateRequest(Long productId) {
         return PreOrderCreateRequest.of(productId, 1L);
+    }
+
+    public static PreOrderCreateCartItemRequest createPreOrderCreateCartItemRequest(Long cartItemId) {
+        return new PreOrderCreateCartItemRequest(cartItemId);
     }
 
     public static Long createPreOrderAndGetId(Long productId, String accessToken) {
