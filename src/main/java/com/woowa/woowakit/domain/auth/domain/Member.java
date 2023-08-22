@@ -4,6 +4,7 @@ import com.woowa.woowakit.domain.auth.domain.converter.EmailConverter;
 import com.woowa.woowakit.domain.auth.domain.converter.PasswordConverter;
 import com.woowa.woowakit.domain.auth.exception.LoginFailException;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -33,6 +34,7 @@ public class Member {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    @Builder
     private Member(
             final Email email,
             final EncodedPassword encodedPassword,
