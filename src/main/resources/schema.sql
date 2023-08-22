@@ -36,6 +36,7 @@ create table if not exists STOCKS
     expiry_date date not null,
     quantity bigint not null,
     product_id bigint not null,
+    stock_type varchar(255),
     created_at datetime not null,
     updated_at datetime not null,
     primary key (id)
