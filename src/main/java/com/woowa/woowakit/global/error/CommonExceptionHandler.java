@@ -23,6 +23,16 @@ public class CommonExceptionHandler {
                 "예상하지 못한 에러입니다."));
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ErrorResponse> illegalArgumentExceptionHandler(
+        IllegalArgumentException exception) {
+        log.warn("잘못된 요청입니다.", exception);
+        return ResponseEntity
+            .status(HttpStatus.INTERNAL_SERVER_ERROR)
+            .body(new ErrorResponse(HttpStatus.BAD_REQUEST.value(),
+                "잘못된 요청입니다."));
+    }
+
     @ExceptionHandler(WooWaException.class)
     public ResponseEntity<ErrorResponse> wooWaExceptionHandler(WooWaException exception) {
         log.info(exception.getMessage(), exception);
