@@ -55,7 +55,7 @@ public class CartItemService {
 		cartItem.updateQuantity(request.getQuantity(), cartItemValidator);
 	}
 
-	private CartItem getCartItem(Long cartItemId) {
+	private CartItem getCartItem(final Long cartItemId) {
 		return cartItemRepository.findById(cartItemId)
 			.orElseThrow(CartItemNotExistException::new);
 	}
