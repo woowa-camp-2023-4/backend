@@ -25,3 +25,8 @@ cloud:
       static: ap-northeast-2
     stack:
       auto: false
+
+spring:
+  servlet:
+    multipart:
+      max-file-size: 5MB

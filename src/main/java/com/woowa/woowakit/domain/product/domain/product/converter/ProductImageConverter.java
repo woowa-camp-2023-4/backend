@@ -8,16 +8,13 @@ import com.woowa.woowakit.domain.product.domain.product.ProductImage;
 @Converter
 public class ProductImageConverter implements AttributeConverter<ProductImage, String> {
 
-	// TODO: Environment 파일로 이동 후 외부에서 주입
-	private static final String IMAGE_BASE_URL = "http://localhost:8080/";
-
 	@Override
 	public String convertToDatabaseColumn(final ProductImage attribute) {
-		return attribute.getPath().replace(IMAGE_BASE_URL, "");
+		return attribute.getPath();
 	}
 
 	@Override
 	public ProductImage convertToEntityAttribute(final String dbData) {
-		return ProductImage.from(IMAGE_BASE_URL + dbData);
+		return ProductImage.from(dbData);
 	}
 }
