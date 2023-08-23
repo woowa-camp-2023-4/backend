@@ -25,7 +25,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "PRODUCTS")
+@Table(name = "products")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class Product extends BaseEntity {

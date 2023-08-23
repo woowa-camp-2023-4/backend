@@ -1,13 +1,12 @@
-drop table if exists MEMBERS;
-drop table if exists PRODUCTS;
-drop table if exists STOCKS;
-drop table if exists ORDERS;
-drop table if exists ORDER_ITEMS;
-drop table if exists ORDER_ITEM_STOCKS;
-drop table if exists PAYMENTS;
-drop table if exists CART_ITEMS;
+drop table if exists members;
+drop table if exists products;
+drop table if exists stocks;
+drop table if exists orders;
+drop table if exists order_items;
+drop table if exists payments;
+drop table if exists cart_items;
 
-create table if not exists MEMBERS
+create table if not exists members
 (
     id bigint auto_increment not null,
     name varchar(255) not null,
@@ -17,7 +16,7 @@ create table if not exists MEMBERS
     primary key(id)
 );
 
-create table if not exists PRODUCTS
+create table if not exists products
 (
     id bigint auto_increment not null,
     name varchar(255) not null,
@@ -30,7 +29,7 @@ create table if not exists PRODUCTS
     primary key (id)
 );
 
-create table if not exists STOCKS
+create table if not exists stocks
 (
     id bigint auto_increment not null,
     expiry_date date not null,
@@ -42,7 +41,7 @@ create table if not exists STOCKS
     primary key (id)
 );
 
-CREATE TABLE if not exists ORDER_ITEMS
+CREATE TABLE if not exists order_items
 (
     id bigint auto_increment not null,
     order_id   bigint,
@@ -58,7 +57,7 @@ CREATE TABLE if not exists ORDER_ITEMS
 
 
 
-create table if not exists ORDERS
+create table if not exists orders
 (
     id bigint auto_increment not null,
     order_status varchar(255) not null,
@@ -70,7 +69,7 @@ create table if not exists ORDERS
     primary key (id)
 );
 
-create table if not exists PAYMENTS
+create table if not exists payments
 (
     id bigint auto_increment not null,
     order_id bigint not null,
@@ -82,7 +81,7 @@ create table if not exists PAYMENTS
     primary key (id)
 );
 
-create table if not exists CART_ITEMS
+create table if not exists cart_items
 (
     id bigint auto_increment not null,
     member_id bigint not null,
