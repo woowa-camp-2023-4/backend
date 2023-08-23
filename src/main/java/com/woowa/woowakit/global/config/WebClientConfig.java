@@ -20,7 +20,7 @@ import reactor.netty.http.client.HttpClient;
 @Configuration
 public class WebClientConfig {
 
-	private static final int TIMEOUT_MILLIS = 1000;
+	private static final int TIMEOUT_MILLIS = 3000;
 
 	@Bean
 	public WebClient webClient() {
