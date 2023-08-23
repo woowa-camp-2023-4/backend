@@ -24,8 +24,8 @@ public class StockProcessingService {
 	@Transactional
 	public void doProcess(final Long productId, final LocalDate currentDate) {
 		Product product = getProductById(productId);
-		expirationDateProcessor.run(productId, currentDate);
 		stockConsistencyProcessor.run(product);
+		expirationDateProcessor.run(productId, currentDate);
 	}
 
 	private Product getProductById(final Long productId) {
