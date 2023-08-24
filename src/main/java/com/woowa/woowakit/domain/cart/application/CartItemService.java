@@ -16,7 +16,9 @@ import com.woowa.woowakit.domain.cart.exception.NotMyCartItemException;
 import com.woowa.woowakit.domain.model.Quantity;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -29,7 +31,10 @@ public class CartItemService {
 	public CartItem addCartItem(final CartItemAddRequest request, final Long memberId) {
 		CartItem cartItem = cartItemRepository.findCartItemByMemberIdAndProductId(memberId, request.getProductId())
 			.orElse(CartItem.of(memberId, request.getProductId()));
+
+		log.info("CartItemService.addCartItem() 실행 전: cartItemId = {}, quantity = {}, addQuantity = {}", cartItem.getId(), cartItem.getQuantity().getValue(), request.getQuantity());
 		cartItem.addQuantity(Quantity.from(request.getQuantity()), cartItemValidator);
+		log.info("CartItemService.addCartItem() 실행 후: cartItemId = {}, quantity = {}", cartItem.getId(), cartItem.getQuantity().getValue());
 
 		return cartItemRepository.save(cartItem);
 	}
@@ -48,11 +53,15 @@ public class CartItemService {
 	public void updateQuantity(final Long cartItemId, final CartItemUpdateQuantityRequest request, final Long memberId) {
 		CartItem cartItem = getCartItem(cartItemId);
 
+		log.info("CartItemService.updateQuantity() 실행 전: cartItemId = {}, quantity = {}, addQuantity = {}", cartItem.getId(), cartItem.getQuantity().getValue(), request.getQuantity());
+
 		if (!cartItem.isMyCartItem(memberId)) {
 			throw new NotMyCartItemException();
 		}
 
 		cartItem.updateQuantity(request.getQuantity(), cartItemValidator);
+
+		log.info("CartItemService.updateQuantity() 실행 후: cartItemId = {}, quantity = {}", cartItem.getId(), cartItem.getQuantity().getValue());
 	}
 
 	private CartItem getCartItem(final Long cartItemId) {

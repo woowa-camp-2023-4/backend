@@ -13,7 +13,9 @@ import com.woowa.woowakit.domain.product.dto.request.StockCreateRequest;
 import com.woowa.woowakit.domain.product.exception.ProductNotExistException;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class StockService {
@@ -28,7 +30,12 @@ public class StockService {
 		final Stock stock = stockRepository
 			.findByProductIdAndExpiryDate(productId, ExpiryDate.from(request.getExpiryDate()))
 			.orElse(Stock.of(request.getExpiryDate(), product));
+
+		log.info("StockService.create() 로직 실행 전: stockId = {} (새로 생성 시 null), quantity = {}, addQuantity = {}", stock.getId(), stock.getQuantity().getValue(), request.getQuantity());
+
 		stock.addQuantity(Quantity.from(request.getQuantity()));
+
+		log.info("StockService.create() 로직 실행 후: productId = {} (새로 생성 시 null), quantity = {}, addQuantity = {}", stock.getId(), stock.getQuantity().getValue(), request.getQuantity());
 
 		return stockRepository.save(stock).getId();
 	}

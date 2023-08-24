@@ -8,12 +8,14 @@ import com.woowa.woowakit.domain.product.dto.request.ProductStatusUpdateRequest;
 import com.woowa.woowakit.domain.product.dto.response.ProductDetailResponse;
 import com.woowa.woowakit.domain.product.exception.ProductNotExistException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ProductService {
@@ -40,7 +42,9 @@ public class ProductService {
     @Transactional
     public void updateStatus(final Long id, final ProductStatusUpdateRequest request) {
         Product product = findProductById(id);
+        log.info("ProductService.updateStatus() 로직 실행 전: productId = {}, status = {}, updateStatus = {}", id, product.getStatus().name(), request.getProductStatus().name());
         product.updateProductStatus(request.getProductStatus());
+        log.info("ProductService.updateStatus() 로직 실행 후: productId = {}, status = {}", id, product.getStatus().name());
     }
 
     private Product findProductById(final Long id) {
