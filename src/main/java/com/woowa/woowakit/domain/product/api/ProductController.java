@@ -59,6 +59,7 @@ public class ProductController {
 		@PathVariable final Long id,
 		@Valid @RequestBody final StockCreateRequest request
 	) {
+		log.info("[Request] ProductController.addStock(): productId = {}, addStock = [expiryDate:{}, quantity: {}]", id, request.getExpiryDate(), request.getQuantity());
 		long resultId = stockService.create(request, id);
 		return ResponseEntity.created(URI.create("/products/" + id + "/stocks/" + resultId))
 			.build();
@@ -70,6 +71,7 @@ public class ProductController {
 		@PathVariable final Long id,
 		@Valid @RequestBody final ProductStatusUpdateRequest request
 	) {
+		log.info("[Request] ProductController.updateStatus(): productId = {}, productStatus = {}", id, request.getProductStatus().name());
 		productService.updateStatus(id, request);
 		return ResponseEntity.noContent().build();
 	}

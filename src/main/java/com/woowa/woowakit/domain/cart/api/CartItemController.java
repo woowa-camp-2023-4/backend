@@ -25,7 +25,9 @@ import com.woowa.woowakit.domain.cart.dto.CartItemAddRequest;
 import com.woowa.woowakit.domain.cart.dto.CartItemUpdateQuantityRequest;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestController
 @RequestMapping("/cart-items")
 @RequiredArgsConstructor
@@ -46,6 +48,7 @@ public class CartItemController {
 		@Valid @RequestBody final CartItemAddRequest request,
 		@Authenticated final AuthPrincipal authPrincipal
 	) {
+		log.info("[Request] CartItemController.addCartItem : memberId = {}, productId = {}, quantity = {}", authPrincipal.getId(), request.getProductId(), request.getQuantity());
 		CartItem cartItem = cartItemService.addCartItem(request, authPrincipal.getId());
 		return ResponseEntity.created(URI.create("/cart-items/" + cartItem.getId())).build();
 	}
@@ -67,7 +70,9 @@ public class CartItemController {
 		@PathVariable("id") final Long cartItemId,
 		@Authenticated final AuthPrincipal authPrincipal
 	) {
+		log.info("[Request] CartItemController.updateQuantity : memberId = {}, cartItemId = {}, quantity = {}", authPrincipal.getId(), cartItemId, request.getQuantity());
 		cartItemService.updateQuantity(cartItemId, request, authPrincipal.getId());
 		return ResponseEntity.ok().build();
 	}
 }
+
