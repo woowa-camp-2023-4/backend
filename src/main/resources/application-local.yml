@@ -28,3 +28,14 @@ security:
 
 cors:
   allowed-origin: http://localhost:3000
+
+payment:
+  toss:
+    secret-key: localocal
+
+management:
+  server:
+    port: 8080
+  endpoints:
+    web:
+      base-path: /actuator
