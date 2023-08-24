@@ -47,9 +47,13 @@ public class ProductController {
 	@GetMapping
 	public ResponseEntity<List<ProductDetailResponse>> searchProducts(
 		ProductSearchRequest request) {
+		long startTime = System.currentTimeMillis();
 		log.info("productKeyword: {}, lastProductId: {} 상품 조회", request.getProductKeyword(),
 			request.getLastProductId());
 		final List<ProductDetailResponse> response = productService.searchProducts(request);
+		long endTime = System.currentTimeMillis();
+		log.info("productKeyword: {}, lastProductId: {} 상품 조회 완료, 소요시간: {}ms",
+			request.getProductKeyword(), request.getLastProductId(), endTime - startTime);
 		return ResponseEntity.ok(response);
 	}
 
