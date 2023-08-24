@@ -22,3 +22,11 @@ cloud:
   aws:
     credentials:
       instanceProfile: true
+
+server:
+  tomcat:
+    accesslog:
+      enabled: true
+      directory: logs
+      pattern: '%h %l %u [%{yy-MM-dd:HH:mm:ss}t] "%r" %s %b %D %{User-Agent}i' #'%h %l %u %t "%r" %s %b'
+    basedir: ./
