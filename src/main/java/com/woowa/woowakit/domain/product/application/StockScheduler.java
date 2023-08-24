@@ -28,7 +28,9 @@ public class StockScheduler {
 		List<Long> productIds = productRepository.findAllIds();
 
 		for (Long productId : productIds) {
+			log.info("상품 정합성 시작 = {}", LocalDateTime.now());
 			stockProcessingService.doProcess(productId, LocalDate.now(ZoneId.of("Asia/Seoul")));
+			log.info("상품 정합성 끝 = {}", LocalDateTime.now());
 		}
 		long diffTime = System.currentTimeMillis() - startEnd;
 		log.info("재고 정합성 스케쥴러 끝 = {} , 걸린 시간 = {} ms ", LocalDateTime.now(), diffTime);
