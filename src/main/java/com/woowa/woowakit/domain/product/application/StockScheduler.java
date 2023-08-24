@@ -1,6 +1,7 @@
 package com.woowa.woowakit.domain.product.application;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
 
@@ -22,10 +23,14 @@ public class StockScheduler {
 
 	@Scheduled(zone = "Asia/Seoul", cron = "0 0 0 * * ?")
 	public void trigger() {
+		long startEnd = System.currentTimeMillis();
+		log.info("재고 정합성 스케쥴러 시작 = {}", LocalDateTime.now());
 		List<Long> productIds = productRepository.findAllIds();
 
 		for (Long productId : productIds) {
 			stockProcessingService.doProcess(productId, LocalDate.now(ZoneId.of("Asia/Seoul")));
 		}
+		long diffTime = System.currentTimeMillis() - startEnd;
+		log.info("재고 정합성 스케쥴러 끝 = {} , 걸린 시간 = {} ms ", LocalDateTime.now(), diffTime);
 	}
 }
