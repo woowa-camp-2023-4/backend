@@ -9,7 +9,6 @@ import java.util.Base64;
 import java.util.Objects;
 import java.util.concurrent.TimeoutException;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -20,7 +19,6 @@ import reactor.core.publisher.Mono;
 import reactor.util.retry.Retry;
 
 @Component
-@Profile("!prod")
 public class TossPaymentClient implements PaymentService {
 
 	private final Duration timeout;
