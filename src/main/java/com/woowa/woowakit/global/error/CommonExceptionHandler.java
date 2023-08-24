@@ -1,16 +1,15 @@
 package com.woowa.woowakit.global.error;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 import java.util.stream.Collectors;
-
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-
-import lombok.extern.slf4j.Slf4j;
 
 @RestControllerAdvice
 @Slf4j
@@ -58,9 +57,19 @@ public class CommonExceptionHandler {
 
 	private List<String> getFieldErrorMessages(final MethodArgumentNotValidException ex) {
 		return ex.getBindingResult().getAllErrors().stream().map(error -> {
-			String fieldName = ((FieldError)error).getField();
+			String fieldName = ((FieldError) error).getField();
 			String message = error.getDefaultMessage();
 			return fieldName + ": " + message;
 		}).collect(Collectors.toUnmodifiableList());
+	}
+
+	@ExceptionHandler(SQLIntegrityConstraintViolationException.class)
+	public ResponseEntity<ErrorResponse> sqlIntegrityConstraintViolationExceptionHandler(
+		final SQLIntegrityConstraintViolationException exception) {
+		log.warn("잘못된 요청입니다.", exception);
+		return ResponseEntity
+			.status(HttpStatus.CONFLICT)
+			.body(new ErrorResponse(HttpStatus.CONFLICT.value(),
+				"잘못된 요청입니다."));
 	}
 }
