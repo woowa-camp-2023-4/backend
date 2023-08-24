@@ -15,7 +15,7 @@ spring:
     username: ${DB_USER}
     password: ${DB_PASSWORD}
     hikari:
-      maximumPoolSize: 100
+      maximumPoolSize: 15
 
 
 cors:
