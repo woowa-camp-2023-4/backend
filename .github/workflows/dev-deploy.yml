@@ -46,3 +46,6 @@ jobs:
           DB_USER: ${{secrets.DEV_USER}}
           DB_PASSWORD: ${{secrets.DEV_PASSWORD}}
           JWT_SECRET_KEY: ${{secrets.JWT_SECRET_KEY}}
+          ACTUATOR_PORT: ${{secrets.ACTUATOR_PORT}}
+          ACTUATOR_BASE_PATH: ${{secrets.ACTUATOR_BASE_PATH}}
+
