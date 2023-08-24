@@ -1,27 +1,26 @@
 package com.woowa.woowakit.infra.payment.toss;
 
+import com.woowa.woowakit.domain.model.Money;
+import com.woowa.woowakit.domain.payment.domain.PaymentService;
+import com.woowa.woowakit.infra.payment.toss.dto.TossPaymentErrorResponse;
+import com.woowa.woowakit.infra.payment.toss.dto.TossPaymentRequest;
 import java.time.Duration;
 import java.util.Base64;
 import java.util.Objects;
 import java.util.concurrent.TimeoutException;
-
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.WebClient;
-
-import com.woowa.woowakit.domain.model.Money;
-import com.woowa.woowakit.domain.payment.domain.PaymentService;
-import com.woowa.woowakit.infra.payment.toss.dto.TossPaymentErrorResponse;
-import com.woowa.woowakit.infra.payment.toss.dto.TossPaymentRequest;
-
 import reactor.core.publisher.Mono;
 import reactor.util.retry.Retry;
 
 @Component
+@Profile("!prod")
 public class TossPaymentClient implements PaymentService {
 
 	private final Duration timeout;
