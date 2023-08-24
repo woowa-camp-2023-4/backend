@@ -30,3 +30,19 @@ spring:
   servlet:
     multipart:
       max-file-size: 5MB
+
+management:
+  server:
+    port: ${ACTUATOR_PORT}
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+      base-path: ${ACTUATOR_BASE_PATH}
+
+
+
+server:
+  tomcat:
+    mbeanregistry:
+      enabled: true
