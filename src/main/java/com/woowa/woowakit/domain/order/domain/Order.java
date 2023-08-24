@@ -1,9 +1,12 @@
 package com.woowa.woowakit.domain.order.domain;
 
+import com.woowa.woowakit.domain.model.BaseEntity;
+import com.woowa.woowakit.domain.model.Money;
+import com.woowa.woowakit.domain.model.converter.MoneyConverter;
+import com.woowa.woowakit.domain.order.domain.event.OrderCompleteEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Convert;
@@ -16,17 +19,13 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-
-import com.woowa.woowakit.domain.model.BaseEntity;
-import com.woowa.woowakit.domain.model.Money;
-import com.woowa.woowakit.domain.model.converter.MoneyConverter;
-import com.woowa.woowakit.domain.order.domain.event.OrderCompleteEvent;
-
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Table(name = "orders")
 @Entity
 @Getter
@@ -71,5 +70,6 @@ public class Order extends BaseEntity {
 
 	public void order(final String paymentKey) {
 		registerEvent(new OrderCompleteEvent(this, paymentKey));
+		log.info("주문 완료 이벤트 발행 orderId: {}", id);
 	}
 }

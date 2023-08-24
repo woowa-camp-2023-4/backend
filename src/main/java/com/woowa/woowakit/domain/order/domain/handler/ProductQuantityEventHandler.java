@@ -1,22 +1,21 @@
 package com.woowa.woowakit.domain.order.domain.handler;
 
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import org.springframework.context.event.EventListener;
-import org.springframework.core.annotation.Order;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.woowa.woowakit.domain.model.Quantity;
 import com.woowa.woowakit.domain.order.domain.OrderItem;
 import com.woowa.woowakit.domain.order.domain.event.OrderCompleteEvent;
 import com.woowa.woowakit.domain.product.domain.product.Product;
 import com.woowa.woowakit.domain.product.domain.product.ProductRepository;
-
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.event.EventListener;
+import org.springframework.core.annotation.Order;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class ProductQuantityEventHandler {
@@ -39,7 +38,12 @@ public class ProductQuantityEventHandler {
 
 		List<Product> products = productRepository.findByIdsWithPessimistic(productIds);
 		for (Product product : products) {
+			log.info("상품 {}의 수량을 {}만큼 감소시킵니다. 현재 상품 수량: {}", product.getId(),
+				quantityOfProducts.get(product.getId()), product.getQuantity().getValue());
+
 			product.subtractQuantity(quantityOfProducts.get(product.getId()));
+
+			log.info("상품 {}의 수량이 {}로 변경되었습니다.", product.getId(), product.getQuantity().getValue());
 		}
 	}
 

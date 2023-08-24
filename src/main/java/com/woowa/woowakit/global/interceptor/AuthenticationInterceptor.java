@@ -1,13 +1,5 @@
 package com.woowa.woowakit.global.interceptor;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.springframework.http.HttpHeaders;
-import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
-import org.springframework.web.servlet.HandlerInterceptor;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.woowa.woowakit.domain.auth.domain.AuthPrincipal;
@@ -15,9 +7,14 @@ import com.woowa.woowakit.domain.auth.domain.MemberRepository;
 import com.woowa.woowakit.domain.auth.infra.TokenProvider;
 import com.woowa.woowakit.global.error.NotFoundMemberException;
 import com.woowa.woowakit.global.error.TokenInvalidException;
-
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
+import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
+import org.springframework.web.servlet.HandlerInterceptor;
 
 @Slf4j
 @Component
@@ -58,6 +55,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
 	private String getAccessToken(final HttpServletRequest request) {
 		String value = request.getHeader(HttpHeaders.AUTHORIZATION);
 		if (!StringUtils.hasText(value) || !value.startsWith(BEARER_TYPE)) {
+			log.info("헤더에 토큰이 없습니다. value: {}", value);
 			throw new TokenInvalidException();
 		}
 
@@ -66,6 +64,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
 
 	private void validateToken(final String accessToken) {
 		if (!tokenProvider.validateToken(accessToken)) {
+			log.info("토큰이 유효하지 않습니다. accessToken: {}", accessToken);
 			throw new TokenInvalidException();
 		}
 	}
@@ -82,6 +81,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
 
 	private void validateMember(final Long memberId) {
 		if (!memberRepository.existsById(memberId)) {
+			log.info("존재하지 않는 회원입니다. memberId: {}", memberId);
 			throw new NotFoundMemberException();
 		}
 	}
