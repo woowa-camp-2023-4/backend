@@ -5,7 +5,6 @@ import com.woowa.woowakit.domain.order.domain.event.OrderCompleteEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
 
 @Slf4j
@@ -16,12 +15,11 @@ public class PaymentHandler {
 	private final PaymentRepository paymentRepository;
 	private final PaymentService paymentService;
 
-	@TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT, fallbackExecution = true)
+	@TransactionalEventListener
 	public void handle(final OrderCompleteEvent event) {
 		log.info("결제 요청 subscribe event: {}", event.getPaymentKey());
 		payOrder(event);
 	}
-
 
 	private void payOrder(OrderCompleteEvent event) {
 		Order order = event.getOrder();
