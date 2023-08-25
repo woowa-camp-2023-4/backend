@@ -30,6 +30,9 @@ spring:
   servlet:
     multipart:
       max-file-size: 5MB
+  datasource:
+    hikari:
+      maximum-pool-size: 33
 
 management:
   server:
