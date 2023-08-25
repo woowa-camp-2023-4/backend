@@ -12,13 +12,19 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 
 import com.woowa.woowakit.domain.model.Quantity;
+import com.woowa.woowakit.domain.product.domain.ProductSalesRepository;
 import com.woowa.woowakit.domain.product.domain.product.Product;
 import com.woowa.woowakit.domain.product.domain.product.ProductRepository;
+import com.woowa.woowakit.domain.product.domain.product.ProductSales;
+import com.woowa.woowakit.domain.product.domain.product.SaleQuantity;
 import com.woowa.woowakit.domain.product.fixture.ProductFixture;
 import com.woowa.woowakit.global.config.QuerydslTestConfig;
 
 @DataJpaTest
-@Import({StockConsistencyProcessor.class, QuerydslTestConfig.class})
+@Import({
+	StockConsistencyProcessor.class,
+	QuerydslTestConfig.class
+})
 class StockConsistencyProcessorTest {
 
 	@Autowired
@@ -29,6 +35,9 @@ class StockConsistencyProcessorTest {
 
 	@Autowired
 	private StockConsistencyProcessor stockConsistencyProcessor;
+
+	@Autowired
+	private ProductSalesRepository productSalesRepository;
 
 	@Test
 	@DisplayName("상품 수량과 재고 테이블의 정합성을 맞춘다.")
@@ -50,6 +59,11 @@ class StockConsistencyProcessorTest {
 		assertThat(stocks).hasSize(2)
 			.extracting("quantity")
 			.contains(Quantity.from(5), Quantity.from(30));
+
+		List<ProductSales> productSales = productSalesRepository.findByProductId(product.getId());
+		assertThat(productSales).hasSize(1)
+			.extracting("sale")
+			.contains(SaleQuantity.from(25));
 	}
 
 	private Stock createStock(Product product, LocalDate date, long quantity) {

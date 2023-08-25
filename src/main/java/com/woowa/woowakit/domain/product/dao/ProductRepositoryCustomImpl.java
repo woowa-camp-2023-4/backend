@@ -1,7 +1,9 @@
 package com.woowa.woowakit.domain.product.dao;
 
-import static com.woowa.woowakit.domain.product.domain.product.QProduct.product;
+import static com.woowa.woowakit.domain.product.domain.product.QProduct.*;
+import static com.woowa.woowakit.domain.product.domain.product.QProductSales.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.stereotype.Repository;
@@ -23,11 +25,13 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
 	@Override
 	public List<Product> searchProducts(final ProductSearchCondition condition) {
 		return jpaQueryFactory.selectFrom(product)
+			.leftJoin(productSales).on(product.id.eq(productSales.productId))
 			.where(
 				containsName(condition.getProductKeyword()),
-				cursorId(condition.getLastProductId())
-			)
+				saleNow(condition.getSaleDate()),
+				cursorId(condition.getLastProductId()))
 			.limit(condition.getPageSize())
+			.orderBy(productSales.sale.value.desc().nullsLast(), product.id.asc())
 			.fetch();
 	}
 
@@ -37,6 +41,10 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
 		}
 
 		return null;
+	}
+
+	private BooleanExpression saleNow(final LocalDate localDate) {
+		return productSales.saleDate.eq(localDate).or(productSales.saleDate.isNull());
 	}
 
 	private BooleanExpression cursorId(final Long lastProductId) {
