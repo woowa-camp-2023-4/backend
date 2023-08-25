@@ -1,14 +1,14 @@
 package com.woowa.woowakit.domain.payment.domain;
 
-import org.springframework.context.event.EventListener;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.woowa.woowakit.domain.order.domain.Order;
 import com.woowa.woowakit.domain.order.domain.event.OrderCompleteEvent;
-
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.event.TransactionPhase;
+import org.springframework.transaction.event.TransactionalEventListener;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class PaymentHandler {
@@ -16,9 +16,9 @@ public class PaymentHandler {
 	private final PaymentRepository paymentRepository;
 	private final PaymentService paymentService;
 
-	@Transactional
-	@EventListener
+	@TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
 	public void handle(final OrderCompleteEvent event) {
+		log.info("결제 요청 subscribe event: {}", event.getPaymentKey());
 		payOrder(event);
 	}
 
