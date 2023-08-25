@@ -2,10 +2,12 @@ package com.woowa.woowakit.domain.product.application;
 
 import com.woowa.woowakit.domain.product.domain.product.Product;
 import com.woowa.woowakit.domain.product.domain.product.ProductRepository;
+import com.woowa.woowakit.domain.product.domain.product.ProductSpecification;
 import com.woowa.woowakit.domain.product.dto.request.ProductCreateRequest;
 import com.woowa.woowakit.domain.product.dto.request.ProductSearchRequest;
 import com.woowa.woowakit.domain.product.dto.request.ProductStatusUpdateRequest;
 import com.woowa.woowakit.domain.product.dto.response.ProductDetailResponse;
+import com.woowa.woowakit.domain.product.dto.response.ProductsResponse;
 import com.woowa.woowakit.domain.product.exception.ProductNotExistException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,9 +36,9 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public List<ProductDetailResponse> searchProducts(final ProductSearchRequest productSearchRequest) {
-        final List<Product> products = productRepository.searchProducts(productSearchRequest.toProductSearchCondition());
-        return ProductDetailResponse.listOf(products);
+    public List<ProductsResponse> searchProducts(final ProductSearchRequest productSearchRequest) {
+        final List<ProductSpecification> productSpecifications = productRepository.searchProducts(productSearchRequest.toProductSearchCondition());
+        return ProductsResponse.listOf(productSpecifications);
     }
 
     @Transactional
