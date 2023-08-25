@@ -12,7 +12,7 @@ import org.springframework.transaction.event.TransactionalEventListener;
 @RequiredArgsConstructor
 public class PaymentHandler {
 
-	private final PaymentRepository paymentRepository;
+	private final PaySaveService paySaveService;
 	private final PaymentService paymentService;
 
 	@TransactionalEventListener
@@ -30,7 +30,7 @@ public class PaymentHandler {
 		Payment payment = Payment.of(event.getPaymentKey(), order.getTotalPrice(), order.getUuid(),
 			order.getId());
 
-		paymentRepository.save(payment);
+		paySaveService.save(payment);
 		log.info("결제 완료 subscribe event: {}");
 	}
 }
