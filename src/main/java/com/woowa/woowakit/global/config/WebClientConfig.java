@@ -1,19 +1,19 @@
 package com.woowa.woowakit.global.config;
 
+import io.netty.channel.ChannelOption;
+import io.netty.handler.timeout.ReadTimeoutHandler;
+import io.netty.handler.timeout.WriteTimeoutHandler;
 import java.time.Duration;
 import java.util.concurrent.TimeUnit;
-
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.web.reactive.function.client.ExchangeFilterFunction;
 import org.springframework.web.reactive.function.client.WebClient;
-
-import io.netty.channel.ChannelOption;
-import io.netty.handler.timeout.ReadTimeoutHandler;
-import io.netty.handler.timeout.WriteTimeoutHandler;
-import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Scheduler;
+import reactor.core.scheduler.Schedulers;
 import reactor.netty.http.client.HttpClient;
 
 @Slf4j
@@ -45,7 +45,8 @@ public class WebClientConfig {
 		return ExchangeFilterFunction.ofRequestProcessor(clientRequest -> {
 			log.info("Request: {} {}\n", clientRequest.method(), clientRequest.url());
 			clientRequest.headers()
-				.forEach((name, values) -> values.forEach(value -> log.info("Request Header: {}={}", name, value)));
+				.forEach((name, values) -> values.forEach(
+					value -> log.info("Request Header: {}={}", name, value)));
 			return Mono.just(clientRequest);
 		});
 	}
@@ -55,8 +56,15 @@ public class WebClientConfig {
 			log.info("Response Status: {}\n", clientResponse.statusCode());
 			clientResponse.headers()
 				.asHttpHeaders()
-				.forEach((name, values) -> values.forEach(value -> log.info("Response Header {}={}", name, value)));
+				.forEach((name, values) -> values.forEach(
+					value -> log.info("Response Header {}={}", name, value)));
 			return Mono.just(clientResponse);
 		});
+	}
+
+	//ScheduledThreadPoolExecutor
+	@Bean
+	public Scheduler monoDelay() {
+		return Schedulers.newParallel("mono-delay", 50);
 	}
 }
