@@ -12,8 +12,6 @@ import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.web.reactive.function.client.ExchangeFilterFunction;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
-import reactor.core.scheduler.Scheduler;
-import reactor.core.scheduler.Schedulers;
 import reactor.netty.http.client.HttpClient;
 
 @Slf4j
@@ -60,11 +58,5 @@ public class WebClientConfig {
 					value -> log.info("Response Header {}={}", name, value)));
 			return Mono.just(clientResponse);
 		});
-	}
-
-	//ScheduledThreadPoolExecutor
-	@Bean
-	public Scheduler monoDelay() {
-		return Schedulers.newParallel("mono-delay", 50);
 	}
 }

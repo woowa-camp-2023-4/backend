@@ -18,6 +18,10 @@ public class ThreadSleepClient implements PaymentService {
 
 	private final Scheduler scheduler;
 
+	public ThreadSleepClient(Scheduler scheduler) {
+		this.scheduler = scheduler;
+	}
+
 	@Override
 	public Mono<Void> validatePayment(
 		final String paymentKey,
