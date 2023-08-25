@@ -43,8 +43,6 @@ management:
         include: "*"
       base-path: ${ACTUATOR_BASE_PATH}
 
-
-
 server:
   tomcat:
     mbeanregistry:
