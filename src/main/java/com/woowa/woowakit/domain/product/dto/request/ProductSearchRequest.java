@@ -3,7 +3,6 @@ package com.woowa.woowakit.domain.product.dto.request;
 import java.time.LocalDate;
 
 import javax.validation.constraints.Min;
-import javax.validation.constraints.Null;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -23,10 +22,8 @@ public class ProductSearchRequest {
 
 	private static final int DEFAULT_PAGE_SIZE = 10;
 
-	@Null
 	private String productKeyword;
 
-	@Null
 	private Long lastProductId;
 
 	@Min(value = 1, message = "최소 1개 이상의 상품을 조회해야합니다.")
