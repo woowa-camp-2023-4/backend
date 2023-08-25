@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Profile;
 @Configuration
 public class PayConfig {
 
-	@Profile("dev")
+	@Profile("prod")
 	@Bean
 	public PaymentService paymentService() {
 		return new ThreadSleepClient();
