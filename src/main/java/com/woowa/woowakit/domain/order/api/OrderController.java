@@ -53,8 +53,7 @@ public class OrderController {
 	public ResponseEntity<Long> createOrder(
 		@Authenticated final AuthPrincipal authPrincipal,
 		@Valid @RequestBody final OrderCreateRequest request
-	) throws InterruptedException {
-		Thread.sleep(1200);
+	) {
 		Long orderId = orderService.order(authPrincipal, request);
 		return ResponseEntity.status(HttpStatus.OK).body(orderId);
 	}
