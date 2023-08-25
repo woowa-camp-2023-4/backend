@@ -16,6 +16,7 @@ import com.woowa.woowakit.domain.product.domain.ProductSalesRepository;
 import com.woowa.woowakit.domain.product.domain.product.Product;
 import com.woowa.woowakit.domain.product.domain.product.ProductRepository;
 import com.woowa.woowakit.domain.product.domain.product.ProductSales;
+import com.woowa.woowakit.domain.product.domain.product.SaleQuantity;
 import com.woowa.woowakit.domain.product.fixture.ProductFixture;
 import com.woowa.woowakit.global.config.QuerydslTestConfig;
 
@@ -62,7 +63,7 @@ class StockConsistencyProcessorTest {
 		List<ProductSales> productSales = productSalesRepository.findByProductId(product.getId());
 		assertThat(productSales).hasSize(1)
 			.extracting("sale")
-			.contains(Quantity.from(25));
+			.contains(SaleQuantity.from(25));
 	}
 
 	private Stock createStock(Product product, LocalDate date, long quantity) {

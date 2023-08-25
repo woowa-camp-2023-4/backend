@@ -2,7 +2,7 @@ package com.woowa.woowakit.domain.product.domain.product;
 
 import java.time.LocalDate;
 
-import javax.persistence.Convert;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -11,7 +11,6 @@ import javax.persistence.Table;
 
 import com.woowa.woowakit.domain.model.BaseEntity;
 import com.woowa.woowakit.domain.model.Quantity;
-import com.woowa.woowakit.domain.model.converter.QuantityConverter;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -30,15 +29,19 @@ public class ProductSales extends BaseEntity {
 
 	private Long productId;
 
-	@Convert(converter = QuantityConverter.class)
-	private Quantity sale;
+	@Embedded
+	private SaleQuantity sale;
 
 	private LocalDate saleDate;
 
 	@Builder
-	public ProductSales(Long productId, Quantity sale, LocalDate saleDate) {
+	public ProductSales(
+		final Long productId,
+		final Quantity sale,
+		final LocalDate saleDate
+	) {
 		this.productId = productId;
-		this.sale = sale;
+		this.sale = SaleQuantity.from(sale.getValue());
 		this.saleDate = saleDate;
 	}
 }

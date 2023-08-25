@@ -1,7 +1,11 @@
 package com.woowa.woowakit.domain.product.dto.request;
 
+import java.time.LocalDate;
+
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Null;
+
+import org.springframework.format.annotation.DateTimeFormat;
 
 import com.woowa.woowakit.domain.product.domain.product.ProductSearchCondition;
 
@@ -17,6 +21,8 @@ import lombok.Setter;
 @Setter
 public class ProductSearchRequest {
 
+	private static final int DEFAULT_PAGE_SIZE = 10;
+
 	@Null
 	private String productKeyword;
 
@@ -24,14 +30,22 @@ public class ProductSearchRequest {
 	private Long lastProductId;
 
 	@Min(value = 1, message = "최소 1개 이상의 상품을 조회해야합니다.")
-	private int pageSize;
+	private int pageSize = DEFAULT_PAGE_SIZE;
 
-	public static ProductSearchRequest of(final String productKeyword, final Long lastProductId, final int pageSize) {
-		return new ProductSearchRequest(productKeyword, lastProductId, pageSize);
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private LocalDate saleDate = LocalDate.now().minusDays(1);
+
+	public static ProductSearchRequest of(
+		final String productKeyword,
+		final Long lastProductId,
+		final int pageSize,
+		final LocalDate saleDate
+	) {
+		return new ProductSearchRequest(productKeyword, lastProductId, pageSize, saleDate);
 	}
 
 	public ProductSearchCondition toProductSearchCondition() {
-		return ProductSearchCondition.of(productKeyword, lastProductId, pageSize);
+		return ProductSearchCondition.of(productKeyword, lastProductId, pageSize, saleDate);
 	}
 }
 
