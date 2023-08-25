@@ -1,18 +1,5 @@
 package com.woowa.woowakit.domain.order.api;
 
-import java.util.List;
-
-import javax.validation.Valid;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.woowa.woowakit.domain.auth.annotation.Authenticated;
 import com.woowa.woowakit.domain.auth.annotation.User;
 import com.woowa.woowakit.domain.auth.domain.AuthPrincipal;
@@ -22,8 +9,17 @@ import com.woowa.woowakit.domain.order.dto.request.PreOrderCreateCartItemRequest
 import com.woowa.woowakit.domain.order.dto.request.PreOrderCreateRequest;
 import com.woowa.woowakit.domain.order.dto.response.OrderDetailResponse;
 import com.woowa.woowakit.domain.order.dto.response.PreOrderResponse;
-
+import java.util.List;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/orders")
@@ -57,7 +53,8 @@ public class OrderController {
 	public ResponseEntity<Long> createOrder(
 		@Authenticated final AuthPrincipal authPrincipal,
 		@Valid @RequestBody final OrderCreateRequest request
-	) {
+	) throws InterruptedException {
+		Thread.sleep(1200);
 		Long orderId = orderService.order(authPrincipal, request);
 		return ResponseEntity.status(HttpStatus.OK).body(orderId);
 	}
@@ -73,7 +70,8 @@ public class OrderController {
 
 	@User
 	@GetMapping
-	public ResponseEntity<List<OrderDetailResponse>> getOrderDetail(@Authenticated final AuthPrincipal authPrincipal) {
+	public ResponseEntity<List<OrderDetailResponse>> getOrderDetail(
+		@Authenticated final AuthPrincipal authPrincipal) {
 		return ResponseEntity.ok(orderService.findAllOrderByMemberId(authPrincipal));
 	}
 }
