@@ -6,6 +6,7 @@ import java.time.Duration;
 import java.util.Random;
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 
 @Slf4j
 public class ThreadSleepClient implements PaymentService {
@@ -24,6 +25,7 @@ public class ThreadSleepClient implements PaymentService {
 		log.info("결제 요청 반환에 {} ms 가 수행됩니다. paymentKey: {}", latancyMs, paymentKey);
 
 		return Mono.delay(Duration.ofMillis(latancyMs))
+			.publishOn(Schedulers.newParallel("mono-delay", 50))
 			.log("[mono]mono delay에 " + latancyMs + " ms가 수행되었습니다. paymentKey: " + paymentKey)
 			.then();
 	}
