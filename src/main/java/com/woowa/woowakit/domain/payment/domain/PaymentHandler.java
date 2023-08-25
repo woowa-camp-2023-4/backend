@@ -4,35 +4,30 @@ import com.woowa.woowakit.domain.order.domain.Order;
 import com.woowa.woowakit.domain.order.domain.event.OrderCompleteEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.scheduling.annotation.Async;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.event.TransactionalEventListener;
+import reactor.core.publisher.Mono;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
-@Async
 public class PaymentHandler {
 
 	private final PaySaveService paySaveService;
 	private final PaymentService paymentService;
 
-	@TransactionalEventListener
+	@EventListener
 	public void handle(final OrderCompleteEvent event) {
 		log.info("결제 요청 subscribe event: {}", event.getPaymentKey());
 		payOrder(event);
 	}
 
-	private void payOrder(OrderCompleteEvent event) {
+	private void payOrder(final OrderCompleteEvent event) {
 		Order order = event.getOrder();
-		paymentService.validatePayment(
+		Mono<Void> payMono = paymentService.validatePayment(
 			event.getPaymentKey(),
 			order.getUuid(),
 			order.getTotalPrice());
-		Payment payment = Payment.of(event.getPaymentKey(), order.getTotalPrice(), order.getUuid(),
-			order.getId());
-
-		paySaveService.save(payment);
-		log.info("결제 완료 subscribe event: {}");
+		paySaveService.save(event, payMono);
 	}
 }

@@ -12,7 +12,7 @@ class ThreadSleepClientTest {
 	void test() {
 		long start = System.currentTimeMillis();
 		ThreadSleepClient threadSleepClient = new ThreadSleepClient();
-		threadSleepClient.validatePayment("paymentKey", "orderToken", null);
+		threadSleepClient.validatePayment("paymentKey", "orderToken", null).block();
 		Assertions.assertThat(System.currentTimeMillis() - start).isGreaterThan(500);
 	}
 }
