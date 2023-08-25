@@ -27,7 +27,7 @@ public class PaySaveService {
 			event.getOrder().getId()
 		);
 		paymentRepository.save(payment);
-		log.info("결제 완료 subscribe event: {}");
+		log.info("결제 완료 subscribe paymentKey: {}", event.getPaymentKey());
 	}
 
 }
