@@ -2,6 +2,7 @@ package com.woowa.woowakit.domain.product.domain.product;
 
 import java.time.LocalDate;
 
+import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -27,11 +28,13 @@ public class ProductSales extends BaseEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	@Column(name = "product_id")
 	private Long productId;
 
 	@Embedded
 	private SaleQuantity sale;
 
+	@Column(name = "sale_date")
 	private LocalDate saleDate;
 
 	@Builder

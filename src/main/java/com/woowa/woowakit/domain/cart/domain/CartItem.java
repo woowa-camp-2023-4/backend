@@ -2,6 +2,7 @@ package com.woowa.woowakit.domain.cart.domain;
 
 import java.util.Objects;
 
+import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -32,6 +33,7 @@ public class CartItem extends BaseEntity {
 
 	private Long memberId;
 
+	@Column(name = "product_id")
 	private Long productId;
 
 	@Convert(converter = QuantityConverter.class)

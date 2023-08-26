@@ -2,6 +2,7 @@ package com.woowa.woowakit.domain.product.domain.stock;
 
 import java.time.LocalDate;
 
+import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -38,6 +39,7 @@ public class Stock extends BaseEntity {
 	private Long id;
 
 	@Convert(converter = ExpiryDateConverter.class)
+	@Column(name = "expiry_date")
 	private ExpiryDate expiryDate;
 
 	@Convert(converter = QuantityConverter.class)
@@ -48,6 +50,7 @@ public class Stock extends BaseEntity {
 	private Product product;
 
 	@Enumerated(EnumType.STRING)
+	@Column(name = "stock_type")
 	private StockType stockType;
 
 	@Builder
