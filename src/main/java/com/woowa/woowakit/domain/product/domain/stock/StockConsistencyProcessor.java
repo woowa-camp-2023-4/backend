@@ -2,8 +2,10 @@ package com.woowa.woowakit.domain.product.domain.stock;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.woowa.woowakit.domain.model.Quantity;
@@ -22,9 +24,8 @@ public class StockConsistencyProcessor {
 	private final StockRepository stockRepository;
 	private final ProductSalesRepository productSalesRepository;
 
-	@Transactional
-	public void run(final Product product) {
-		List<Stock> stocks = stockRepository.findAllByProductId(product.getId(), StockType.NORMAL);
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
+	public void run(final Product product, final List<Stock> stocks) {
 		Quantity difference = getTotalStockQuantity(stocks).subtract(product.getQuantity());
 		saveProductSales(product.getId(), difference);
 
@@ -32,7 +33,14 @@ public class StockConsistencyProcessor {
 			Quantity removalQuantity = computeRemovalQuantity(difference, stock);
 			difference = difference.subtract(removalQuantity);
 			stock.subtractQuantity(removalQuantity);
-			removeStockIfEmpty(stock);
+			updateStockQuantity(difference, stock);
+		}
+		stockRepository.deleteStock(computeDeletingStock(stocks));
+	}
+
+	private void updateStockQuantity(final Quantity difference, final Stock stock) {
+		if (difference.isEmpty()) {
+			stockRepository.updateStockQuantity(stock.getId(), stock.getQuantity());
 		}
 	}
 
@@ -58,9 +66,10 @@ public class StockConsistencyProcessor {
 		return Quantity.from(Math.min(stock.getQuantity().getValue(), removingQuantity.getValue()));
 	}
 
-	private void removeStockIfEmpty(final Stock stock) {
-		if (stock.isEmpty()) {
-			stockRepository.delete(stock);
-		}
+	private List<Long> computeDeletingStock(final List<Stock> stocks) {
+		return stocks.stream()
+			.filter(Stock::isEmpty)
+			.map(Stock::getId)
+			.collect(Collectors.toList());
 	}
 }
