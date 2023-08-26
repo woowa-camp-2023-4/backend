@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.UUID;
 
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.woowa.woowakit.domain.product.application.ImageUploader;
@@ -27,8 +28,6 @@ public class S3ImageUploader implements ImageUploader {
 	}
 
 	private String parseExtension(final MultipartFile multipartFile) {
-		String[] nameArray = multipartFile.getName().split("\\.");
-
-		return nameArray[nameArray.length - 1];
+		return StringUtils.getFilenameExtension(multipartFile.getOriginalFilename());
 	}
 }
