@@ -127,8 +127,8 @@ class ProductRepositoryTest {
 		ProductSearchCondition condition = ProductSearchCondition.of(null, productD.getId(), 30L, 4, LocalDate.of(2023, 8, 25));
 		List<ProductSpecification> products = productRepository.searchProducts(condition);
 		Assertions.assertThat(products).hasSize(4)
-			.extracting("product")
-			.extracting("name")
+			.extracting(ProductSpecification::getProduct)
+			.extracting(Product::getName)
 			.contains(
 				ProductName.from("productE"),
 				ProductName.from("productF"),
