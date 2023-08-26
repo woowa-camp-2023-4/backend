@@ -1,0 +1,29 @@
+= 회원가입과 로그인
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 2
+:sectlinks:
+
+== 회원가입
+
+=== 요청
+
+include::{snippets}/auth/signup/http-request.adoc[]
+include::{snippets}/auth/signup/request-fields.adoc[]
+
+=== 응답
+
+include::{snippets}/auth/signup/http-response.adoc[]
+include::{snippets}/auth/signup/response-fields.adoc[]
+
+== 로그인
+
+include::{snippets}/auth/login/http-request.adoc[]
+include::{snippets}/auth/login/request-fields.adoc[]
+
+=== 응답
+
+include::{snippets}/auth/login/http-response.adoc[]
+include::{snippets}/auth/login/response-fields.adoc[]

@@ -1,0 +1,56 @@
+= 장바구니
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 2
+:sectlinks:
+
+== 장바구니 조회
+
+=== 요청
+
+include::{snippets}/cartItem/get/http-request.adoc[]
+include::{snippets}/cartItem/get/request-headers.adoc[]
+
+=== 응답
+
+include::{snippets}/cartItem/get/http-response.adoc[]
+include::{snippets}/cartItem/get/response-fields.adoc[]
+
+== 장바구니 추가
+
+=== 요청
+
+include::{snippets}/cartItem/post/http-request.adoc[]
+include::{snippets}/cartItem/post/request-headers.adoc[]
+include::{snippets}/cartItem/post/request-fields.adoc[]
+
+=== 응답
+
+include::{snippets}/cartItem/post/http-response.adoc[]
+
+== 장바구니 삭제
+
+=== 요청
+
+include::{snippets}/cartItem/delete/http-request.adoc[]
+include::{snippets}/cartItem/delete/request-headers.adoc[]
+include::{snippets}/cartItem/delete/path-parameters.adoc[]
+
+=== 응답
+
+include::{snippets}/cartItem/delete/http-response.adoc[]
+
+== 장바구니 수정
+
+=== 요청
+
+include::{snippets}/cartItem/patch/http-request.adoc[]
+include::{snippets}/cartItem/patch/request-headers.adoc[]
+include::{snippets}/cartItem/patch/path-parameters.adoc[]
+include::{snippets}/cartItem/patch/request-fields.adoc[]
+
+=== 응답
+
+include::{snippets}/cartItem/patch/http-response.adoc[]

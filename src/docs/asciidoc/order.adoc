@@ -1,0 +1,70 @@
+= 주문
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 2
+:sectlinks:
+
+== 주문 생성
+
+=== 요청
+
+include::{snippets}/orders/pre/http-request.adoc[]
+include::{snippets}/orders/pre/request-headers.adoc[]
+include::{snippets}/orders/pre/request-fields.adoc[]
+
+=== 응답
+
+include::{snippets}/orders/pre/http-response.adoc[]
+include::{snippets}/orders/pre/response-fields.adoc[]
+
+== 장바구니 주문 생성
+
+=== 요청
+
+include::{snippets}/orders/pre-cart/http-request.adoc[]
+include::{snippets}/orders/pre-cart/request-headers.adoc[]
+include::{snippets}/orders/pre-cart/request-fields.adoc[]
+
+=== 응답
+
+include::{snippets}/orders/pre-cart/http-response.adoc[]
+include::{snippets}/orders/pre-cart/response-fields.adoc[]
+
+== 주문
+
+=== 요청
+
+include::{snippets}/orders/order/http-request.adoc[]
+include::{snippets}/orders/order/request-headers.adoc[]
+include::{snippets}/orders/order/request-fields.adoc[]
+
+=== 응답
+
+include::{snippets}/orders/order/http-response.adoc[]
+
+== 단일 주문 조회
+
+=== 요청
+
+include::{snippets}/orders/detail/http-request.adoc[]
+include::{snippets}/orders/detail/request-headers.adoc[]
+include::{snippets}/orders/detail/path-parameters.adoc[]
+
+=== 응답
+
+include::{snippets}/orders/detail/http-response.adoc[]
+include::{snippets}/orders/detail/response-fields.adoc[]
+
+== 전체 주문 조회
+
+=== 요청
+
+include::{snippets}/orders/details/http-request.adoc[]
+include::{snippets}/orders/details/request-headers.adoc[]
+
+=== 응답
+
+include::{snippets}/orders/details/http-response.adoc[]
+include::{snippets}/orders/details/response-fields.adoc[]

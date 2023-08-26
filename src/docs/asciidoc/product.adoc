@@ -1,0 +1,68 @@
+= 상품
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 2
+:sectlinks:
+
+== 상품 생성
+
+=== 요청
+
+include::{snippets}/product/create/http-request.adoc[]
+include::{snippets}/product/create/request-headers.adoc[]
+include::{snippets}/product/create/request-fields.adoc[]
+
+=== 응답
+
+include::{snippets}/product/create/http-response.adoc[]
+
+== 단일 상품 조회
+
+=== 요청
+
+include::{snippets}/product/findById/http-request.adoc[]
+include::{snippets}/product/findById/path-parameters.adoc[]
+
+=== 응답
+
+include::{snippets}/product/findById/http-response.adoc[]
+include::{snippets}/product/findById/response-fields.adoc[]
+
+== 상품 조회
+
+=== 요청
+
+include::{snippets}/product/findAll/http-request.adoc[]
+include::{snippets}/product/findAll/request-fields.adoc[]
+
+=== 응답
+
+include::{snippets}/product/findAll/http-response.adoc[]
+include::{snippets}/product/findAll/response-fields.adoc[]
+
+== 상품 상태 변경
+
+=== 요청
+
+include::{snippets}/product/status/http-request.adoc[]
+include::{snippets}/product/status/request-fields.adoc[]
+
+=== 응답
+
+include::{snippets}/product/status/http-response.adoc[]
+
+
+== 재고 추가
+
+=== 요청
+
+include::{snippets}/stock/add/http-request.adoc[]
+include::{snippets}/stock/add/request-headers.adoc[]
+include::{snippets}/stock/add/path-parameters.adoc[]
+include::{snippets}/stock/add/request-fields.adoc[]
+
+=== 응답
+
+include::{snippets}/stock/add/http-response.adoc[]
