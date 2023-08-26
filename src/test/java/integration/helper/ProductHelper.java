@@ -6,7 +6,7 @@ import com.woowa.woowakit.domain.product.domain.product.ProductStatus;
 import com.woowa.woowakit.domain.product.dto.request.ProductCreateRequest;
 import com.woowa.woowakit.domain.product.dto.request.ProductStatusUpdateRequest;
 import com.woowa.woowakit.domain.product.dto.request.StockCreateRequest;
-import com.woowa.woowakit.domain.product.dto.response.ProductsResponse;
+import com.woowa.woowakit.domain.product.dto.response.ProductResponse;
 
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -86,7 +86,7 @@ public class ProductHelper {
 		return getIdFrom(location);
 	}
 
-	public static ProductsResponse getProductDetail(Long productId) {
-		return CommonRestAssuredUtils.get("/products/" + productId).as(ProductsResponse.class);
+	public static ProductResponse getProductDetail(Long productId) {
+		return CommonRestAssuredUtils.get("/products/" + productId).as(ProductResponse.class);
 	}
 }

@@ -14,7 +14,7 @@ import com.woowa.woowakit.domain.product.domain.product.ProductStatus;
 import com.woowa.woowakit.domain.product.dto.request.ProductCreateRequest;
 import com.woowa.woowakit.domain.product.dto.request.ProductStatusUpdateRequest;
 import com.woowa.woowakit.domain.product.dto.request.StockCreateRequest;
-import com.woowa.woowakit.domain.product.dto.response.ProductsResponse;
+import com.woowa.woowakit.domain.product.dto.response.ProductResponse;
 
 import integration.IntegrationTest;
 import integration.helper.CommonRestAssuredUtils;
@@ -53,7 +53,7 @@ class ProductIntegrationTest extends IntegrationTest {
 
 		// then
 		assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-		ProductsResponse detailResponse = response.as(ProductsResponse.class);
+		ProductResponse detailResponse = response.as(ProductResponse.class);
 		assertThat(detailResponse).extracting("quantity").isEqualTo(0L);
 		assertThat(detailResponse).extracting("imageUrl").isEqualTo("testImage");
 		assertThat(detailResponse).extracting("status").isEqualTo("PRE_REGISTRATION");
@@ -77,7 +77,7 @@ class ProductIntegrationTest extends IntegrationTest {
 
 		// then
 		assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-		List<ProductsResponse> responses = response.as(ArrayList.class);
+		List<ProductResponse> responses = response.as(ArrayList.class);
 		assertThat(responses).hasSize(2);
 	}
 
@@ -96,7 +96,7 @@ class ProductIntegrationTest extends IntegrationTest {
 		assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
 		assertThat(response.header("Location")).matches("^/products/[0-9]+/stocks/[0-9]+$");
 
-		ProductsResponse productResponse = CommonRestAssuredUtils.get(location).as(ProductsResponse.class);
+		ProductResponse productResponse = CommonRestAssuredUtils.get(location).as(ProductResponse.class);
 		assertThat(productResponse).extracting("quantity").isEqualTo(5L);
 	}
 
@@ -119,7 +119,7 @@ class ProductIntegrationTest extends IntegrationTest {
 
 		//then
 		assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
-		ProductsResponse productResponse = CommonRestAssuredUtils.get(location).as(ProductsResponse.class);
+		ProductResponse productResponse = CommonRestAssuredUtils.get(location).as(ProductResponse.class);
 		assertThat(productResponse).extracting("status").isEqualTo("IN_STOCK");
 	}
 
@@ -146,7 +146,7 @@ class ProductIntegrationTest extends IntegrationTest {
 
 		//then
 		assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
-		ProductsResponse productResponse = CommonRestAssuredUtils.get(location).as(ProductsResponse.class);
+		ProductResponse productResponse = CommonRestAssuredUtils.get(location).as(ProductResponse.class);
 		assertThat(productResponse).extracting("status").isEqualTo("STOPPED");
 	}
 

@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
-public class ProductsResponse {
+public class ProductResponse {
 
     private Long id;
     private String name;
@@ -23,7 +23,7 @@ public class ProductsResponse {
     private long productSale;
 
     @Builder
-    private ProductsResponse(
+    private ProductResponse(
         final Long id,
         final String name,
         final Long price,
@@ -41,8 +41,8 @@ public class ProductsResponse {
         this.productSale = productSale;
     }
 
-    public static ProductsResponse from(final ProductSpecification productSpecification) {
-        return ProductsResponse.builder()
+    public static ProductResponse from(final ProductSpecification productSpecification) {
+        return ProductResponse.builder()
             .id(productSpecification.getProduct().getId())
             .name(productSpecification.getProduct().getName().getName())
             .price(productSpecification.getProduct().getPrice().getPrice().getValue())
@@ -53,9 +53,9 @@ public class ProductsResponse {
             .build();
     }
 
-    public static List<ProductsResponse> listOf(final List<ProductSpecification> productSpecifications) {
+    public static List<ProductResponse> listOf(final List<ProductSpecification> productSpecifications) {
         return productSpecifications.stream()
-            .map(ProductsResponse::from)
+            .map(ProductResponse::from)
             .collect(Collectors.toUnmodifiableList());
     }
 }
