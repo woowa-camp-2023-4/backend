@@ -26,6 +26,8 @@ public class ProductSearchRequest {
 
 	private Long lastProductId;
 
+	private Long lastProductSale;
+
 	@Min(value = 1, message = "최소 1개 이상의 상품을 조회해야합니다.")
 	private int pageSize = DEFAULT_PAGE_SIZE;
 
@@ -35,14 +37,15 @@ public class ProductSearchRequest {
 	public static ProductSearchRequest of(
 		final String productKeyword,
 		final Long lastProductId,
+		final Long lastProductSale,
 		final int pageSize,
 		final LocalDate saleDate
 	) {
-		return new ProductSearchRequest(productKeyword, lastProductId, pageSize, saleDate);
+		return new ProductSearchRequest(productKeyword, lastProductId, lastProductSale, pageSize, saleDate);
 	}
 
 	public ProductSearchCondition toProductSearchCondition() {
-		return ProductSearchCondition.of(productKeyword, lastProductId, pageSize, saleDate);
+		return ProductSearchCondition.of(productKeyword, lastProductId, lastProductSale, pageSize, saleDate);
 	}
 }
 
