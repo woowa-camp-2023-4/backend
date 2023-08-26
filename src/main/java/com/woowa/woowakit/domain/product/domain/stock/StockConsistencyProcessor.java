@@ -26,7 +26,7 @@ public class StockConsistencyProcessor {
 
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public void run(final Product product, final List<Stock> stocks) {
-		Quantity difference = getTotalStockQuantity(stocks).subtract(product.getQuantity());
+		Quantity difference = getDifference(product, stocks);
 		saveProductSales(product.getId(), difference);
 
 		for (Stock stock : stocks) {
@@ -38,6 +38,10 @@ public class StockConsistencyProcessor {
 		stockRepository.deleteStock(computeDeletingStock(stocks));
 	}
 
+	private Quantity getDifference(Product product, List<Stock> stocks) {
+		return getTotalStockQuantity(stocks).subtract(product.getQuantity());
+	}
+
 	private void updateStockQuantity(final Quantity difference, final Stock stock) {
 		if (difference.isEmpty()) {
 			stockRepository.updateStockQuantity(stock.getId(), stock.getQuantity());
@@ -46,9 +50,11 @@ public class StockConsistencyProcessor {
 
 	private void saveProductSales(final Long productId, final Quantity quantity) {
 		try {
+			LocalDate yesterday = LocalDate.now().minusDays(1);
+			log.info("{} productId = {} 판매량 ={} ", yesterday, productId, quantity);
 			productSalesRepository.save(ProductSales.builder()
 				.productId(productId)
-				.saleDate(LocalDate.now().minusDays(1))
+				.saleDate(yesterday)
 				.sale(Quantity.from(quantity.getValue()))
 				.build());
 		} catch (Exception e) {

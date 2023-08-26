@@ -43,7 +43,7 @@ public class StockProcessingService {
 	) {
 		long startTime = currentTimeMillis();
 		doStockProcess(productId, currentDate, stocks);
-		log.info("상품 사이클 걸린 시간 = {}ms ", currentTimeMillis() - startTime);
+		log.info("productId = {} 상품 사이클 걸린 시간 = {}ms ", productId, currentTimeMillis() - startTime);
 	}
 
 	@Transactional
@@ -75,6 +75,7 @@ public class StockProcessingService {
 		long subtractExpiryQuantity = stockRepository.countStockByExpiry(productId, StockType.EXPIRED.name(),
 				currentDate.plusDays(DAYS))
 			.orElse(DEFAULT_SUBTRACT);
+		log.info("유통기한 정책에 의해 차감된 재고 = {}", subtractExpiryQuantity);
 		product.subtractQuantity(Quantity.from(subtractExpiryQuantity));
 	}
 }
