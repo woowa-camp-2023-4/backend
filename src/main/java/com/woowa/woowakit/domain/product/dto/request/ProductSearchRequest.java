@@ -1,6 +1,7 @@
 package com.woowa.woowakit.domain.product.dto.request;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 import javax.validation.constraints.Min;
 
@@ -46,6 +47,34 @@ public class ProductSearchRequest {
 
 	public ProductSearchCondition toProductSearchCondition() {
 		return ProductSearchCondition.of(productKeyword, lastProductId, lastProductSale, pageSize, saleDate);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o)
+			return true;
+		if (o == null || getClass() != o.getClass())
+			return false;
+		ProductSearchRequest that = (ProductSearchRequest)o;
+		return pageSize == that.pageSize && Objects.equals(productKeyword, that.productKeyword)
+			&& Objects.equals(lastProductId, that.lastProductId) && Objects.equals(lastProductSale,
+			that.lastProductSale) && Objects.equals(saleDate, that.saleDate);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(productKeyword, lastProductId, lastProductSale, pageSize, saleDate);
+	}
+
+	@Override
+	public String toString() {
+		return "ProductSearchRequest{" +
+			"productKeyword='" + productKeyword + '\'' +
+			", lastProductId=" + lastProductId +
+			", lastProductSale=" + lastProductSale +
+			", pageSize=" + pageSize +
+			", saleDate=" + saleDate +
+			'}';
 	}
 }
 
