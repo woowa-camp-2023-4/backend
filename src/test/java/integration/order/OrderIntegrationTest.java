@@ -1,5 +1,6 @@
 package integration.order;
 
+import static java.lang.Thread.*;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
@@ -77,7 +78,7 @@ class OrderIntegrationTest extends IntegrationTest {
 
 	@Test
 	@DisplayName("주문을 진행한다")
-	void order() {
+	void order() throws InterruptedException {
 		// given
 		Long productId = ProductHelper.createProductAndSetUp();
 		String accessToken = MemberHelper.signUpAndLogIn();
@@ -95,6 +96,37 @@ class OrderIntegrationTest extends IntegrationTest {
 		assertThat(response.as(Long.class)).isNotNull();
 		Long afterProductQuantity = ProductHelper.getProductDetail(productId).getQuantity();
 		assertThat(afterProductQuantity).isEqualTo(beforeProductQuantity - 1);
+
+		sleep(10);
+		OrderDetailResponse orderResponse = OrderHelper.getOrder(orderId, accessToken);
+		assertThat(orderResponse).extracting("orderStatus").isEqualTo("PAYED");
+	}
+
+	@Test
+	@DisplayName("주문 실패 시 복구 로직을 진행한다")
+	void orderRecovery() throws InterruptedException {
+		// given
+		Long productId = ProductHelper.createProductAndSetUp();
+		String accessToken = MemberHelper.signUpAndLogIn();
+		Long orderId = OrderHelper.createPreOrderAndGetId(productId, accessToken);
+		Long beforeProductQuantity = ProductHelper.getProductDetail(productId).getQuantity();
+
+		when(paymentClient.validatePayment(any(), any(), any())).thenReturn(Mono.error(IllegalArgumentException::new));
+
+		//when
+		ExtractableResponse<Response> response = OrderHelper.createOrder(
+			OrderHelper.createOrderCreateRequest(orderId), accessToken);
+
+		// then
+		assertThat(response.statusCode()).isEqualTo(200);
+		assertThat(response.as(Long.class)).isNotNull();
+
+		sleep(10);
+		Long afterProductQuantity = ProductHelper.getProductDetail(productId).getQuantity();
+		assertThat(afterProductQuantity).isEqualTo(beforeProductQuantity);
+
+		OrderDetailResponse orderResponse = OrderHelper.getOrder(orderId, accessToken);
+		assertThat(orderResponse).extracting("orderStatus").isEqualTo("CANCELED");
 	}
 
 	@Test
