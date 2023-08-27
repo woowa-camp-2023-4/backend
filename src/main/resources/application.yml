@@ -33,6 +33,12 @@ spring:
   datasource:
     hikari:
       maximum-pool-size: 51
+  cache:
+    caffeine:
+      spec: maximumSize=500,expireAfterAccess=5s
+    type: caffeine
+    cache-names:
+      - searchProducts
 
 management:
   server:
