@@ -20,14 +20,17 @@ public class PaySaveService {
 	@Async
 	public void save(final OrderCompleteEvent event, final Mono<Void> pay) {
 		pay.block();
-		Payment payment = Payment.of(
+		Payment payment = mapToPayment(event);
+		paymentRepository.save(payment);
+		log.info("결제 완료 subscribe paymentKey: {}", event.getPaymentKey());
+	}
+
+	private Payment mapToPayment(OrderCompleteEvent event) {
+		return Payment.of(
 			event.getPaymentKey(),
 			event.getOrder().getTotalPrice(),
 			event.getOrder().getUuid(),
 			event.getOrder().getId()
 		);
-		paymentRepository.save(payment);
-		log.info("결제 완료 subscribe paymentKey: {}", event.getPaymentKey());
 	}
-
 }

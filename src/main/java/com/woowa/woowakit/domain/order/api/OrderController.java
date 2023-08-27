@@ -70,7 +70,8 @@ public class OrderController {
 	@User
 	@GetMapping
 	public ResponseEntity<List<OrderDetailResponse>> getOrderDetail(
-		@Authenticated final AuthPrincipal authPrincipal) {
+		@Authenticated final AuthPrincipal authPrincipal
+	) {
 		return ResponseEntity.ok(orderService.findAllOrderByMemberId(authPrincipal));
 	}
 }
