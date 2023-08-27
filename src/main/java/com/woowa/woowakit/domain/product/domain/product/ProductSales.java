@@ -1,22 +1,15 @@
 package com.woowa.woowakit.domain.product.domain.product;
 
-import java.time.LocalDate;
-
-import javax.persistence.Column;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
 import com.woowa.woowakit.domain.model.BaseEntity;
 import com.woowa.woowakit.domain.model.Quantity;
-
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
+import java.time.LocalDate;
+import java.util.Objects;
 
 @Entity
 @Table(name = "product_sales")
@@ -46,5 +39,18 @@ public class ProductSales extends BaseEntity {
 		this.productId = productId;
 		this.sale = SaleQuantity.from(sale.getValue());
 		this.saleDate = saleDate;
+	}
+
+	@Override
+	public boolean equals(final Object o) {
+		if (this == o) return true;
+		if (!(o instanceof ProductSales)) return false;
+		final ProductSales that = (ProductSales) o;
+		return Objects.equals(id, that.id);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id);
 	}
 }

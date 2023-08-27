@@ -1,21 +1,15 @@
 package com.woowa.woowakit.domain.payment.domain;
 
-import javax.persistence.Column;
-import javax.persistence.Convert;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
 import com.woowa.woowakit.domain.model.BaseEntity;
 import com.woowa.woowakit.domain.model.Money;
 import com.woowa.woowakit.domain.model.converter.MoneyConverter;
-
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
+import java.util.Objects;
 
 @Table(name = "payments")
 @Entity
@@ -64,5 +58,18 @@ public class Payment extends BaseEntity {
 			.uuid(uuid)
 			.orderId(orderId)
 			.build();
+	}
+
+	@Override
+	public boolean equals(final Object o) {
+		if (this == o) return true;
+		if (!(o instanceof Payment)) return false;
+		final Payment payment = (Payment) o;
+		return Objects.equals(id, payment.id);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id);
 	}
 }

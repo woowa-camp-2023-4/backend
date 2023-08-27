@@ -1,23 +1,15 @@
 package com.woowa.woowakit.domain.cart.domain;
 
-import java.util.Objects;
-
-import javax.persistence.Column;
-import javax.persistence.Convert;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
 import com.woowa.woowakit.domain.model.BaseEntity;
 import com.woowa.woowakit.domain.model.Quantity;
 import com.woowa.woowakit.domain.model.converter.QuantityConverter;
-
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Table(name = "cart_items")
@@ -77,5 +69,18 @@ public class CartItem extends BaseEntity {
 
 	public boolean isMyCartItem(final Long memberId) {
 		return Objects.equals(this.memberId, memberId);
+	}
+
+	@Override
+	public boolean equals(final Object o) {
+		if (this == o) return true;
+		if (!(o instanceof CartItem)) return false;
+		final CartItem cartItem = (CartItem) o;
+		return Objects.equals(id, cartItem.id);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id);
 	}
 }
