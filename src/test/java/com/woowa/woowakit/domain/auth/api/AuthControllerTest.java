@@ -1,16 +1,14 @@
 package com.woowa.woowakit.domain.auth.api;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.woowa.woowakit.domain.auth.application.AuthService;
 import com.woowa.woowakit.domain.auth.domain.Email;
-import com.woowa.woowakit.domain.auth.domain.MemberRepository;
 import com.woowa.woowakit.domain.auth.domain.Role;
 import com.woowa.woowakit.domain.auth.dto.request.LoginRequest;
 import com.woowa.woowakit.domain.auth.dto.request.SignUpRequest;
 import com.woowa.woowakit.domain.auth.dto.response.LoginResponse;
-import com.woowa.woowakit.domain.auth.infra.TokenProvider;
 import com.woowa.woowakit.restDocsHelper.RequestFields;
 import com.woowa.woowakit.restDocsHelper.ResponseFields;
+import com.woowa.woowakit.restDocsHelper.RestDocsTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -35,33 +33,22 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(AuthController.class)
 @AutoConfigureRestDocs(uriHost = "api.test.com", uriPort = 80)
 @ExtendWith(RestDocumentationExtension.class)
-class AuthControllerTest {
+class AuthControllerTest extends RestDocsTest {
 
     @Autowired
     private MockMvc mockMvc;
 
-    @Autowired
-    private ObjectMapper objectMapper;
-
     @MockBean
     private AuthService authService;
-
-    @MockBean
-    private TokenProvider tokenProvider;
-
-    @MockBean
-    private MemberRepository memberRepository;
 
     @Test
     @DisplayName("[POST] [/auth/signup] 회원가입 테스트 및 문서화")
     void signUp() throws Exception {
-
         RequestFields requestFields = new RequestFields(Map.of(
                 "name", "이름",
                 "email", "이메일",
                 "password", "비밀번호"
         ));
-
         ResponseFields responseFields = new ResponseFields(Map.of(
                 "id", "회원 ID"
         ));
@@ -80,12 +67,10 @@ class AuthControllerTest {
     @Test
     @DisplayName("[POST] [/auth/login] 로그인 테스트 및 문서화")
     void login() throws Exception {
-
         RequestFields requestFields = new RequestFields(Map.of(
                 "email", "이메일",
                 "password", "비밀번호"
         ));
-
         ResponseFields responseFields = new ResponseFields(Map.of(
                 "accessToken", "유저 토큰",
                 "name", "이름",

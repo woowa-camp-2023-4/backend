@@ -57,12 +57,14 @@ class CartItemControllerTest extends RestDocsTest {
                 "[]productId", "상품 ID",
                 "[]cartItemId", "장바구니 아이템 ID"
         ));
+
         String token = getToken();
         List<CartItemSpecification> responses = List.of(
                 getCartItemSpecification(2, 15000, "된장 밀키트", 1L, 2L),
                 getCartItemSpecification(5, 30000, "닯갈비 밀키트", 2L, 4L)
         );
         given(cartItemService.readCartItem(any())).willReturn(responses);
+
         mockMvc.perform(get("/cart-items")
                         .header(HttpHeaders.AUTHORIZATION, token))
                 .andExpect(status().isOk())
@@ -77,6 +79,7 @@ class CartItemControllerTest extends RestDocsTest {
                 "productId", "상품 ID",
                 "quantity", "상품 수량"
         ));
+
         String token = getToken();
         CartItemAddRequest request = CartItemAddRequest.of(1L, 10L);
         given(cartItemService.addCartItem(any(), any())).willReturn(CartItem.of(1L, 2L));
@@ -113,6 +116,7 @@ class CartItemControllerTest extends RestDocsTest {
 
         String token = getToken();
         CartItemUpdateQuantityRequest request = CartItemUpdateQuantityRequest.from(10);
+
         mockMvc.perform(patch("/cart-items/{id}/quantity", 1L)
                         .header(HttpHeaders.AUTHORIZATION, token)
                         .contentType(MediaType.APPLICATION_JSON)

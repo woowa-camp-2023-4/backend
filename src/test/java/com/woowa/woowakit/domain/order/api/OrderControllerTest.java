@@ -56,7 +56,6 @@ class OrderControllerTest extends RestDocsTest {
                 "productId", "상품 ID",
                 "quantity", "상품 수량"
         ));
-
         ResponseFields responseFields = new ResponseFields(Map.of(
                 "id", "주문 아이디",
                 "uuid", "주문 고유 번호",
@@ -67,11 +66,10 @@ class OrderControllerTest extends RestDocsTest {
                 "orderItems[].price", "주문 상품 가격",
                 "orderItems[].quantity", "주문 상품 수량"
         ));
-        String token = getToken();
 
+        String token = getToken();
         PreOrderCreateRequest request = PreOrderCreateRequest.of(1L, 10L);
         PreOrderResponse response = PreOrderResponse.from(getOrder());
-
         given(orderService.preOrder(any(), any())).willReturn(response);
 
         mockMvc.perform(post("/orders/pre")
@@ -89,7 +87,6 @@ class OrderControllerTest extends RestDocsTest {
         RequestFields requestFields = new RequestFields(Map.of(
                 "[]cartItemId", "장바구니 ID"
         ));
-
         ResponseFields responseFields = new ResponseFields(Map.of(
                 "id", "주문 아이디",
                 "uuid", "주문 고유 번호",
@@ -100,14 +97,12 @@ class OrderControllerTest extends RestDocsTest {
                 "orderItems[].price", "주문 상품 가격",
                 "orderItems[].quantity", "주문 상품 수량"
         ));
-        String token = getToken();
 
+        String token = getToken();
         List<PreOrderCreateCartItemRequest> requests = List.of(
                 PreOrderCreateCartItemRequest.from(1L),
-                PreOrderCreateCartItemRequest.from(3L)
-        );
+                PreOrderCreateCartItemRequest.from(3L));
         PreOrderResponse response = PreOrderResponse.from(getOrder());
-
         given(orderService.preOrderCartItems(any(), any())).willReturn(response);
 
         mockMvc.perform(post("/orders/pre-cart-item")
@@ -128,7 +123,6 @@ class OrderControllerTest extends RestDocsTest {
         ));
 
         String token = getToken();
-
         OrderCreateRequest request = OrderCreateRequest.of(1L, "paymentKey");
         Long response = 1L;
         given(orderService.order(any(), any())).willReturn(response);
@@ -160,7 +154,6 @@ class OrderControllerTest extends RestDocsTest {
         ));
 
         String token = getToken();
-
         Long orderId = 1L;
         OrderDetailResponse response = OrderDetailResponse.from(getOrder());
         given(orderService.findOrderByOrderIdAndMemberId(any(), any())).willReturn(response);
@@ -189,7 +182,6 @@ class OrderControllerTest extends RestDocsTest {
         ));
 
         String token = getToken();
-
         OrderDetailResponse response = OrderDetailResponse.from(getOrder());
         given(orderService.findAllOrderByMemberId(any())).willReturn(List.of(response));
 

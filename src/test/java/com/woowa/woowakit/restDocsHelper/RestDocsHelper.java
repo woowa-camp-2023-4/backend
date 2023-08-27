@@ -26,16 +26,11 @@ public class RestDocsHelper {
             final RequestFields requestFields,
             final ResponseFields responseFields
     ) {
-        return document(
-                path,
-                preprocessRequest(Preprocessors.prettyPrint()),
-                preprocessResponse(Preprocessors.prettyPrint()),
+        return getRestDocumentationResultHandler(path).document(
                 requestFields(
-                        requestFieldsDescriptor(requestFields.getValues())
-                ),
+                        requestFieldsDescriptor(requestFields.getValues())),
                 responseFields(
-                        responseFieldsDescriptor(responseFields.getValues())
-                )
+                        responseFieldsDescriptor(responseFields.getValues()))
         );
     }
 
@@ -44,15 +39,11 @@ public class RestDocsHelper {
             final PathParam pathParam,
             final ResponseFields responseFields
     ) {
-        return document(
-                path,
-                preprocessRequest(Preprocessors.prettyPrint()),
-                preprocessResponse(Preprocessors.prettyPrint()),
+        return getRestDocumentationResultHandler(path).document(
                 pathParameters(
                         parameterWithName(pathParam.getName()).description(pathParam.getDescription())),
                 responseFields(
-                        responseFieldsDescriptor(responseFields.getValues())
-                )
+                        responseFieldsDescriptor(responseFields.getValues()))
         );
     }
 
@@ -60,15 +51,11 @@ public class RestDocsHelper {
             final String path,
             final ResponseFields responseFields
     ) {
-        return document(
-                path,
-                preprocessRequest(Preprocessors.prettyPrint()),
-                preprocessResponse(Preprocessors.prettyPrint()),
+        return getRestDocumentationResultHandler(path).document(
                 requestHeaders(
                         headerWithName(HttpHeaders.AUTHORIZATION).description("인증 헤더 이름")),
                 responseFields(
-                        responseFieldsDescriptor(responseFields.getValues())
-                )
+                        responseFieldsDescriptor(responseFields.getValues()))
         );
     }
 
@@ -76,15 +63,11 @@ public class RestDocsHelper {
             final String path,
             final RequestFields requestFields
     ) {
-        return document(
-                path,
-                preprocessRequest(Preprocessors.prettyPrint()),
-                preprocessResponse(Preprocessors.prettyPrint()),
+        return getRestDocumentationResultHandler(path).document(
                 requestHeaders(
                         headerWithName(HttpHeaders.AUTHORIZATION).description("인증 헤더 이름")),
                 requestFields(
-                        requestFieldsDescriptor(requestFields.getValues())
-                )
+                        requestFieldsDescriptor(requestFields.getValues()))
         );
     }
 
@@ -93,10 +76,7 @@ public class RestDocsHelper {
             final PathParam pathParam
 
     ) {
-        return document(
-                path,
-                preprocessRequest(Preprocessors.prettyPrint()),
-                preprocessResponse(Preprocessors.prettyPrint()),
+        return getRestDocumentationResultHandler(path).document(
                 requestHeaders(
                         headerWithName(HttpHeaders.AUTHORIZATION).description("인증 헤더 이름")),
                 pathParameters(
@@ -110,10 +90,7 @@ public class RestDocsHelper {
             final ResponseFields responseFields
 
     ) {
-        return document(
-                path,
-                preprocessRequest(Preprocessors.prettyPrint()),
-                preprocessResponse(Preprocessors.prettyPrint()),
+        return getRestDocumentationResultHandler(path).document(
                 requestHeaders(
                         headerWithName(HttpHeaders.AUTHORIZATION).description("인증 헤더 이름")),
                 requestFields(
@@ -130,10 +107,7 @@ public class RestDocsHelper {
             final RequestFields requestFields
 
     ) {
-        return document(
-                path,
-                preprocessRequest(Preprocessors.prettyPrint()),
-                preprocessResponse(Preprocessors.prettyPrint()),
+        return getRestDocumentationResultHandler(path).document(
                 requestHeaders(
                         headerWithName(HttpHeaders.AUTHORIZATION).description("인증 헤더 이름")),
                 pathParameters(
@@ -149,10 +123,7 @@ public class RestDocsHelper {
             final ResponseFields responseFields
 
     ) {
-        return document(
-                path,
-                preprocessRequest(Preprocessors.prettyPrint()),
-                preprocessResponse(Preprocessors.prettyPrint()),
+        return getRestDocumentationResultHandler(path).document(
                 requestHeaders(
                         headerWithName(HttpHeaders.AUTHORIZATION).description("인증 헤더 이름")),
                 pathParameters(
@@ -163,7 +134,7 @@ public class RestDocsHelper {
     }
 
 
-    private static List<FieldDescriptor> requestFieldsDescriptor(Map<String, String> keyValue) {
+    private static List<FieldDescriptor> requestFieldsDescriptor(final Map<String, String> keyValue) {
         List<FieldDescriptor> fieldDescriptors = new ArrayList<>();
         for (String key : keyValue.keySet()) {
             fieldDescriptors.add(fieldWithPath(key).description(keyValue.get(key)));
@@ -171,11 +142,17 @@ public class RestDocsHelper {
         return fieldDescriptors;
     }
 
-    private static List<FieldDescriptor> responseFieldsDescriptor(Map<String, String> keyValue) {
+    private static List<FieldDescriptor> responseFieldsDescriptor(final Map<String, String> keyValue) {
         List<FieldDescriptor> fieldDescriptors = new ArrayList<>();
         for (String key : keyValue.keySet()) {
             fieldDescriptors.add(fieldWithPath(key).description(keyValue.get(key)));
         }
         return fieldDescriptors;
+    }
+
+    private static RestDocumentationResultHandler getRestDocumentationResultHandler(final String path) {
+        return document(path,
+                preprocessRequest(Preprocessors.prettyPrint()),
+                preprocessResponse(Preprocessors.prettyPrint()));
     }
 }

@@ -66,12 +66,10 @@ class ProductControllerTest extends RestDocsTest {
         ));
 
         String token = getToken();
-
         ProductCreateRequest request = ProductCreateRequest.of(
                 "파스타 밀키트",
                 50000L,
-                "https://service-hub.org/file/log"
-        );
+                "https://service-hub.org/file/log");
         given(productService.create(any())).willReturn(1L);
 
         mockMvc.perform(post("/products")
@@ -115,7 +113,6 @@ class ProductControllerTest extends RestDocsTest {
                 "pageSize", "페이지 사이즈",
                 "saleDate", "판매 일"
         ));
-
         ResponseFields responseFields = new ResponseFields(Map.of(
                 "[]name", "상품 이름",
                 "[]id", "상품 ID",
@@ -129,11 +126,9 @@ class ProductControllerTest extends RestDocsTest {
                 "",
                 3L,
                 10,
-                LocalDate.now()
-        );
+                LocalDate.now());
         List<ProductDetailResponse> response = List.of(
-                ProductDetailResponse.from(getProduct())
-        );
+                ProductDetailResponse.from(getProduct()));
         given(productService.searchProducts(any())).willReturn(response);
 
         mockMvc.perform(get("/products")
