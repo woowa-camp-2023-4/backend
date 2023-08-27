@@ -1,18 +1,6 @@
 package com.woowa.woowakit.domain.order.application;
 
-import static org.assertj.core.api.Assertions.*;
-
-import java.util.List;
-
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
-
 import com.woowa.woowakit.domain.auth.domain.AuthPrincipal;
-import com.woowa.woowakit.domain.auth.domain.EncodedPassword;
 import com.woowa.woowakit.domain.auth.domain.Member;
 import com.woowa.woowakit.domain.auth.domain.MemberRepository;
 import com.woowa.woowakit.domain.cart.domain.CartItem;
@@ -27,18 +15,31 @@ import com.woowa.woowakit.domain.order.dto.request.PreOrderCreateCartItemRequest
 import com.woowa.woowakit.domain.order.dto.response.PreOrderResponse;
 import com.woowa.woowakit.domain.payment.domain.PaymentService;
 import com.woowa.woowakit.domain.product.domain.product.Product;
-import com.woowa.woowakit.domain.product.domain.product.ProductImage;
-import com.woowa.woowakit.domain.product.domain.product.ProductName;
-import com.woowa.woowakit.domain.product.domain.product.ProductPrice;
 import com.woowa.woowakit.domain.product.domain.product.ProductRepository;
-import com.woowa.woowakit.domain.product.domain.product.ProductStatus;
 import com.woowa.woowakit.domain.product.fixture.ProductFixture;
+import com.woowa.woowakit.global.config.JpaConfig;
 import com.woowa.woowakit.global.config.QuerydslTestConfig;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
+
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @DisplayName("OrderService 단위 테스트")
 @DataJpaTest
-@Import({OrderService.class, QuerydslTestConfig.class, OrderMapper.class, CartItemDeletionEventHandler.class,
-	ProductQuantityEventHandler.class})
+@Import({
+		OrderService.class,
+		QuerydslTestConfig.class,
+		OrderMapper.class,
+		CartItemDeletionEventHandler.class,
+		ProductQuantityEventHandler.class,
+		JpaConfig.class
+})
 class OrderServiceTest {
 
 	@Autowired

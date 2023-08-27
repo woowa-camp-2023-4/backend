@@ -10,7 +10,10 @@ import lombok.NoArgsConstructor;
 @Getter
 public class ProductSpecification {
 
-	private Product product;
-	private long productSale;
+    private Product product;
+    private long productSale;
 
+    public static ProductSpecification of(final Product product, final long productSale) {
+        return new ProductSpecification(product, productSale);
+    }
 }
