@@ -30,6 +30,9 @@ spring:
   servlet:
     multipart:
       max-file-size: 5MB
+  datasource:
+    hikari:
+      maximum-pool-size: 51
 
 management:
   server:
@@ -40,9 +43,9 @@ management:
         include: "*"
       base-path: ${ACTUATOR_BASE_PATH}
 
-
-
 server:
   tomcat:
     mbeanregistry:
       enabled: true
+    threads:
+      max: 40 # 생성할 수 있는 thread의 총 개수

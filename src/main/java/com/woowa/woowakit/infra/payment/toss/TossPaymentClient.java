@@ -41,9 +41,9 @@ public class TossPaymentClient implements PaymentService {
 		this.maxRetry = maxRetry;
 	}
 
-	public void validatePayment(final String paymentKey, final String orderToken,
+	public Mono<Void> validatePayment(final String paymentKey, final String orderToken,
 		final Money totalPrice) {
-		webClient.post()
+		return webClient.post()
 			.uri(url)
 			.header(HttpHeaders.AUTHORIZATION, keyToBasic(paymentSecretKey))
 			.contentType(MediaType.APPLICATION_JSON)
@@ -57,7 +57,7 @@ public class TossPaymentClient implements PaymentService {
 			.onErrorMap(IllegalStateException.class, Throwable::getCause)
 			.onErrorMap(TimeoutException.class,
 				e -> new IllegalStateException("요청 시간이 초과되었습니다.", e))
-			.block();
+			.then();
 	}
 
 	private boolean isRetryable(Throwable ex) {
