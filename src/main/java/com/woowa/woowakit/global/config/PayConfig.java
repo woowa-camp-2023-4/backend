@@ -1,10 +1,12 @@
 package com.woowa.woowakit.global.config;
 
-import com.woowa.woowakit.domain.payment.domain.PaymentService;
-import com.woowa.woowakit.infra.payment.toss.ThreadSleepClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+
+import com.woowa.woowakit.domain.payment.domain.PaymentClient;
+import com.woowa.woowakit.infra.payment.toss.ThreadSleepClient;
+
 import reactor.core.scheduler.Scheduler;
 import reactor.core.scheduler.Schedulers;
 
@@ -13,7 +15,7 @@ public class PayConfig {
 
 	@Profile("prod | local")
 	@Bean
-	public PaymentService paymentService() {
+	public PaymentClient paymentClient() {
 		return new ThreadSleepClient(monoDelay());
 	}
 

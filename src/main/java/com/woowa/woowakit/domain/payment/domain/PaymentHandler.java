@@ -1,20 +1,22 @@
 package com.woowa.woowakit.domain.payment.domain;
 
+import org.springframework.context.event.EventListener;
+import org.springframework.stereotype.Component;
+
 import com.woowa.woowakit.domain.order.domain.Order;
 import com.woowa.woowakit.domain.order.domain.event.OrderCompleteEvent;
+
 import io.micrometer.core.annotation.Counted;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.event.EventListener;
-import org.springframework.stereotype.Component;
-import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class PaymentHandler {
 
-	private final PaySaveService paySaveService;
+	private final PaymentClient paymentClient;
 	private final PaymentService paymentService;
 
 	@EventListener
@@ -26,10 +28,10 @@ public class PaymentHandler {
 
 	private void payOrder(final OrderCompleteEvent event) {
 		Order order = event.getOrder();
-		Mono<Void> payMono = paymentService.validatePayment(
-			event.getPaymentKey(),
-			order.getUuid(),
-			order.getTotalPrice());
-		paySaveService.save(event, payMono);
+		paymentClient.validatePayment(event.getPaymentKey(), order.getUuid(), order.getTotalPrice())
+			.publishOn(Schedulers.boundedElastic())
+			.doOnSuccess(ignore -> paymentService.handlePaySuccess(event))
+			.doOnError(error -> paymentService.handlePayError(event, error))
+			.subscribe();
 	}
 }
