@@ -91,3 +91,14 @@ create table if not exists cart_items
     updated_at datetime not null,
     primary key(id)
 );
+
+create table if not exists product_sales
+(
+    id bigint auto_increment not null,
+    product_id bigint not null,
+    sale bigint not null,
+    sale_date   date not null,
+    created_at datetime not null,
+    updated_at datetime not null,
+    primary key(id)
+);
