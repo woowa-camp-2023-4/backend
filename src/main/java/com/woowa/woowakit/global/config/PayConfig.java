@@ -11,7 +11,7 @@ import reactor.core.scheduler.Schedulers;
 @Configuration
 public class PayConfig {
 
-	@Profile("prod")
+	@Profile("prod | local")
 	@Bean
 	public PaymentService paymentService() {
 		return new ThreadSleepClient(monoDelay());

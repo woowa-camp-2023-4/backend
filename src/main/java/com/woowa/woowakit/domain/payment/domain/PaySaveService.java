@@ -1,6 +1,7 @@
 package com.woowa.woowakit.domain.payment.domain;
 
 import com.woowa.woowakit.domain.order.domain.event.OrderCompleteEvent;
+import io.micrometer.core.annotation.Counted;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
@@ -18,6 +19,7 @@ public class PaySaveService {
 
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	@Async
+	@Counted("order.payment.async")
 	public void save(final OrderCompleteEvent event, final Mono<Void> pay) {
 		pay.block();
 		Payment payment = mapToPayment(event);
