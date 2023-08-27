@@ -97,7 +97,7 @@ class OrderIntegrationTest extends IntegrationTest {
 		Long afterProductQuantity = ProductHelper.getProductDetail(productId).getQuantity();
 		assertThat(afterProductQuantity).isEqualTo(beforeProductQuantity - 1);
 
-		sleep(10);
+		sleep(100);
 		OrderDetailResponse orderResponse = OrderHelper.getOrder(orderId, accessToken);
 		assertThat(orderResponse).extracting("orderStatus").isEqualTo("PAYED");
 	}
@@ -121,7 +121,7 @@ class OrderIntegrationTest extends IntegrationTest {
 		assertThat(response.statusCode()).isEqualTo(200);
 		assertThat(response.as(Long.class)).isNotNull();
 
-		sleep(10);
+		sleep(100);
 		Long afterProductQuantity = ProductHelper.getProductDetail(productId).getQuantity();
 		assertThat(afterProductQuantity).isEqualTo(beforeProductQuantity);
 
