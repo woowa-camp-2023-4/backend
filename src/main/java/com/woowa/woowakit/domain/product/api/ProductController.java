@@ -8,6 +8,7 @@ import com.woowa.woowakit.domain.product.dto.request.ProductSearchRequest;
 import com.woowa.woowakit.domain.product.dto.request.ProductStatusUpdateRequest;
 import com.woowa.woowakit.domain.product.dto.request.StockCreateRequest;
 import com.woowa.woowakit.domain.product.dto.response.ProductDetailResponse;
+import com.woowa.woowakit.domain.product.dto.response.ProductResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -40,24 +41,12 @@ public class ProductController {
 	}
 
 	@GetMapping
-	public ResponseEntity<List<ProductDetailResponse>> searchProducts(
+	public ResponseEntity<List<ProductResponse>> searchProducts(
 			@Valid @ModelAttribute final ProductSearchRequest request) {
 		log.info("productKeyword: {}, lastProductId: {} 상품 조회", request.getProductKeyword(),
 				request.getLastProductId());
-		final List<ProductDetailResponse> response = productService.searchProducts(request);
+		final List<ProductResponse> response = productService.searchProducts(request);
 		return ResponseEntity.ok(response);
-	}
-
-	@Admin
-	@PatchMapping("/{id}/status")
-	public ResponseEntity<Void> updateStatus(
-			@PathVariable final Long id,
-			@Valid @RequestBody final ProductStatusUpdateRequest request
-	) {
-		log.info("[Request] ProductController.updateStatus(): productId = {}, productStatus = {}", id,
-				request.getProductStatus().name());
-		productService.updateStatus(id, request);
-		return ResponseEntity.noContent().build();
 	}
 
 	@Admin
@@ -71,5 +60,17 @@ public class ProductController {
 		long resultId = stockService.create(request, id);
 		return ResponseEntity.created(URI.create("/products/" + id + "/stocks/" + resultId))
 				.build();
+	}
+
+	@Admin
+	@PatchMapping("/{id}/status")
+	public ResponseEntity<Void> updateStatus(
+			@PathVariable final Long id,
+			@Valid @RequestBody final ProductStatusUpdateRequest request
+	) {
+		log.info("[Request] ProductController.updateStatus(): productId = {}, productStatus = {}", id,
+				request.getProductStatus().name());
+		productService.updateStatus(id, request);
+		return ResponseEntity.noContent().build();
 	}
 }

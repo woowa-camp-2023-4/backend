@@ -40,14 +40,14 @@ class ProductRepositoryTest {
         productRepository.saveAll(List.of(product1, product2, product3, product4, product5));
 
         // when
-        ProductSearchCondition productSearchCondition = ProductSearchCondition.of("1", null, 5, LocalDate.now());
-        List<Product> result = productRepository.searchProducts(productSearchCondition);
+        ProductSearchCondition productSearchCondition = ProductSearchCondition.of("1", null, null, 5, LocalDate.now());
+        List<ProductSpecification> result = productRepository.searchProducts(productSearchCondition);
 
         // then
         Assertions.assertThat(result).hasSize(3);
-        Assertions.assertThat(result.get(0)).extracting(Product::getId).isEqualTo(product1.getId());
-        Assertions.assertThat(result.get(1)).extracting(Product::getId).isEqualTo(product4.getId());
-        Assertions.assertThat(result.get(2)).extracting(Product::getId).isEqualTo(product5.getId());
+        Assertions.assertThat(result.get(0)).extracting(ProductSpecification::getProduct).extracting(Product::getId).isEqualTo(product1.getId());
+        Assertions.assertThat(result.get(1)).extracting(ProductSpecification::getProduct).extracting(Product::getId).isEqualTo(product4.getId());
+        Assertions.assertThat(result.get(2)).extracting(ProductSpecification::getProduct).extracting(Product::getId).isEqualTo(product5.getId());
     }
 
     @Test
@@ -63,14 +63,14 @@ class ProductRepositoryTest {
         productRepository.saveAll(List.of(product1, product2, product3, product4, product5));
 
         // when
-        ProductSearchCondition productSearchCondition = ProductSearchCondition.of("테스트", product2.getId(), 2,
+        ProductSearchCondition productSearchCondition = ProductSearchCondition.of("테스트", product2.getId(), null, 2,
                 LocalDate.now());
-        List<Product> result = productRepository.searchProducts(productSearchCondition);
+        List<ProductSpecification> result = productRepository.searchProducts(productSearchCondition);
 
         // then
         Assertions.assertThat(result).hasSize(2);
-        Assertions.assertThat(result.get(0)).extracting(Product::getId).isEqualTo(product3.getId());
-        Assertions.assertThat(result.get(1)).extracting(Product::getId).isEqualTo(product4.getId());
+        Assertions.assertThat(result.get(0)).extracting(ProductSpecification::getProduct).extracting(Product::getId).isEqualTo(product3.getId());
+        Assertions.assertThat(result.get(1)).extracting(ProductSpecification::getProduct).extracting(Product::getId).isEqualTo(product4.getId());
     }
 
     @Test
@@ -88,23 +88,50 @@ class ProductRepositoryTest {
         Product productD = productRepository.save(ProductFixture.anProduct()
                 .name(ProductName.from("productD"))
                 .build());
+        Product productE = productRepository.save(ProductFixture.anProduct()
+                .name(ProductName.from("productE"))
+                .build());
+        Product productF = productRepository.save(ProductFixture.anProduct()
+                .name(ProductName.from("productF"))
+                .build());
+        Product productG = productRepository.save(ProductFixture.anProduct()
+                .name(ProductName.from("productG"))
+                .build());
+        Product productH = productRepository.save(ProductFixture.anProduct()
+                .name(ProductName.from("productH"))
+                .build());
+        Product productI = productRepository.save(ProductFixture.anProduct()
+                .name(ProductName.from("productI"))
+                .build());
+        Product productJ = productRepository.save(ProductFixture.anProduct()
+                .name(ProductName.from("productJ"))
+                .build());
 
-        productSalesRepository.save(createProductSale(productA, 10, LocalDate.of(2023, 8, 25)));
-        productSalesRepository.save(createProductSale(productB, 20, LocalDate.of(2023, 8, 25)));
+
+        productSalesRepository.save(createProductSale(productA, 50, LocalDate.of(2023, 8, 25)));
+        productSalesRepository.save(createProductSale(productB, 60, LocalDate.of(2023, 8, 25)));
         productSalesRepository.save(createProductSale(productC, 30, LocalDate.of(2023, 8, 25)));
+        productSalesRepository.save(createProductSale(productD, 30, LocalDate.of(2023, 8, 25)));
+        productSalesRepository.save(createProductSale(productE, 30, LocalDate.of(2023, 8, 25)));
+        productSalesRepository.save(createProductSale(productF, 30, LocalDate.of(2023, 8, 25)));
+        productSalesRepository.save(createProductSale(productG, 30, LocalDate.of(2023, 8, 25)));
+        productSalesRepository.save(createProductSale(productH, 30, LocalDate.of(2023, 8, 25)));
+        productSalesRepository.save(createProductSale(productI, 30, LocalDate.of(2023, 8, 25)));
+        productSalesRepository.save(createProductSale(productJ, 30, LocalDate.of(2023, 8, 25)));
 
-        ProductSearchCondition condition = ProductSearchCondition.of(null, 0L, 10, LocalDate.of(2023, 8, 25));
-        List<Product> products = productRepository.searchProducts(condition);
+        ProductSearchCondition condition = ProductSearchCondition.of(null, productD.getId(), 30L, 4, LocalDate.of(2023, 8, 25));
+        List<ProductSpecification> products = productRepository.searchProducts(condition);
         Assertions.assertThat(products).hasSize(4)
-                .extracting("name")
+                .extracting(ProductSpecification::getProduct)
+                .extracting(Product::getName)
                 .contains(
-                        ProductName.from("productC"),
-                        ProductName.from("productB"),
-                        ProductName.from("productA"),
-                        ProductName.from("productD"));
+                        ProductName.from("productE"),
+                        ProductName.from("productF"),
+                        ProductName.from("productG"),
+                        ProductName.from("productH"));
     }
 
-    private ProductSales createProductSale(Product productA, long quantity, LocalDate saleDate) {
+    private ProductSales createProductSale(final Product productA, final long quantity, final LocalDate saleDate) {
         return ProductSales.builder()
                 .productId(productA.getId())
                 .sale(Quantity.from(quantity))

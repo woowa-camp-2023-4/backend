@@ -14,6 +14,8 @@ public class ProductSearchCondition {
 
 	private Long lastProductId;
 
+	private Long lastProductSale;
+
 	private int pageSize;
 
 	private LocalDate saleDate;
@@ -21,9 +23,10 @@ public class ProductSearchCondition {
 	public static ProductSearchCondition of(
 		final String productKeyword,
 		final Long lastProductId,
+		final Long lastProductSale,
 		final int pageSize,
 		final LocalDate saleDate
 	) {
-		return new ProductSearchCondition(productKeyword, lastProductId, pageSize, saleDate);
+		return new ProductSearchCondition(productKeyword, lastProductId, lastProductSale, pageSize, saleDate);
 	}
 }

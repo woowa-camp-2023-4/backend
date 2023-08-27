@@ -10,6 +10,7 @@ import com.woowa.woowakit.domain.product.dto.request.ProductSearchRequest;
 import com.woowa.woowakit.domain.product.dto.request.ProductStatusUpdateRequest;
 import com.woowa.woowakit.domain.product.dto.request.StockCreateRequest;
 import com.woowa.woowakit.domain.product.dto.response.ProductDetailResponse;
+import com.woowa.woowakit.domain.product.dto.response.ProductResponse;
 import com.woowa.woowakit.restDocsHelper.PathParam;
 import com.woowa.woowakit.restDocsHelper.RequestFields;
 import com.woowa.woowakit.restDocsHelper.ResponseFields;
@@ -111,7 +112,8 @@ class ProductControllerTest extends RestDocsTest {
                 "productKeyword", "상품 이름 키워드",
                 "lastProductId", "마지막 상품 ID",
                 "pageSize", "페이지 사이즈",
-                "saleDate", "판매 일"
+                "saleDate", "판매 일자",
+                "lastProductSale", "마지막 상품 판매량"
         ));
         ResponseFields responseFields = new ResponseFields(Map.of(
                 "[]name", "상품 이름",
@@ -119,16 +121,18 @@ class ProductControllerTest extends RestDocsTest {
                 "[]price", "상품 가격",
                 "[]imageUrl", "상품 이미지 URL",
                 "[]status", "상품 상태",
-                "[]quantity", "상품 총 수량"
+                "[]quantity", "상품 총 수량",
+                "[]productSale", "마지막 상품 판매량"
         ));
 
         ProductSearchRequest request = ProductSearchRequest.of(
                 "",
                 3L,
+                109L,
                 10,
                 LocalDate.now());
-        List<ProductDetailResponse> response = List.of(
-                ProductDetailResponse.from(getProduct()));
+        List<ProductResponse> response = List.of(
+                ProductResponse.from(getProductSpecification()));
         given(productService.searchProducts(any())).willReturn(response);
 
         mockMvc.perform(get("/products")
@@ -182,6 +186,10 @@ class ProductControllerTest extends RestDocsTest {
                 .andExpect(status().isCreated())
                 .andExpect(handler().methodName("addStock"))
                 .andDo(authorizationDocument("stock/add", pathParam, requestFields));
+    }
+
+    private ProductSpecification getProductSpecification() {
+        return ProductSpecification.of(getProduct(), 109);
     }
 
     private Product getProduct() {
