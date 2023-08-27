@@ -18,7 +18,7 @@ public class ImageUploadConfig {
 	static class LocalImageUploader implements ImageUploader {
 
 		@Override
-		public String upload(MultipartFile multipartFile) {
+		public String upload(final MultipartFile multipartFile) {
 			return "localUrl";
 		}
 	}
