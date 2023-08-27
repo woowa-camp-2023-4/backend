@@ -69,7 +69,7 @@ public class Order extends BaseEntity {
 			.reduce(Money.ZERO, Money::add);
 	}
 
-	@Counted("order")
+	@Counted("order.order")
 	public void order(final String paymentKey) {
 		registerEvent(new OrderCompleteEvent(this, paymentKey));
 		log.info("주문 완료 이벤트 발행 orderId: {}", id);
