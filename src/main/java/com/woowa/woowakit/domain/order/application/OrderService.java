@@ -10,6 +10,7 @@ import com.woowa.woowakit.domain.order.dto.request.PreOrderCreateRequest;
 import com.woowa.woowakit.domain.order.dto.response.OrderDetailResponse;
 import com.woowa.woowakit.domain.order.dto.response.PreOrderResponse;
 import com.woowa.woowakit.domain.order.exception.OrderNotFoundException;
+import io.micrometer.core.annotation.Counted;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -50,6 +51,7 @@ public class OrderService {
 	}
 
 	@Transactional
+	@Counted("order.preOrder")
 	public PreOrderResponse preOrder(final AuthPrincipal authPrincipal,
 		final PreOrderCreateRequest request) {
 		log.info("가주문 생성 memberId: {} productId: {} quantity: {}", authPrincipal.getId(),
@@ -71,6 +73,7 @@ public class OrderService {
 	}
 
 	@Transactional
+	@Counted("order.order")
 	public Long order(final AuthPrincipal authPrincipal, final OrderCreateRequest request) {
 		log.info("주문 생성 memberId: {} orderId: {} paymentKey: {}", authPrincipal.getId(),
 			request.getOrderId(), request.getPaymentKey());

@@ -4,7 +4,6 @@ import com.woowa.woowakit.domain.model.BaseEntity;
 import com.woowa.woowakit.domain.model.Money;
 import com.woowa.woowakit.domain.model.converter.MoneyConverter;
 import com.woowa.woowakit.domain.order.domain.event.OrderCompleteEvent;
-import io.micrometer.core.annotation.Counted;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -69,7 +68,6 @@ public class Order extends BaseEntity {
 			.reduce(Money.ZERO, Money::add);
 	}
 
-	@Counted("order.order")
 	public void order(final String paymentKey) {
 		registerEvent(new OrderCompleteEvent(this, paymentKey));
 		log.info("주문 완료 이벤트 발행 orderId: {}", id);
