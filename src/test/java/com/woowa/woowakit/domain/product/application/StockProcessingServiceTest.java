@@ -1,6 +1,9 @@
 package com.woowa.woowakit.domain.product.application;
 
+import static org.assertj.core.api.Assertions.*;
+
 import java.time.LocalDate;
+import java.util.List;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -30,23 +33,56 @@ class StockProcessingServiceTest {
 	private StockRepository stockRepository;
 
 	@Test
-	@DisplayName("재고의 정합성 , 유통기한 테스트")
-	void doProcessTest() {
+	@DisplayName("유통기한 테스트")
+	void doProcessTestCaseOfExpiration() {
 		// given
 		Product product = productRepository.save(ProductFixture.anProduct()
 			.quantity(Quantity.from(75))
 			.build());
 
-		stockRepository.save(createStock(product, LocalDate.of(2023, 9, 22), 10));
-		stockRepository.save(createStock(product, LocalDate.of(2023, 9, 22), 10));
-		stockRepository.save(createStock(product, LocalDate.of(2023, 9, 22), 20));
-		stockRepository.save(createStock(product, LocalDate.of(2023, 9, 28), 30));
-		stockRepository.save(createStock(product, LocalDate.of(2023, 9, 28), 30));
-		stockRepository.save(createStock(product, LocalDate.of(2023, 9, 28), 30));
-		stockRepository.save(createStock(product, LocalDate.of(2023, 9, 28), 30));
+		List<Stock> stocks = List.of(
+			stockRepository.save(createStock(product, LocalDate.of(3023, 9, 22), 10)),
+			stockRepository.save(createStock(product, LocalDate.of(3023, 9, 22), 10)),
+			stockRepository.save(createStock(product, LocalDate.of(3023, 9, 22), 10)),
+			stockRepository.save(createStock(product, LocalDate.of(3023, 9, 22), 10)),
+			stockRepository.save(createStock(product, LocalDate.of(3023, 9, 22), 20)),
+			stockRepository.save(createStock(product, LocalDate.of(3023, 9, 29), 10)),
+			stockRepository.save(createStock(product, LocalDate.of(3023, 9, 30), 10)),
+			stockRepository.save(createStock(product, LocalDate.of(3023, 9, 30), 5))
+		);
 
 		// when
-		stockProcessingService.doProcess(product.getId(), LocalDate.of(2023, 9, 16));
+		stockProcessingService.doStockProcess(product.getId(), LocalDate.of(3023, 9, 16), stocks);
+
+		// then
+		assertThat(stockRepository.findAllByProductId(product.getId(), StockType.NORMAL))
+			.hasSize(3)
+			.extracting("quantity")
+			.contains(Quantity.from(10), Quantity.from(10), Quantity.from(5));
+		assertThat(productRepository.findById(product.getId()).get().getQuantity()).isEqualTo(
+			Quantity.from(25));
+	}
+
+	@Test
+	@DisplayName("재고의 정합성 테스트")
+	void doProcessTestCaseOfConsistency() {
+		// given
+		Product product = productRepository.save(ProductFixture.anProduct()
+			.quantity(Quantity.from(75))
+			.build());
+
+		List<Stock> stocks = List.of(
+			stockRepository.save(createStock(product, LocalDate.of(3023, 9, 22), 10)),
+			stockRepository.save(createStock(product, LocalDate.of(3023, 9, 22), 10)),
+			stockRepository.save(createStock(product, LocalDate.of(3023, 9, 22), 20)),
+			stockRepository.save(createStock(product, LocalDate.of(3023, 9, 28), 30)),
+			stockRepository.save(createStock(product, LocalDate.of(3023, 9, 28), 30)),
+			stockRepository.save(createStock(product, LocalDate.of(3023, 9, 28), 30)),
+			stockRepository.save(createStock(product, LocalDate.of(3023, 9, 28), 30))
+		);
+
+		// when
+		stockProcessingService.doStockProcess(product.getId(), LocalDate.of(3023, 9, 16), stocks);
 
 		// then
 		Assertions.assertThat(stockRepository.findAllByProductId(product.getId(), StockType.NORMAL))

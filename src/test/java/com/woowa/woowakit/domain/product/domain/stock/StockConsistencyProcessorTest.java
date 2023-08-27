@@ -8,8 +8,7 @@ import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.context.annotation.Import;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import com.woowa.woowakit.domain.model.Quantity;
 import com.woowa.woowakit.domain.product.domain.ProductSalesRepository;
@@ -18,13 +17,8 @@ import com.woowa.woowakit.domain.product.domain.product.ProductRepository;
 import com.woowa.woowakit.domain.product.domain.product.ProductSales;
 import com.woowa.woowakit.domain.product.domain.product.SaleQuantity;
 import com.woowa.woowakit.domain.product.fixture.ProductFixture;
-import com.woowa.woowakit.global.config.QuerydslTestConfig;
 
-@DataJpaTest
-@Import({
-	StockConsistencyProcessor.class,
-	QuerydslTestConfig.class
-})
+@SpringBootTest
 class StockConsistencyProcessorTest {
 
 	@Autowired
@@ -47,12 +41,12 @@ class StockConsistencyProcessorTest {
 			.quantity(Quantity.from(35))
 			.build());
 
-		stockRepository.save(createStock(product, LocalDate.of(3023, 9, 22), 10));
-		stockRepository.save(createStock(product, LocalDate.of(3023, 9, 25), 20));
-		stockRepository.save(createStock(product, LocalDate.of(3023, 9, 28), 30));
+		Stock stockA = stockRepository.save(createStock(product, LocalDate.of(3023, 9, 22), 10));
+		Stock stockB = stockRepository.save(createStock(product, LocalDate.of(3023, 9, 25), 20));
+		Stock stockC = stockRepository.save(createStock(product, LocalDate.of(3023, 9, 28), 30));
 
 		// when
-		stockConsistencyProcessor.run(product);
+		stockConsistencyProcessor.run(product, List.of(stockA, stockB, stockC));
 
 		// then
 		List<Stock> stocks = stockRepository.findAllByProductId(product.getId(), StockType.NORMAL);

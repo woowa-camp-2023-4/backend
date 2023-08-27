@@ -7,8 +7,7 @@ import java.time.LocalDate;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.context.annotation.Import;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import com.woowa.woowakit.domain.model.Quantity;
 import com.woowa.woowakit.domain.product.domain.product.Product;
@@ -17,10 +16,8 @@ import com.woowa.woowakit.domain.product.domain.product.ProductName;
 import com.woowa.woowakit.domain.product.domain.product.ProductPrice;
 import com.woowa.woowakit.domain.product.domain.product.ProductRepository;
 import com.woowa.woowakit.domain.product.domain.product.ProductStatus;
-import com.woowa.woowakit.global.config.QuerydslTestConfig;
 
-@DataJpaTest
-@Import({ExpirationDateProcessor.class, QuerydslTestConfig.class})
+@SpringBootTest
 class ExpirationDateProcessorTest {
 
 	@Autowired
@@ -44,7 +41,6 @@ class ExpirationDateProcessorTest {
 			.status(ProductStatus.IN_STOCK)
 			.build());
 
-		stockRepository.save((Stock.of(LocalDate.of(3023, 9, 10), product)));
 		stockRepository.save((Stock.of(LocalDate.of(3023, 9, 11), product)));
 		stockRepository.save((Stock.of(LocalDate.of(3023, 9, 12), product)));
 		stockRepository.save((Stock.of(LocalDate.of(3023, 9, 13), product)));
@@ -55,6 +51,6 @@ class ExpirationDateProcessorTest {
 
 		// then
 		assertThat(stockRepository.findAllByProductId(product.getId(), StockType.EXPIRED))
-			.hasSize(2);
+			.hasSize(1);
 	}
 }
