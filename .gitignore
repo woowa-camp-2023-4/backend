@@ -39,3 +39,7 @@ db/
 
 ### QueryDsl
 /src/main/generated/
+
+
+### rest-docs
+src/main/resources/static/docs/
