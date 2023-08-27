@@ -41,10 +41,8 @@ public class ProductController {
 	}
 
 	@GetMapping
-	public ResponseEntity<List<ProductResponse>> searchProducts(
-			@Valid @ModelAttribute final ProductSearchRequest request) {
-		log.info("productKeyword: {}, lastProductId: {} 상품 조회", request.getProductKeyword(),
-				request.getLastProductId());
+	public ResponseEntity<List<ProductResponse>> searchProducts(@Valid @ModelAttribute final ProductSearchRequest request) {
+		log.info("productKeyword: {}, lastProductId: {} 상품 조회", request.getProductKeyword(), request.getLastProductId());
 		final List<ProductResponse> response = productService.searchProducts(request);
 		return ResponseEntity.ok(response);
 	}
@@ -52,24 +50,23 @@ public class ProductController {
 	@Admin
 	@PostMapping("/{id}/stocks")
 	public ResponseEntity<Void> addStock(
-			@PathVariable final Long id,
-			@Valid @RequestBody final StockCreateRequest request
+		@PathVariable final Long id,
+		@Valid @RequestBody final StockCreateRequest request
 	) {
 		log.info("[Request] ProductController.addStock(): productId = {}, addStock = [expiryDate:{}, quantity: {}]", id,
-				request.getExpiryDate(), request.getQuantity());
+			request.getExpiryDate(), request.getQuantity());
 		long resultId = stockService.create(request, id);
-		return ResponseEntity.created(URI.create("/products/" + id + "/stocks/" + resultId))
-				.build();
+		return ResponseEntity.created(URI.create("/products/" + id + "/stocks/" + resultId)).build();
 	}
 
 	@Admin
 	@PatchMapping("/{id}/status")
 	public ResponseEntity<Void> updateStatus(
-			@PathVariable final Long id,
-			@Valid @RequestBody final ProductStatusUpdateRequest request
+		@PathVariable final Long id,
+		@Valid @RequestBody final ProductStatusUpdateRequest request
 	) {
 		log.info("[Request] ProductController.updateStatus(): productId = {}, productStatus = {}", id,
-				request.getProductStatus().name());
+			request.getProductStatus().name());
 		productService.updateStatus(id, request);
 		return ResponseEntity.noContent().build();
 	}

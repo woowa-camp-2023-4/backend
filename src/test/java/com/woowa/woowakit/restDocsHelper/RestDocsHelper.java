@@ -21,138 +21,138 @@ import static org.springframework.restdocs.request.RequestDocumentation.pathPara
 
 public class RestDocsHelper {
 
-    public static RestDocumentationResultHandler defaultDocument(
-            final String path,
-            final RequestFields requestFields,
-            final ResponseFields responseFields
-    ) {
-        return getRestDocumentationResultHandler(path).document(
-                requestFields(
-                        requestFieldsDescriptor(requestFields.getValues())),
-                responseFields(
-                        responseFieldsDescriptor(responseFields.getValues()))
-        );
-    }
+	public static RestDocumentationResultHandler defaultDocument(
+		final String path,
+		final RequestFields requestFields,
+		final ResponseFields responseFields
+	) {
+		return getRestDocumentationResultHandler(path).document(
+			requestFields(
+				requestFieldsDescriptor(requestFields.getValues())),
+			responseFields(
+				responseFieldsDescriptor(responseFields.getValues()))
+		);
+	}
 
-    public static RestDocumentationResultHandler defaultDocument(
-            final String path,
-            final PathParam pathParam,
-            final ResponseFields responseFields
-    ) {
-        return getRestDocumentationResultHandler(path).document(
-                pathParameters(
-                        parameterWithName(pathParam.getName()).description(pathParam.getDescription())),
-                responseFields(
-                        responseFieldsDescriptor(responseFields.getValues()))
-        );
-    }
+	public static RestDocumentationResultHandler defaultDocument(
+		final String path,
+		final PathParam pathParam,
+		final ResponseFields responseFields
+	) {
+		return getRestDocumentationResultHandler(path).document(
+			pathParameters(
+				parameterWithName(pathParam.getName()).description(pathParam.getDescription())),
+			responseFields(
+				responseFieldsDescriptor(responseFields.getValues()))
+		);
+	}
 
-    public static RestDocumentationResultHandler authorizationDocument(
-            final String path,
-            final ResponseFields responseFields
-    ) {
-        return getRestDocumentationResultHandler(path).document(
-                requestHeaders(
-                        headerWithName(HttpHeaders.AUTHORIZATION).description("인증 헤더 이름")),
-                responseFields(
-                        responseFieldsDescriptor(responseFields.getValues()))
-        );
-    }
+	public static RestDocumentationResultHandler authorizationDocument(
+		final String path,
+		final ResponseFields responseFields
+	) {
+		return getRestDocumentationResultHandler(path).document(
+			requestHeaders(
+				headerWithName(HttpHeaders.AUTHORIZATION).description("인증 헤더 이름")),
+			responseFields(
+				responseFieldsDescriptor(responseFields.getValues()))
+		);
+	}
 
-    public static RestDocumentationResultHandler authorizationDocument(
-            final String path,
-            final RequestFields requestFields
-    ) {
-        return getRestDocumentationResultHandler(path).document(
-                requestHeaders(
-                        headerWithName(HttpHeaders.AUTHORIZATION).description("인증 헤더 이름")),
-                requestFields(
-                        requestFieldsDescriptor(requestFields.getValues()))
-        );
-    }
+	public static RestDocumentationResultHandler authorizationDocument(
+		final String path,
+		final RequestFields requestFields
+	) {
+		return getRestDocumentationResultHandler(path).document(
+			requestHeaders(
+				headerWithName(HttpHeaders.AUTHORIZATION).description("인증 헤더 이름")),
+			requestFields(
+				requestFieldsDescriptor(requestFields.getValues()))
+		);
+	}
 
-    public static RestDocumentationResultHandler authorizationDocument(
-            final String path,
-            final PathParam pathParam
+	public static RestDocumentationResultHandler authorizationDocument(
+		final String path,
+		final PathParam pathParam
 
-    ) {
-        return getRestDocumentationResultHandler(path).document(
-                requestHeaders(
-                        headerWithName(HttpHeaders.AUTHORIZATION).description("인증 헤더 이름")),
-                pathParameters(
-                        parameterWithName(pathParam.getName()).description(pathParam.getDescription()))
-        );
-    }
+	) {
+		return getRestDocumentationResultHandler(path).document(
+			requestHeaders(
+				headerWithName(HttpHeaders.AUTHORIZATION).description("인증 헤더 이름")),
+			pathParameters(
+				parameterWithName(pathParam.getName()).description(pathParam.getDescription()))
+		);
+	}
 
-    public static RestDocumentationResultHandler authorizationDocument(
-            final String path,
-            final RequestFields requestFields,
-            final ResponseFields responseFields
+	public static RestDocumentationResultHandler authorizationDocument(
+		final String path,
+		final RequestFields requestFields,
+		final ResponseFields responseFields
 
-    ) {
-        return getRestDocumentationResultHandler(path).document(
-                requestHeaders(
-                        headerWithName(HttpHeaders.AUTHORIZATION).description("인증 헤더 이름")),
-                requestFields(
-                        requestFieldsDescriptor(requestFields.getValues())),
-                responseFields(
-                        responseFieldsDescriptor(responseFields.getValues()))
+	) {
+		return getRestDocumentationResultHandler(path).document(
+			requestHeaders(
+				headerWithName(HttpHeaders.AUTHORIZATION).description("인증 헤더 이름")),
+			requestFields(
+				requestFieldsDescriptor(requestFields.getValues())),
+			responseFields(
+				responseFieldsDescriptor(responseFields.getValues()))
 
-        );
-    }
+		);
+	}
 
-    public static RestDocumentationResultHandler authorizationDocument(
-            final String path,
-            final PathParam pathParam,
-            final RequestFields requestFields
+	public static RestDocumentationResultHandler authorizationDocument(
+		final String path,
+		final PathParam pathParam,
+		final RequestFields requestFields
 
-    ) {
-        return getRestDocumentationResultHandler(path).document(
-                requestHeaders(
-                        headerWithName(HttpHeaders.AUTHORIZATION).description("인증 헤더 이름")),
-                pathParameters(
-                        parameterWithName(pathParam.getName()).description(pathParam.getDescription())),
-                requestFields(
-                        requestFieldsDescriptor(requestFields.getValues()))
-        );
-    }
+	) {
+		return getRestDocumentationResultHandler(path).document(
+			requestHeaders(
+				headerWithName(HttpHeaders.AUTHORIZATION).description("인증 헤더 이름")),
+			pathParameters(
+				parameterWithName(pathParam.getName()).description(pathParam.getDescription())),
+			requestFields(
+				requestFieldsDescriptor(requestFields.getValues()))
+		);
+	}
 
-    public static RestDocumentationResultHandler authorizationDocument(
-            final String path,
-            final PathParam pathParam,
-            final ResponseFields responseFields
+	public static RestDocumentationResultHandler authorizationDocument(
+		final String path,
+		final PathParam pathParam,
+		final ResponseFields responseFields
 
-    ) {
-        return getRestDocumentationResultHandler(path).document(
-                requestHeaders(
-                        headerWithName(HttpHeaders.AUTHORIZATION).description("인증 헤더 이름")),
-                pathParameters(
-                        parameterWithName(pathParam.getName()).description(pathParam.getDescription())),
-                responseFields(
-                        responseFieldsDescriptor(responseFields.getValues()))
-        );
-    }
+	) {
+		return getRestDocumentationResultHandler(path).document(
+			requestHeaders(
+				headerWithName(HttpHeaders.AUTHORIZATION).description("인증 헤더 이름")),
+			pathParameters(
+				parameterWithName(pathParam.getName()).description(pathParam.getDescription())),
+			responseFields(
+				responseFieldsDescriptor(responseFields.getValues()))
+		);
+	}
 
 
-    private static List<FieldDescriptor> requestFieldsDescriptor(final Map<String, String> keyValue) {
-        List<FieldDescriptor> fieldDescriptors = new ArrayList<>();
-        for (String key : keyValue.keySet()) {
-            fieldDescriptors.add(fieldWithPath(key).description(keyValue.get(key)));
-        }
-        return fieldDescriptors;
-    }
+	private static List<FieldDescriptor> requestFieldsDescriptor(final Map<String, String> keyValue) {
+		List<FieldDescriptor> fieldDescriptors = new ArrayList<>();
+		for (String key : keyValue.keySet()) {
+			fieldDescriptors.add(fieldWithPath(key).description(keyValue.get(key)));
+		}
+		return fieldDescriptors;
+	}
 
-    private static List<FieldDescriptor> responseFieldsDescriptor(final Map<String, String> keyValue) {
-        List<FieldDescriptor> fieldDescriptors = new ArrayList<>();
-        for (String key : keyValue.keySet()) {
-            fieldDescriptors.add(fieldWithPath(key).description(keyValue.get(key)));
-        }
-        return fieldDescriptors;
-    }
+	private static List<FieldDescriptor> responseFieldsDescriptor(final Map<String, String> keyValue) {
+		List<FieldDescriptor> fieldDescriptors = new ArrayList<>();
+		for (String key : keyValue.keySet()) {
+			fieldDescriptors.add(fieldWithPath(key).description(keyValue.get(key)));
+		}
+		return fieldDescriptors;
+	}
 
-    private static RestDocumentationResultHandler getRestDocumentationResultHandler(final String path) {
-        return document(path,
-                preprocessRequest(Preprocessors.prettyPrint()),
-                preprocessResponse(Preprocessors.prettyPrint()));
-    }
+	private static RestDocumentationResultHandler getRestDocumentationResultHandler(final String path) {
+		return document(path,
+			preprocessRequest(Preprocessors.prettyPrint()),
+			preprocessResponse(Preprocessors.prettyPrint()));
+	}
 }

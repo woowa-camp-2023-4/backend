@@ -35,60 +35,60 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(RestDocumentationExtension.class)
 class AuthControllerTest extends RestDocsTest {
 
-    @Autowired
-    private MockMvc mockMvc;
+	@Autowired
+	private MockMvc mockMvc;
 
-    @MockBean
-    private AuthService authService;
+	@MockBean
+	private AuthService authService;
 
-    @Test
-    @DisplayName("[POST] [/auth/signup] 회원가입 테스트 및 문서화")
-    void signUp() throws Exception {
-        RequestFields requestFields = new RequestFields(Map.of(
-                "name", "이름",
-                "email", "이메일",
-                "password", "비밀번호"
-        ));
-        ResponseFields responseFields = new ResponseFields(Map.of(
-                "id", "회원 ID"
-        ));
+	@Test
+	@DisplayName("[POST] [/auth/signup] 회원가입 테스트 및 문서화")
+	void signUp() throws Exception {
+		RequestFields requestFields = new RequestFields(Map.of(
+			"name", "이름",
+			"email", "이메일",
+			"password", "비밀번호"
+		));
+		ResponseFields responseFields = new ResponseFields(Map.of(
+			"id", "회원 ID"
+		));
 
-        SignUpRequest request = SignUpRequest.of("yongs170@naver.com", "test1234", "tester");
-        given(authService.signUp(any())).willReturn(1L);
+		SignUpRequest request = SignUpRequest.of("yongs170@naver.com", "test1234", "tester");
+		given(authService.signUp(any())).willReturn(1L);
 
-        mockMvc.perform(post("/auth/signup")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isCreated())
-                .andExpect(handler().methodName("signUp"))
-                .andDo(defaultDocument("auth/signup", requestFields, responseFields));
-    }
+		mockMvc.perform(post("/auth/signup")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(request)))
+			.andExpect(status().isCreated())
+			.andExpect(handler().methodName("signUp"))
+			.andDo(defaultDocument("auth/signup", requestFields, responseFields));
+	}
 
-    @Test
-    @DisplayName("[POST] [/auth/login] 로그인 테스트 및 문서화")
-    void login() throws Exception {
-        RequestFields requestFields = new RequestFields(Map.of(
-                "email", "이메일",
-                "password", "비밀번호"
-        ));
-        ResponseFields responseFields = new ResponseFields(Map.of(
-                "accessToken", "유저 토큰",
-                "name", "이름",
-                "role", "역할",
-                "email", "이메일"
-        ));
+	@Test
+	@DisplayName("[POST] [/auth/login] 로그인 테스트 및 문서화")
+	void login() throws Exception {
+		RequestFields requestFields = new RequestFields(Map.of(
+			"email", "이메일",
+			"password", "비밀번호"
+		));
+		ResponseFields responseFields = new ResponseFields(Map.of(
+			"accessToken", "유저 토큰",
+			"name", "이름",
+			"role", "역할",
+			"email", "이메일"
+		));
 
-        LoginRequest request = LoginRequest.of("yongs170@naver.com", "test1234");
-        LoginResponse response = LoginResponse.of("asadfdsewdqw", "tester", Role.ADMIN, Email.from("yongs170@naver.com"));
-        given(authService.loginMember(any())).willReturn(response);
+		LoginRequest request = LoginRequest.of("yongs170@naver.com", "test1234");
+		LoginResponse response = LoginResponse.of("asadfdsewdqw", "tester", Role.ADMIN, Email.from("yongs170@naver.com"));
+		given(authService.loginMember(any())).willReturn(response);
 
-        mockMvc.perform(post("/auth/login")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isOk())
-                .andExpect(handler().methodName("login"))
-                .andDo(MockMvcResultHandlers.print())
-                .andDo(defaultDocument("auth/login", requestFields, responseFields));
-    }
+		mockMvc.perform(post("/auth/login")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(request)))
+			.andExpect(status().isOk())
+			.andExpect(handler().methodName("login"))
+			.andDo(MockMvcResultHandlers.print())
+			.andDo(defaultDocument("auth/login", requestFields, responseFields));
+	}
 
 }

@@ -19,9 +19,9 @@ public class PreOrderCreateCartItemRequest {
 
 	public static List<Long> toCartItemIds(final List<PreOrderCreateCartItemRequest> requests) {
 		return requests.stream()
-				.mapToLong(PreOrderCreateCartItemRequest::getCartItemId)
-				.boxed()
-				.collect(Collectors.toUnmodifiableList());
+			.mapToLong(PreOrderCreateCartItemRequest::getCartItemId)
+			.boxed()
+			.collect(Collectors.toUnmodifiableList());
 	}
 
 	public static PreOrderCreateCartItemRequest from(Long cartItemId) {
