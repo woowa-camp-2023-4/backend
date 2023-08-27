@@ -26,7 +26,10 @@ public class PaymentService {
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	@Counted("order.payment.async")
 	public void handlePaySuccess(final OrderCompleteEvent event) {
+		Order order = findOrderById(event.getOrder().getId());
 		Payment payment = paymentMapper.mapFrom(event);
+
+		order.pay();
 		paymentRepository.save(payment);
 		log.info("결제 완료 subscribe paymentKey: {}", event.getPaymentKey());
 	}
@@ -34,7 +37,11 @@ public class PaymentService {
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public void handlePayError(final OrderCompleteEvent event, final Throwable error) {
 		log.error("결제 실패 복구 시작 paymentKey: {}, message={}", event.getPaymentKey(), error.getMessage());
-		Order order = orderRepository.findById(event.getOrder().getId()).orElseThrow();
+		Order order = findOrderById(event.getOrder().getId());
 		order.rollback(orderRollbackService);
+	}
+
+	private Order findOrderById(final Long id) {
+		return orderRepository.findById(id).orElseThrow();
 	}
 }
