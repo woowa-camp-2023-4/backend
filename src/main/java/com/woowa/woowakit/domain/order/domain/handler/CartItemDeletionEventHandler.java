@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,7 +18,6 @@ public class CartItemDeletionEventHandler {
 	private final CartItemRepository cartItemRepository;
 
 	@Transactional
-	@EventListener
 	public void handle(final OrderCompleteEvent event) {
 		deleteCartItems(event);
 	}

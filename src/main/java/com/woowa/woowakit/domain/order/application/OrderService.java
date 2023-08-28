@@ -4,6 +4,9 @@ import com.woowa.woowakit.domain.auth.domain.AuthPrincipal;
 import com.woowa.woowakit.domain.order.domain.Order;
 import com.woowa.woowakit.domain.order.domain.OrderMapper;
 import com.woowa.woowakit.domain.order.domain.OrderRepository;
+import com.woowa.woowakit.domain.order.domain.event.OrderCompleteEvent;
+import com.woowa.woowakit.domain.order.domain.service.OrderOrderService;
+import com.woowa.woowakit.domain.order.domain.service.OrderPayService;
 import com.woowa.woowakit.domain.order.dto.request.OrderCreateRequest;
 import com.woowa.woowakit.domain.order.dto.request.PreOrderCreateCartItemRequest;
 import com.woowa.woowakit.domain.order.dto.request.PreOrderCreateRequest;
@@ -24,6 +27,8 @@ public class OrderService {
 
 	private final OrderRepository orderRepository;
 	private final OrderMapper orderMapper;
+	private final OrderPayService orderPayService;
+	private final OrderOrderService orderOrderService;
 
 	@Transactional(readOnly = true)
 	public OrderDetailResponse findOrderByOrderIdAndMemberId(
@@ -72,18 +77,9 @@ public class OrderService {
 		return PreOrderResponse.from(orderRepository.save(order));
 	}
 
-	@Transactional
-	@Counted("order.order")
 	public Long order(final AuthPrincipal authPrincipal, final OrderCreateRequest request) {
-		log.info("주문 생성 memberId: {} orderId: {} paymentKey: {}", authPrincipal.getId(),
-			request.getOrderId(), request.getPaymentKey());
-		Order order = getOrderById(authPrincipal.getId(), request.getOrderId());
-		order.order(request.getPaymentKey());
-		return orderRepository.save(order).getId();
-	}
-
-	private Order getOrderById(final Long memberId, final Long orderId) {
-		return orderRepository.findByIdAndMemberId(orderId, memberId)
-			.orElseThrow(OrderNotFoundException::new);
+		OrderCompleteEvent event = orderOrderService.order(authPrincipal, request);
+		orderPayService.pay(event);
+		return event.getOrder().getId();
 	}
 }

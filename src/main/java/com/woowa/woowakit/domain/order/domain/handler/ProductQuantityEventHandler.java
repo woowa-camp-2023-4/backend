@@ -10,8 +10,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.event.EventListener;
-import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,9 +20,7 @@ public class ProductQuantityEventHandler {
 
 	private final ProductRepository productRepository;
 
-	@Order(0)
 	@Transactional
-	@EventListener
 	public void handle(final OrderCompleteEvent event) {
 		subtractProductQuantity(event);
 	}
