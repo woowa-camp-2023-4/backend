@@ -9,7 +9,7 @@ name: Dev-Stage CD
 
 on:
   push:
-    branches: [ "dev" ]
+    branches: [ "hotfix" ]
 
 permissions:
   contents: read
@@ -26,6 +26,16 @@ jobs:
         with:
           java-version: '11'
           distribution: 'corretto'
+
+      - name: Build with Gradle
+        uses: gradle/gradle-build-action@bd5760595778326ba7f1441bcf7e88b49de61a25
+        with:
+          arguments: asciidoctor
+
+      - name: Build with Gradle
+        uses: gradle/gradle-build-action@bd5760595778326ba7f1441bcf7e88b49de61a25
+        with:
+          arguments: bootJar
 
       - name: Build with Gradle
         uses: gradle/gradle-build-action@bd5760595778326ba7f1441bcf7e88b49de61a25
