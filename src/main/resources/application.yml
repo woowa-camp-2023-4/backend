@@ -35,10 +35,10 @@ spring:
       maximum-pool-size: 51
   cache:
     caffeine:
-      spec: maximumSize=500,expireAfterAccess=5s
+      spec: maximumSize=100,expireAfterAccess=30s
     type: caffeine
     cache-names:
-      - searchProducts
+      - productsFirstRanking
 
 management:
   server:

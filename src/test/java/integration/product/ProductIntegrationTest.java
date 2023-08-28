@@ -60,6 +60,27 @@ class ProductIntegrationTest extends IntegrationTest {
 	}
 
 	@Test
+	@DisplayName("일일 판매량 순서를 바탕으로 메인 페이지를 조회할 수 있다.")
+	void mainPage() {
+		// given
+		String accessToken = MemberHelper.login(MemberHelper.createAdminLoginRequest());
+		ProductHelper.createProduct(ProductHelper.createProductCreateRequest(), accessToken);
+		ProductHelper.createProduct(ProductHelper.createProductCreateRequest(), accessToken);
+		ProductHelper.createProduct(ProductHelper.createProductCreateRequest2(), accessToken);
+		ProductHelper.createProduct(ProductHelper.createProductCreateRequest2(), accessToken);
+		ProductHelper.createProduct(ProductHelper.createProductCreateRequest3(), accessToken);
+		ProductHelper.createProduct(ProductHelper.createProductCreateRequest3(), accessToken);
+
+		// when
+		ExtractableResponse<Response> response = CommonRestAssuredUtils.get("/products/rank");
+
+		// then
+		assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+		List<ProductResponse> responses = response.as(ArrayList.class);
+		assertThat(responses).hasSize(6);
+	}
+
+	@Test
 	@DisplayName("상품 리스트를 검색 조건에 따라 cursor 방식으로 조회할 수 있다.")
 	void findAll() {
 		// given
