@@ -22,8 +22,12 @@ class OrderRollbackServiceTest {
 	@DisplayName("rollback 시 담은 개수만큼 다시 복구되는지 테스트.")
 	void rollback() {
 		// given
-		OrderRollbackService orderRollbackService = new OrderRollbackService(mock(CartItemRepository.class), mock(
-			ProductRepository.class), mock(CartItemMapper.class));
+		OrderRollbackService orderRollbackService = new OrderRollbackService(
+			mock(CartItemRepository.class),
+			mock(ProductRepository.class),
+			mock(OrderRepository.class),
+			mock(CartItemMapper.class)
+		);
 		Order order = OrderFixture.anOrder().build();
 		Product product = ProductFixture.anProduct().id(2L).quantity(Quantity.from(1L)).build();
 

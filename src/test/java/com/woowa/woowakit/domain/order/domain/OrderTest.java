@@ -1,7 +1,6 @@
 package com.woowa.woowakit.domain.order.domain;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,7 +17,7 @@ class OrderTest {
 		Order order = OrderFixture.anOrder().build();
 
 		// when
-		order.rollback(mock(OrderRollbackService.class));
+		order.cancel();
 
 		// then
 		assertThat(order).extracting("orderStatus").isEqualTo(OrderStatus.CANCELED);

@@ -6,7 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.woowa.woowakit.domain.order.domain.Order;
 import com.woowa.woowakit.domain.order.domain.OrderRepository;
-import com.woowa.woowakit.domain.order.domain.OrderRollbackService;
+import com.woowa.woowakit.domain.payment.domain.mapper.PaymentMapper;
 
 import io.micrometer.core.annotation.Counted;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +20,6 @@ public class PaymentService {
 	private final PaymentRepository paymentRepository;
 	private final PaymentMapper paymentMapper;
 	private final OrderRepository orderRepository;
-	private final OrderRollbackService orderRollbackService;
 
 	@Counted("order.payment.success")
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
@@ -32,14 +31,6 @@ public class PaymentService {
 		paymentRepository.save(payment);
 
 		log.info("결제 완료 subscribe paymentKey: {}", paymentKey);
-	}
-
-	@Counted("order.payment.failure")
-	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	public void handlePayError(final Long orderId, final Throwable error) {
-		log.error("결제 실패 복구 시작 orderId: {}, message={}", orderId, error.getMessage());
-		Order order = findOrderById(orderId);
-		order.rollback(orderRollbackService);
 	}
 
 	private Order findOrderById(final Long id) {

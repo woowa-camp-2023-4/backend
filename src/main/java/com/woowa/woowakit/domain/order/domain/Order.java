@@ -1,12 +1,10 @@
 package com.woowa.woowakit.domain.order.domain;
 
-import com.woowa.woowakit.domain.model.BaseEntity;
-import com.woowa.woowakit.domain.model.Money;
-import com.woowa.woowakit.domain.model.converter.MoneyConverter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Convert;
@@ -19,6 +17,11 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import com.woowa.woowakit.domain.model.BaseEntity;
+import com.woowa.woowakit.domain.model.Money;
+import com.woowa.woowakit.domain.model.converter.MoneyConverter;
+
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -73,12 +76,7 @@ public class Order extends BaseEntity {
 		log.info("주문 배치 완료 orderId: {}", id);
 	}
 
-	public void rollback(final OrderRollbackService orderRollbackService) {
-		cancel();
-		orderRollbackService.rollback(this);
-	}
-
-	private void cancel() {
+	public void cancel() {
 		orderStatus = OrderStatus.CANCELED;
 	}
 

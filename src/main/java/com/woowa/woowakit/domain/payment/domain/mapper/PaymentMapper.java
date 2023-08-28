@@ -1,8 +1,9 @@
-package com.woowa.woowakit.domain.payment.domain;
+package com.woowa.woowakit.domain.payment.domain.mapper;
 
 import org.springframework.stereotype.Component;
 
 import com.woowa.woowakit.domain.order.domain.Order;
+import com.woowa.woowakit.domain.payment.domain.Payment;
 
 @Component
 public class PaymentMapper {

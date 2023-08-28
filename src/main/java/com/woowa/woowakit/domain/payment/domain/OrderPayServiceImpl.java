@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import com.woowa.woowakit.domain.order.domain.Order;
 import com.woowa.woowakit.domain.order.domain.OrderPayService;
 import com.woowa.woowakit.domain.order.domain.OrderRepository;
+import com.woowa.woowakit.domain.order.domain.OrderRollbackService;
 import com.woowa.woowakit.global.error.WooWaException;
 
 import io.micrometer.core.annotation.Counted;
@@ -21,6 +22,7 @@ public class OrderPayServiceImpl implements OrderPayService {
 	private final PaymentClient paymentClient;
 	private final PaymentService paymentService;
 	private final OrderRepository orderRepository;
+	private final OrderRollbackService orderRollbackService;
 
 	@Counted("order.payment.request")
 	public void pay(final Long orderId, final String paymentKey) {
@@ -30,7 +32,7 @@ public class OrderPayServiceImpl implements OrderPayService {
 		paymentClient.validatePayment(paymentKey, order.getUuid(), order.getTotalPrice())
 			.publishOn(Schedulers.boundedElastic())
 			.doOnSuccess(ignore -> paymentService.handlePaySuccess(orderId, paymentKey))
-			.doOnError(error -> paymentService.handlePayError(orderId, error))
+			.doOnError(error -> orderRollbackService.rollback(orderId, error))
 			.onErrorMap(IllegalArgumentException.class,
 				error -> new WooWaException(error.getMessage(), HttpStatus.BAD_REQUEST))
 			.onErrorMap(IllegalStateException.class,
