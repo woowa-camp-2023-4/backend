@@ -10,12 +10,12 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class ProductIdToQuantity {
+public class QuantityOfProducts {
 
 	private final Map<Long, Quantity> data;
 
-	public static ProductIdToQuantity from(final Order order) {
-		return new ProductIdToQuantity(order.getOrderItems()
+	public static QuantityOfProducts from(final Order order) {
+		return new QuantityOfProducts(order.getOrderItems()
 			.stream()
 			.collect(Collectors.toUnmodifiableMap(OrderItem::getProductId, OrderItem::getQuantity)));
 	}

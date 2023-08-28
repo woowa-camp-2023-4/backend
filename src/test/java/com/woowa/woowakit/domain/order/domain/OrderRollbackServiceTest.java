@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 
 import com.woowa.woowakit.domain.cart.domain.CartItemRepository;
 import com.woowa.woowakit.domain.model.Quantity;
+import com.woowa.woowakit.domain.order.domain.mapper.CartItemMapper;
 import com.woowa.woowakit.domain.order.fixture.OrderFixture;
 import com.woowa.woowakit.domain.product.domain.product.Product;
 import com.woowa.woowakit.domain.product.domain.product.ProductRepository;

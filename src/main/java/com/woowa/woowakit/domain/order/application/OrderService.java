@@ -1,24 +1,26 @@
 package com.woowa.woowakit.domain.order.application;
 
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.woowa.woowakit.domain.auth.domain.AuthPrincipal;
 import com.woowa.woowakit.domain.order.domain.Order;
-import com.woowa.woowakit.domain.order.domain.OrderMapper;
+import com.woowa.woowakit.domain.order.domain.OrderPayService;
+import com.woowa.woowakit.domain.order.domain.OrderPlaceService;
 import com.woowa.woowakit.domain.order.domain.OrderRepository;
-import com.woowa.woowakit.domain.order.domain.event.OrderCompleteEvent;
-import com.woowa.woowakit.domain.order.domain.service.OrderOrderService;
-import com.woowa.woowakit.domain.order.domain.service.OrderPayService;
+import com.woowa.woowakit.domain.order.domain.mapper.OrderMapper;
 import com.woowa.woowakit.domain.order.dto.request.OrderCreateRequest;
 import com.woowa.woowakit.domain.order.dto.request.PreOrderCreateCartItemRequest;
 import com.woowa.woowakit.domain.order.dto.request.PreOrderCreateRequest;
 import com.woowa.woowakit.domain.order.dto.response.OrderDetailResponse;
 import com.woowa.woowakit.domain.order.dto.response.PreOrderResponse;
 import com.woowa.woowakit.domain.order.exception.OrderNotFoundException;
+
 import io.micrometer.core.annotation.Counted;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
@@ -28,7 +30,7 @@ public class OrderService {
 	private final OrderRepository orderRepository;
 	private final OrderMapper orderMapper;
 	private final OrderPayService orderPayService;
-	private final OrderOrderService orderOrderService;
+	private final OrderPlaceService orderPlaceService;
 
 	@Transactional(readOnly = true)
 	public OrderDetailResponse findOrderByOrderIdAndMemberId(
@@ -78,8 +80,8 @@ public class OrderService {
 	}
 
 	public Long order(final AuthPrincipal authPrincipal, final OrderCreateRequest request) {
-		OrderCompleteEvent event = orderOrderService.order(authPrincipal, request);
-		orderPayService.pay(event);
-		return event.getOrder().getId();
+		orderPlaceService.order(authPrincipal, request.getOrderId());
+		orderPayService.pay(request.getOrderId(), request.getPaymentKey());
+		return request.getOrderId();
 	}
 }
