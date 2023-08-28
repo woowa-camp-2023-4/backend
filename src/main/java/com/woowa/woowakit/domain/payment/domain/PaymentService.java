@@ -8,7 +8,6 @@ import io.micrometer.core.annotation.Counted;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
@@ -21,8 +20,8 @@ public class PaymentService {
 	private final OrderRepository orderRepository;
 	private final OrderRollbackService orderRollbackService;
 
-	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	@Counted("order.payment.success")
+	@Transactional
 	public void handlePaySuccess(final OrderCompleteEvent event) {
 		Order order = findOrderById(event.getOrder().getId());
 		Payment payment = paymentMapper.mapFrom(event);
@@ -32,7 +31,7 @@ public class PaymentService {
 		log.info("결제 완료 subscribe paymentKey: {}", event.getPaymentKey());
 	}
 
-	@Transactional(propagation = Propagation.REQUIRES_NEW)
+	@Transactional
 	@Counted("order.payment.failure")
 	public void handlePayError(final OrderCompleteEvent event, final Throwable error) {
 		log.error("결제 실패 복구 시작 paymentKey: {}, message={}", event.getPaymentKey(),
