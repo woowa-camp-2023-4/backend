@@ -31,8 +31,8 @@ public class OrderPlaceService {
 		Order order = getOrderById(authPrincipal.getId(), orderId);
 
 		order.order();
-		deleteCartItems(order);
 		subtractProductQuantity(order);
+		deleteCartItems(order);
 	}
 
 	private void deleteCartItems(final Order order) {

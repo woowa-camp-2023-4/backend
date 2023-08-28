@@ -3,7 +3,6 @@ package com.woowa.woowakit.domain.order.domain;
 import java.util.List;
 
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.woowa.woowakit.domain.cart.domain.CartItem;
@@ -26,7 +25,7 @@ public class OrderRollbackService {
 	private final OrderRepository orderRepository;
 	private final CartItemMapper cartItemMapper;
 
-	@Transactional(propagation = Propagation.REQUIRES_NEW)
+	@Transactional
 	@Counted("order.payment.failure")
 	public void rollback(final Long orderId, final Throwable error) {
 		log.error("결제 실패 복구 시작 orderId: {}, message={}", orderId, error.getMessage());

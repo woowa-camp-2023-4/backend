@@ -20,7 +20,7 @@ import reactor.core.scheduler.Schedulers;
 public class OrderPayServiceImpl implements OrderPayService {
 
 	private final PaymentClient paymentClient;
-	private final PaymentService paymentService;
+	private final PaymentCreateService paymentSaveService;
 	private final OrderRepository orderRepository;
 	private final OrderRollbackService orderRollbackService;
 
@@ -29,9 +29,10 @@ public class OrderPayServiceImpl implements OrderPayService {
 		log.info("결제 요청 subscribe event: {}", paymentKey);
 
 		Order order = orderRepository.findById(orderId).orElseThrow();
+
 		paymentClient.validatePayment(paymentKey, order.getUuid(), order.getTotalPrice())
 			.publishOn(Schedulers.boundedElastic())
-			.doOnSuccess(ignore -> paymentService.handlePaySuccess(orderId, paymentKey))
+			.doOnSuccess(ignore -> paymentSaveService.save(orderId, paymentKey))
 			.doOnError(error -> orderRollbackService.rollback(orderId, error))
 			.onErrorMap(IllegalArgumentException.class,
 				error -> new WooWaException(error.getMessage(), HttpStatus.BAD_REQUEST))
