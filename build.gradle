@@ -95,6 +95,8 @@ asciidoctor {
 
 bootJar {
     dependsOn asciidoctor
+    dependsOn test
+    
     copy {
         from asciidoctor.outputDir
         into "src/main/resources/static/docs"
