@@ -9,7 +9,7 @@ name: Dev-Stage CD
 
 on:
     push:
-        branches: [ "feat/108" ]
+        branches: [ "feat/108-sync" ]
 
 permissions:
     contents: read
