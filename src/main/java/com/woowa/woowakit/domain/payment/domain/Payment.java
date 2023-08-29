@@ -1,5 +1,6 @@
 package com.woowa.woowakit.domain.payment.domain;
 
+import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -26,11 +27,14 @@ public class Payment extends BaseEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	@Column(name = "order_id")
 	private Long orderId;
 
+	@Column(name = "payment_key")
 	private String paymentKey;
 
 	@Convert(converter = MoneyConverter.class)
+	@Column(name = "total_price")
 	private Money totalPrice;
 
 	private String uuid;
