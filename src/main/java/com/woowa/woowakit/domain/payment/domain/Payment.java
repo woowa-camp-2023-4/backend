@@ -37,31 +37,25 @@ public class Payment extends BaseEntity {
 	@Column(name = "total_price")
 	private Money totalPrice;
 
-	private String uuid;
-
 	@Builder
 	private Payment(
 		final String paymentKey,
 		final Money totalPrice,
-		final String uuid,
 		final Long orderId
 	) {
 		this.paymentKey = paymentKey;
 		this.totalPrice = totalPrice;
-		this.uuid = uuid;
 		this.orderId = orderId;
 	}
 
 	public static Payment of(
 		final String paymentKey,
 		final Money totalPrice,
-		final String uuid,
 		final Long orderId
 	) {
 		return Payment.builder()
 			.paymentKey(paymentKey)
 			.totalPrice(totalPrice)
-			.uuid(uuid)
 			.orderId(orderId)
 			.build();
 	}

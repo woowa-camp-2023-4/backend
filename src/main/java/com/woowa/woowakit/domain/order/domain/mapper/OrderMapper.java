@@ -1,4 +1,4 @@
-package com.woowa.woowakit.domain.order.domain;
+package com.woowa.woowakit.domain.order.domain.mapper;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -10,6 +10,8 @@ import com.woowa.woowakit.domain.cart.domain.CartItemSpecification;
 import com.woowa.woowakit.domain.model.Image;
 import com.woowa.woowakit.domain.model.Money;
 import com.woowa.woowakit.domain.model.Quantity;
+import com.woowa.woowakit.domain.order.domain.Order;
+import com.woowa.woowakit.domain.order.domain.OrderItem;
 import com.woowa.woowakit.domain.order.exception.CartItemNotFoundException;
 import com.woowa.woowakit.domain.order.exception.ProductNotFoundException;
 import com.woowa.woowakit.domain.product.domain.product.Product;

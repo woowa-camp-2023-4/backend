@@ -1,21 +1,26 @@
 package com.woowa.woowakit.domain.order.application;
 
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.woowa.woowakit.domain.auth.domain.AuthPrincipal;
 import com.woowa.woowakit.domain.order.domain.Order;
-import com.woowa.woowakit.domain.order.domain.OrderMapper;
+import com.woowa.woowakit.domain.order.domain.OrderPayService;
+import com.woowa.woowakit.domain.order.domain.OrderPlaceService;
 import com.woowa.woowakit.domain.order.domain.OrderRepository;
+import com.woowa.woowakit.domain.order.domain.mapper.OrderMapper;
 import com.woowa.woowakit.domain.order.dto.request.OrderCreateRequest;
 import com.woowa.woowakit.domain.order.dto.request.PreOrderCreateCartItemRequest;
 import com.woowa.woowakit.domain.order.dto.request.PreOrderCreateRequest;
 import com.woowa.woowakit.domain.order.dto.response.OrderDetailResponse;
 import com.woowa.woowakit.domain.order.dto.response.PreOrderResponse;
 import com.woowa.woowakit.domain.order.exception.OrderNotFoundException;
+
 import io.micrometer.core.annotation.Counted;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
@@ -24,6 +29,8 @@ public class OrderService {
 
 	private final OrderRepository orderRepository;
 	private final OrderMapper orderMapper;
+	private final OrderPayService orderPayService;
+	private final OrderPlaceService orderPlaceService;
 
 	@Transactional(readOnly = true)
 	public OrderDetailResponse findOrderByOrderIdAndMemberId(
@@ -72,18 +79,9 @@ public class OrderService {
 		return PreOrderResponse.from(orderRepository.save(order));
 	}
 
-	@Transactional
-	@Counted("order.order")
-	public Long order(final AuthPrincipal authPrincipal, final OrderCreateRequest request) {
-		log.info("주문 생성 memberId: {} orderId: {} paymentKey: {}", authPrincipal.getId(),
-			request.getOrderId(), request.getPaymentKey());
-		Order order = getOrderById(authPrincipal.getId(), request.getOrderId());
-		order.order(request.getPaymentKey());
-		return orderRepository.save(order).getId();
-	}
-
-	private Order getOrderById(final Long memberId, final Long orderId) {
-		return orderRepository.findByIdAndMemberId(orderId, memberId)
-			.orElseThrow(OrderNotFoundException::new);
+	public Long pay(final AuthPrincipal authPrincipal, final OrderCreateRequest request) {
+		orderPlaceService.place(authPrincipal, request.getOrderId());
+		orderPayService.pay(request.getOrderId(), request.getPaymentKey());
+		return request.getOrderId();
 	}
 }
