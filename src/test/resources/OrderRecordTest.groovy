@@ -3,12 +3,11 @@ import net.grinder.script.GTest
 import net.grinder.scriptengine.groovy.junit.GrinderRunner
 import net.grinder.scriptengine.groovy.junit.annotation.BeforeProcess
 import net.grinder.scriptengine.groovy.junit.annotation.BeforeThread
-import org.junit.jupiter.api.Test
+import org.junit.Test
 import org.junit.runner.RunWith
 import org.ngrinder.http.HTTPRequest
 import org.ngrinder.http.HTTPRequestControl
 import org.ngrinder.http.HTTPResponse
-import org.ngrinder.http.cookie.Cookie
 
 import static net.grinder.script.Grinder.grinder
 
@@ -29,15 +28,14 @@ class TestRunner {
     public static GTest test3
     public static GTest test4
     public static GTest test5
+    public static GTest test6
+
 
     public static HTTPRequest request
     public static Map<String, String> headers = [:]
-    public static Map<String, Object> params = [:]
-
-    public static String other = ""
-    public static List<Cookie> cookies = []
     public static String SERVER_URL = "http://43.200.7.192:8080"
     public static final int MAX_PRODUCT_ID = 10000
+    public static final int TOTAL_USER = 260000
 
     public Random random = new Random()
     private String accessToken
@@ -45,9 +43,15 @@ class TestRunner {
     @BeforeProcess
     static void beforeProcess() {
         HTTPRequestControl.setConnectionTimeout(300000)
-        test1 = new GTest(1, "테스트")
+        test1 = new GTest(1, "메인_조회")
+        test2 = new GTest(2, "상품_상세_조회")
+        test3 = new GTest(3, "카트_담기")
+        test4 = new GTest(4, "주문_전체_내역_조회")
+        test5 = new GTest(5, "단건_주문")
+        test6 = new GTest(6, "카트_주문")
 
         request = new HTTPRequest()
+
 
         // Set header data
         headers.put("Content-Type", "application/json")
@@ -56,7 +60,12 @@ class TestRunner {
 
     @BeforeThread
     void beforeThread() {
-        test1.record(this, "test")
+        test1.record(this, "메인_조회")
+        test2.record(this, "상품_상세_조회")
+        test3.record(this, "카트_담기")
+        test4.record(this, "주문_전체_내역_조회")
+        test5.record(this, "단건_주문")
+        test6.record(this, "카트_주문")
 
         login()
 
@@ -65,7 +74,8 @@ class TestRunner {
     }
 
     String login() {
-        String body = "{\n   \"email\" : \"test7@test.com\",\n   \"password\" : \"test1234\"\n}"
+        String email = "test" + random.nextInt(TOTAL_USER) + "@test.com"
+        String body = "{\n   \"email\" : \"" + email + "\",\n   \"password\" : \"test1234\"\n}"
         HTTPResponse response = request.POST(SERVER_URL + "/auth/login", body.getBytes())
         def jsonResponse = new JsonSlurper().parseText(response.getBodyText())
         accessToken = jsonResponse.accessToken
@@ -81,7 +91,6 @@ class TestRunner {
     void test() {
         scenarioMove()
     }
-
 
     private void scenarioMove() {
         switch (random.nextInt(429)) {
@@ -109,30 +118,28 @@ class TestRunner {
                 // 6. 주문 전체 내역 조회
                 카트_주문(getWeightedRandomProductId(), getWeightedRandomProductId(), getWeightedRandomProductId())
                 break
-
         }
     }
 
     int getWeightedRandomProductId() {
 
+        int middle = MAX_PRODUCT_ID / 5
         // 8/2 확률로 2/8 프로덕트 아이디 호출
         if (random.nextInt(5) == 1) {
-            return random.nextInt(MAX_PRODUCT_ID / 5, MAX_PRODUCT_ID)
+            return random.nextInt(MAX_PRODUCT_ID - middle) + middle
         }
 
         return random.nextInt(MAX_PRODUCT_ID / 5) - 1
     }
 
     void 메인_조회() {
-
-
         //아직 진행중
-        HTTPResponse response = request.GET(SERVER_URL + "/products?pageSize=10", params)
+        HTTPResponse response = request.GET(SERVER_URL + "/products/rank")
         checkErrorLog(response)
     }
 
     void 상품_상세_조회(String productId) {
-        HTTPResponse response = request.GET(SERVER_URL + "/products/" + productId, params)
+        HTTPResponse response = request.GET(SERVER_URL + "/products/" + productId)
         checkErrorLog(response)
     }
 
@@ -141,7 +148,6 @@ class TestRunner {
         HTTPResponse preOrderResponse = request.POST(SERVER_URL + "/orders/pre", body.getBytes())
 
         주문_결제_요청(new JsonSlurper().parseText(preOrderResponse.getBodyText()).id)
-
         checkErrorLog(preOrderResponse)
     }
 
@@ -153,7 +159,7 @@ class TestRunner {
         주문_결제_요청(new JsonSlurper().parseText(response.getBodyText()).id)
     }
 
-    private HTTPResponse 카트_주문_요청() {
+    HTTPResponse 카트_주문_요청() {
         String body = "[ {\n" +
                 "  \"cartItemId\" : 1\n" +
                 "}, {\n" +
@@ -176,7 +182,7 @@ class TestRunner {
         checkErrorLog(response)
     }
 
-    private void 주문_결제_요청(Long orderId) {
+    void 주문_결제_요청(Long orderId) {
         String orderPayBody = "{\n" +
                 "  \"orderId\" : " + orderId + ",\n" +
                 "  \"paymentKey\" : \"paymentKey\"\n" +
@@ -197,7 +203,7 @@ class TestRunner {
         checkErrorLog(response)
     }
 
-    private void checkErrorLog(HTTPResponse response) {
+    void checkErrorLog(HTTPResponse response) {
         if (response.statusCode != 200 || response.statusCode != 201) {
             grinder.logger.error("Warning. The response may not be correct. The response code was {}.", response.statusCode)
         }
