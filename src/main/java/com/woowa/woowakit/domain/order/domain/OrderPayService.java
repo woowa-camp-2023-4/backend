@@ -1,14 +1,12 @@
 package com.woowa.woowakit.domain.order.domain;
 
-import org.springframework.stereotype.Component;
-
 import com.woowa.woowakit.domain.order.exception.InvalidPayRequestException;
 import com.woowa.woowakit.domain.order.exception.OrderNotFoundException;
 import com.woowa.woowakit.domain.order.exception.PayFailedException;
-
 import io.micrometer.core.annotation.Counted;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 import reactor.core.scheduler.Schedulers;
 
 @Slf4j
@@ -32,6 +30,6 @@ public class OrderPayService {
 			.doOnError(error -> payResultHandler.rollback(orderId, error))
 			.onErrorMap(IllegalArgumentException.class, InvalidPayRequestException::new)
 			.onErrorMap(IllegalStateException.class, PayFailedException::new)
-			.block();
+			.subscribe();
 	}
 }
