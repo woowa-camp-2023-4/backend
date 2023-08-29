@@ -12,11 +12,13 @@ import com.woowa.woowakit.domain.order.domain.OrderPlaceService;
 import com.woowa.woowakit.domain.order.domain.OrderRepository;
 import com.woowa.woowakit.domain.order.domain.mapper.OrderMapper;
 import com.woowa.woowakit.domain.order.dto.request.OrderCreateRequest;
+import com.woowa.woowakit.domain.order.dto.request.OrderSearchRequest;
 import com.woowa.woowakit.domain.order.dto.request.PreOrderCreateCartItemRequest;
 import com.woowa.woowakit.domain.order.dto.request.PreOrderCreateRequest;
 import com.woowa.woowakit.domain.order.dto.response.OrderDetailResponse;
 import com.woowa.woowakit.domain.order.dto.response.PreOrderResponse;
 import com.woowa.woowakit.domain.order.exception.OrderNotFoundException;
+import com.woowa.woowakit.domain.product.dto.request.ProductSearchRequest;
 
 import io.micrometer.core.annotation.Counted;
 import lombok.RequiredArgsConstructor;
@@ -51,9 +53,13 @@ public class OrderService {
 	}
 
 	@Transactional(readOnly = true)
-	public List<OrderDetailResponse> findAllOrderByMemberId(final AuthPrincipal authPrincipal) {
+	public List<OrderDetailResponse> findAllOrderByMemberId(
+		final AuthPrincipal authPrincipal,
+		final OrderSearchRequest request
+	) {
 		log.info("주문 목록 조회 memberId: {}", authPrincipal.getId());
-		List<Order> orders = orderRepository.findAllByMemberId(authPrincipal.getId());
+		List<Order> orders = orderRepository.findOrdersByMemberId(
+			authPrincipal.getId(), request.getLastOrderId(), request.getPageSize());
 		return OrderDetailResponse.listOf(orders);
 	}
 
