@@ -165,15 +165,15 @@ class TestRunner {
     HTTPResponse 카트_주문_요청(Long productId1, Long productId2, Long productId3) {
         String body = "[{\n" +
                 "        \"productId\": " + productId1 + ",\n" +
-                "        \"quantity\": 3,\n" +
+                "        \"quantity\": 3\n" +
                 "    },\n" +
                 "    {\n" +
                 "        \"productId\": " + productId2 + ",\n" +
-                "        \"quantity\": 3,\n" +
+                "        \"quantity\": 3\n" +
                 "    },\n" +
                 "    {\n" +
                 "        \"productId\": " + productId3 + ",\n" +
-                "        \"quantity\": 3,\n" +
+                "        \"quantity\": 3\n" +
                 "    }]"
         HTTPResponse response = request.POST(SERVER_URL + "/orders", body.getBytes())
         checkErrorLog(response)
