@@ -9,7 +9,7 @@ name: Dev-Stage CD
 
 on:
     push:
-        branches: [ "test/order-async" ]
+        branches: [ "test/order-asnyc" ]
 
 permissions:
     contents: read
