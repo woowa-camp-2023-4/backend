@@ -64,12 +64,21 @@ class ProductIntegrationTest extends IntegrationTest {
 	void mainPage() {
 		// given
 		String accessToken = MemberHelper.login(MemberHelper.createAdminLoginRequest());
-		ProductHelper.createProduct(ProductHelper.createProductCreateRequest(), accessToken);
-		ProductHelper.createProduct(ProductHelper.createProductCreateRequest(), accessToken);
-		ProductHelper.createProduct(ProductHelper.createProductCreateRequest2(), accessToken);
-		ProductHelper.createProduct(ProductHelper.createProductCreateRequest2(), accessToken);
-		ProductHelper.createProduct(ProductHelper.createProductCreateRequest3(), accessToken);
-		ProductHelper.createProduct(ProductHelper.createProductCreateRequest3(), accessToken);
+
+		String location1 = ProductHelper.createProduct(ProductHelper.createProductCreateRequest(), accessToken);
+		StockCreateRequest request1 = ProductHelper.createStockCreateRequest(5L);
+		ProductHelper.createStockOfProduct(location1, request1, accessToken);
+		ProductStatusUpdateRequest productStatusUpdateRequest1 = ProductHelper.createProductStatusUpdateRequest(
+			ProductStatus.IN_STOCK);
+		ProductHelper.updateProductStatus(location1, productStatusUpdateRequest1, accessToken);
+
+		String location2 = ProductHelper.createProduct(ProductHelper.createProductCreateRequest2(), accessToken);
+		StockCreateRequest request2 = ProductHelper.createStockCreateRequest(5L);
+		ProductHelper.createStockOfProduct(location2, request2, accessToken);
+		ProductHelper.createProductStatusUpdateRequest(ProductStatus.IN_STOCK);
+		ProductStatusUpdateRequest productStatusUpdateRequest2 = ProductHelper.createProductStatusUpdateRequest(
+			ProductStatus.IN_STOCK);
+		ProductHelper.updateProductStatus(location2, productStatusUpdateRequest2, accessToken);
 
 		// when
 		ExtractableResponse<Response> response = CommonRestAssuredUtils.get("/products/rank");
@@ -77,7 +86,7 @@ class ProductIntegrationTest extends IntegrationTest {
 		// then
 		assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
 		List<ProductResponse> responses = response.as(ArrayList.class);
-		assertThat(responses).hasSize(6);
+		assertThat(responses).hasSize(2);
 	}
 
 	@Test
@@ -85,16 +94,25 @@ class ProductIntegrationTest extends IntegrationTest {
 	void findAll() {
 		// given
 		String accessToken = MemberHelper.login(MemberHelper.createAdminLoginRequest());
-		ProductHelper.createProduct(ProductHelper.createProductCreateRequest(), accessToken);
-		ProductHelper.createProduct(ProductHelper.createProductCreateRequest(), accessToken);
-		ProductHelper.createProduct(ProductHelper.createProductCreateRequest2(), accessToken);
-		ProductHelper.createProduct(ProductHelper.createProductCreateRequest2(), accessToken);
-		ProductHelper.createProduct(ProductHelper.createProductCreateRequest3(), accessToken);
-		ProductHelper.createProduct(ProductHelper.createProductCreateRequest3(), accessToken);
+
+		String location1 = ProductHelper.createProduct(ProductHelper.createProductCreateRequest(), accessToken);
+		StockCreateRequest request1 = ProductHelper.createStockCreateRequest(5L);
+		ProductHelper.createStockOfProduct(location1, request1, accessToken);
+		ProductStatusUpdateRequest productStatusUpdateRequest1 = ProductHelper.createProductStatusUpdateRequest(
+			ProductStatus.IN_STOCK);
+		ProductHelper.updateProductStatus(location1, productStatusUpdateRequest1, accessToken);
+
+		String location2 = ProductHelper.createProduct(ProductHelper.createProductCreateRequest2(), accessToken);
+		StockCreateRequest request2 = ProductHelper.createStockCreateRequest(5L);
+		ProductHelper.createStockOfProduct(location2, request2, accessToken);
+		ProductHelper.createProductStatusUpdateRequest(ProductStatus.IN_STOCK);
+		ProductStatusUpdateRequest productStatusUpdateRequest2 = ProductHelper.createProductStatusUpdateRequest(
+			ProductStatus.IN_STOCK);
+		ProductHelper.updateProductStatus(location2, productStatusUpdateRequest2, accessToken);
 
 		// when
 		ExtractableResponse<Response> response = CommonRestAssuredUtils.get("/products",
-			Map.of("pageSize", 5, "productKeyword", "2"));
+			Map.of("pageSize", 5));
 
 		// then
 		assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
