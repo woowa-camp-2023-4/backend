@@ -41,11 +41,18 @@ public class Order extends BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+
 	@Enumerated(EnumType.STRING)
+	@Column(name = "order_status")
 	private OrderStatus orderStatus;
+
 	@Convert(converter = MoneyConverter.class)
+	@Column(name = "total_price")
 	private Money totalPrice;
+
+	@Column(name = "member_id")
 	private Long memberId;
+
 	@Column(name = "uuid")
 	private String uuid;
 

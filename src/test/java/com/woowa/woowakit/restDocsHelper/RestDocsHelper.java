@@ -1,23 +1,19 @@
 package com.woowa.woowakit.restDocsHelper;
 
-
-import org.springframework.http.HttpHeaders;
-import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
-import org.springframework.restdocs.operation.preprocess.Preprocessors;
-import org.springframework.restdocs.payload.FieldDescriptor;
+import static org.springframework.restdocs.headers.HeaderDocumentation.*;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.*;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.restdocs.request.RequestDocumentation.*;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
-import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
-import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import org.springframework.http.HttpHeaders;
+import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
+import org.springframework.restdocs.operation.preprocess.Preprocessors;
+import org.springframework.restdocs.payload.FieldDescriptor;
 
 public class RestDocsHelper {
 
@@ -26,7 +22,9 @@ public class RestDocsHelper {
 		final RequestFields requestFields,
 		final ResponseFields responseFields
 	) {
-		return getRestDocumentationResultHandler(path).document(
+		return document(path,
+			preprocessRequest(Preprocessors.prettyPrint()),
+			preprocessResponse(Preprocessors.prettyPrint()),
 			requestFields(
 				requestFieldsDescriptor(requestFields.getValues())),
 			responseFields(
@@ -39,7 +37,9 @@ public class RestDocsHelper {
 		final PathParam pathParam,
 		final ResponseFields responseFields
 	) {
-		return getRestDocumentationResultHandler(path).document(
+		return document(path,
+			preprocessRequest(Preprocessors.prettyPrint()),
+			preprocessResponse(Preprocessors.prettyPrint()),
 			pathParameters(
 				parameterWithName(pathParam.getName()).description(pathParam.getDescription())),
 			responseFields(
@@ -51,7 +51,9 @@ public class RestDocsHelper {
 		final String path,
 		final ResponseFields responseFields
 	) {
-		return getRestDocumentationResultHandler(path).document(
+		return document(path,
+			preprocessRequest(Preprocessors.prettyPrint()),
+			preprocessResponse(Preprocessors.prettyPrint()),
 			requestHeaders(
 				headerWithName(HttpHeaders.AUTHORIZATION).description("인증 헤더 이름")),
 			responseFields(
@@ -63,7 +65,9 @@ public class RestDocsHelper {
 		final String path,
 		final RequestFields requestFields
 	) {
-		return getRestDocumentationResultHandler(path).document(
+		return document(path,
+			preprocessRequest(Preprocessors.prettyPrint()),
+			preprocessResponse(Preprocessors.prettyPrint()),
 			requestHeaders(
 				headerWithName(HttpHeaders.AUTHORIZATION).description("인증 헤더 이름")),
 			requestFields(
@@ -76,7 +80,9 @@ public class RestDocsHelper {
 		final PathParam pathParam
 
 	) {
-		return getRestDocumentationResultHandler(path).document(
+		return document(path,
+			preprocessRequest(Preprocessors.prettyPrint()),
+			preprocessResponse(Preprocessors.prettyPrint()),
 			requestHeaders(
 				headerWithName(HttpHeaders.AUTHORIZATION).description("인증 헤더 이름")),
 			pathParameters(
@@ -90,7 +96,9 @@ public class RestDocsHelper {
 		final ResponseFields responseFields
 
 	) {
-		return getRestDocumentationResultHandler(path).document(
+		return document(path,
+			preprocessRequest(Preprocessors.prettyPrint()),
+			preprocessResponse(Preprocessors.prettyPrint()),
 			requestHeaders(
 				headerWithName(HttpHeaders.AUTHORIZATION).description("인증 헤더 이름")),
 			requestFields(
@@ -107,7 +115,9 @@ public class RestDocsHelper {
 		final RequestFields requestFields
 
 	) {
-		return getRestDocumentationResultHandler(path).document(
+		return document(path,
+			preprocessRequest(Preprocessors.prettyPrint()),
+			preprocessResponse(Preprocessors.prettyPrint()),
 			requestHeaders(
 				headerWithName(HttpHeaders.AUTHORIZATION).description("인증 헤더 이름")),
 			pathParameters(
@@ -123,7 +133,9 @@ public class RestDocsHelper {
 		final ResponseFields responseFields
 
 	) {
-		return getRestDocumentationResultHandler(path).document(
+		return document(path,
+			preprocessRequest(Preprocessors.prettyPrint()),
+			preprocessResponse(Preprocessors.prettyPrint()),
 			requestHeaders(
 				headerWithName(HttpHeaders.AUTHORIZATION).description("인증 헤더 이름")),
 			pathParameters(
@@ -132,7 +144,6 @@ public class RestDocsHelper {
 				responseFieldsDescriptor(responseFields.getValues()))
 		);
 	}
-
 
 	private static List<FieldDescriptor> requestFieldsDescriptor(final Map<String, String> keyValue) {
 		List<FieldDescriptor> fieldDescriptors = new ArrayList<>();
