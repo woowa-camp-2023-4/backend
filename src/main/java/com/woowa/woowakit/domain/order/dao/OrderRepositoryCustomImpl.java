@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.woowa.woowakit.domain.order.domain.Order;
+import com.woowa.woowakit.domain.order.domain.OrderStatus;
 
 import lombok.RequiredArgsConstructor;
 
@@ -21,7 +22,9 @@ public class OrderRepositoryCustomImpl implements OrderRepositoryCustom {
 	@Override
 	public List<Order> findOrdersByMemberId(Long memberId, Long lastOrderId, int pageSize) {
 		return jpaQueryFactory.selectFrom(order)
-			.where(order.memberId.eq(memberId), cursor(lastOrderId))
+			.where(order.memberId.eq(memberId),
+				cursor(lastOrderId),
+				order.orderStatus.in(OrderStatus.PAYED, OrderStatus.CANCELED))
 			.orderBy(order.id.desc())
 			.limit(pageSize)
 			.fetch();
