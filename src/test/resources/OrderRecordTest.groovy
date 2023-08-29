@@ -93,7 +93,11 @@ class TestRunner {
     }
 
     private void scenarioMove() {
-        switch (random.nextInt(429)) {
+
+        int dice = random.nextInt(429)
+        grinder.logger.info("dice : " + dice)
+
+        switch (dice) {
             case 1..200:
                 // 1. 메인 조회
                 메인_조회()
@@ -129,7 +133,7 @@ class TestRunner {
             return random.nextInt(MAX_PRODUCT_ID - middle) + middle
         }
 
-        return random.nextInt(MAX_PRODUCT_ID / 5) - 1
+        return random.nextInt((int) (MAX_PRODUCT_ID / 5)) - 1
     }
 
     void 메인_조회() {
@@ -138,12 +142,12 @@ class TestRunner {
         checkErrorLog(response)
     }
 
-    void 상품_상세_조회(String productId) {
+    void 상품_상세_조회(Long productId) {
         HTTPResponse response = request.GET(SERVER_URL + "/products/" + productId)
         checkErrorLog(response)
     }
 
-    void 단건_주문(long productId) {
+    void 단건_주문(Long productId) {
         String body = "{\n \"productId\" : " + productId + " ,\n  \"quantity\" : 1 \n}"
         HTTPResponse preOrderResponse = request.POST(SERVER_URL + "/orders/pre", body.getBytes())
 
@@ -151,7 +155,7 @@ class TestRunner {
         checkErrorLog(preOrderResponse)
     }
 
-    void 카트_주문(long productId1, long productId2, long productId3) {
+    void 카트_주문(Long productId1, Long productId2, Long productId3) {
         카트_담기(productId1)
         카트_담기(productId2)
         카트_담기(productId3)
@@ -177,7 +181,7 @@ class TestRunner {
                 "  \"productId\" : " + productId + ",\n" +
                 "  \"quantity\" : 3\n" +
                 "}"
-        HTTPResponse response = request.POST(SERVER_URL + "/orders", cartItemBody.getBytes())
+        HTTPResponse response = request.POST(SERVER_URL + "/cart-items", cartItemBody.getBytes())
 
         checkErrorLog(response)
     }
@@ -193,7 +197,7 @@ class TestRunner {
     }
 
     String 카트_조회() {
-        HTTPResponse response = request.POST(SERVER_URL + "/orders/pre-cart-item", cartItemBody.getBytes())
+        HTTPResponse response = request.GET(SERVER_URL + "/cart-items")
         checkErrorLog(response)
         return response.bodyText
     }
