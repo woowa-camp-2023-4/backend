@@ -67,10 +67,12 @@ class OrderServiceConcurrencyTest {
 		ExecutorService executorService = Executors.newFixedThreadPool(32);
 		CountDownLatch countDownLatch = new CountDownLatch(threadCount);
 		for (int i = 0; i < threadCount; i++) {
-			OrderCreateRequest request = OrderCreateRequest.of((long)(i + 1), "test");
+			long orderId = i + 1;
+			OrderCreateRequest request = OrderCreateRequest.of("test");
+			
 			executorService.submit(() -> {
 				try {
-					orderService.pay(AuthPrincipal.from(member), request);
+					orderService.pay(AuthPrincipal.from(member), orderId, request);
 				} finally {
 					countDownLatch.countDown();
 				}

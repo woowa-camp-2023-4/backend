@@ -79,9 +79,8 @@ public class OrderService {
 		return PreOrderResponse.from(orderRepository.save(order));
 	}
 
-	public Long pay(final AuthPrincipal authPrincipal, final OrderCreateRequest request) {
-		orderPlaceService.place(authPrincipal, request.getOrderId());
-		orderPayService.pay(request.getOrderId(), request.getPaymentKey());
-		return request.getOrderId();
+	public void pay(final AuthPrincipal authPrincipal, final Long orderId, final OrderCreateRequest request) {
+		orderPlaceService.place(authPrincipal, orderId);
+		orderPayService.pay(orderId, request.getPaymentKey());
 	}
 }

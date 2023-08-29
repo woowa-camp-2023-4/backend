@@ -41,13 +41,14 @@ public class OrderHelper {
 
 	public static ExtractableResponse<Response> createOrder(
 		final OrderCreateRequest request,
+		final Long orderId,
 		final String accessToken
 	) {
-		return CommonRestAssuredUtils.post("/orders", request, accessToken);
+		return CommonRestAssuredUtils.post("/orders/" + orderId + "/pay", request, accessToken);
 	}
 
-	public static OrderCreateRequest createOrderCreateRequest(final Long preOrderId) {
-		return OrderCreateRequest.of(preOrderId, "paymentKey");
+	public static OrderCreateRequest createOrderCreateRequest() {
+		return OrderCreateRequest.of("paymentKey");
 	}
 
 	public static OrderDetailResponse getOrder(

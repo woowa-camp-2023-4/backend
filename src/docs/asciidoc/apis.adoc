@@ -113,13 +113,14 @@ include::{snippets}/orders/pre-cart/response-fields.adoc[]
 
 === 요청
 
-include::{snippets}/orders/order/http-request.adoc[]
-include::{snippets}/orders/order/request-headers.adoc[]
-include::{snippets}/orders/order/request-fields.adoc[]
+include::{snippets}/orders/pay/http-request.adoc[]
+include::{snippets}/orders/pay/request-headers.adoc[]
+include::{snippets}/orders/pay/path-parameters.adoc[]
+include::{snippets}/orders/pay/request-fields.adoc[]
 
 === 응답
 
-include::{snippets}/orders/order/http-response.adoc[]
+include::{snippets}/orders/pay/http-response.adoc[]
 
 == 단일 주문 조회
 

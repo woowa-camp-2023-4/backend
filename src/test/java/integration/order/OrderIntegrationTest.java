@@ -77,7 +77,7 @@ class OrderIntegrationTest extends IntegrationTest {
 
 	@Test
 	@DisplayName("주문을 진행한다")
-	void order() throws InterruptedException {
+	void order() {
 		// given
 		Long productId = ProductHelper.createProductAndSetUp();
 		String accessToken = MemberHelper.signUpAndLogIn();
@@ -88,11 +88,10 @@ class OrderIntegrationTest extends IntegrationTest {
 
 		//when
 		ExtractableResponse<Response> response = OrderHelper.createOrder(
-			OrderHelper.createOrderCreateRequest(orderId), accessToken);
+			OrderHelper.createOrderCreateRequest(), orderId, accessToken);
 
 		// then
 		assertThat(response.statusCode()).isEqualTo(200);
-		assertThat(response.as(Long.class)).isNotNull();
 		Long afterProductQuantity = ProductHelper.getProductDetail(productId).getQuantity();
 		assertThat(afterProductQuantity).isEqualTo(beforeProductQuantity - 1);
 
@@ -102,7 +101,7 @@ class OrderIntegrationTest extends IntegrationTest {
 
 	@Test
 	@DisplayName("주문 실패 시 복구 로직을 진행한다")
-	void orderRecovery() throws InterruptedException {
+	void orderRecovery() {
 		// given
 		Long productId = ProductHelper.createProductAndSetUp();
 		String accessToken = MemberHelper.signUpAndLogIn();
@@ -114,7 +113,7 @@ class OrderIntegrationTest extends IntegrationTest {
 
 		//when
 		ExtractableResponse<Response> response = OrderHelper.createOrder(
-			OrderHelper.createOrderCreateRequest(orderId), accessToken);
+			OrderHelper.createOrderCreateRequest(), orderId, accessToken);
 
 		// then
 		assertThat(response.statusCode()).isEqualTo(400);
@@ -135,7 +134,7 @@ class OrderIntegrationTest extends IntegrationTest {
 		Long orderId = OrderHelper.createPreOrderAndGetId(productId, accessToken);
 
 		when(paymentClient.validatePayment(any(), any(), any())).thenReturn(Mono.empty());
-		OrderHelper.createOrder(OrderHelper.createOrderCreateRequest(orderId), accessToken);
+		OrderHelper.createOrder(OrderHelper.createOrderCreateRequest(), orderId, accessToken);
 
 		// when
 		ExtractableResponse<Response> response = CommonRestAssuredUtils.get("/orders/" + orderId, accessToken);
@@ -157,8 +156,8 @@ class OrderIntegrationTest extends IntegrationTest {
 		Long orderId1 = OrderHelper.createPreOrderAndGetId(productId, accessToken);
 		Long orderId2 = OrderHelper.createPreOrderAndGetId(productId, accessToken);
 
-		OrderHelper.createOrder(OrderHelper.createOrderCreateRequest(orderId1), accessToken);
-		OrderHelper.createOrder(OrderHelper.createOrderCreateRequest(orderId2), accessToken);
+		OrderHelper.createOrder(OrderHelper.createOrderCreateRequest(), orderId1, accessToken);
+		OrderHelper.createOrder(OrderHelper.createOrderCreateRequest(), orderId2, accessToken);
 
 		// when
 		ExtractableResponse<Response> response = CommonRestAssuredUtils.get("/orders", accessToken);

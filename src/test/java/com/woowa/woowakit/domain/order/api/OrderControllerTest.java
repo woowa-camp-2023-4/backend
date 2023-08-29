@@ -114,25 +114,23 @@ class OrderControllerTest extends RestDocsTest {
 	}
 
 	@Test
-	@DisplayName("[POST] [/orders/order] 주문 테스트 및 문서화")
+	@DisplayName("[POST] [/orders/{id}/pay] 주문 테스트 및 문서화")
 	void createOrder() throws Exception {
+		PathParam pathParam = new PathParam("id", "주문 ID");
 		RequestFields requestFields = new RequestFields(Map.of(
-			"orderId", "주문 ID",
 			"paymentKey", "결제 키"
 		));
 
 		String token = getToken();
-		OrderCreateRequest request = OrderCreateRequest.of(1L, "paymentKey");
-		Long response = 1L;
-		given(orderService.pay(any(), any())).willReturn(response);
+		OrderCreateRequest request = OrderCreateRequest.of("paymentKey");
 
-		mockMvc.perform(post("/orders")
+		mockMvc.perform(post("/orders/{id}/pay", 1L)
 				.header(HttpHeaders.AUTHORIZATION, token)
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(request)))
 			.andExpect(status().isOk())
-			.andExpect(handler().methodName("createOrder"))
-			.andDo(authorizationDocument("orders/order", requestFields));
+			.andExpect(handler().methodName("pay"))
+			.andDo(authorizationDocument("orders/pay", pathParam, requestFields));
 	}
 
 	@Test

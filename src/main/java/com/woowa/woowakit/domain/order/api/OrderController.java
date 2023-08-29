@@ -53,13 +53,14 @@ public class OrderController {
 	}
 
 	@User
-	@PostMapping
-	public ResponseEntity<Long> createOrder(
+	@PostMapping("/{id}/pay")
+	public ResponseEntity<Void> pay(
 		@Authenticated final AuthPrincipal authPrincipal,
+		@PathVariable final Long id,
 		@Valid @RequestBody final OrderCreateRequest request
 	) {
-		Long orderId = orderService.pay(authPrincipal, request);
-		return ResponseEntity.status(HttpStatus.OK).body(orderId);
+		orderService.pay(authPrincipal, id, request);
+		return ResponseEntity.status(HttpStatus.OK).build();
 	}
 
 	@User
