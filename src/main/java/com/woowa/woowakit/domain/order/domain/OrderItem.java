@@ -1,12 +1,5 @@
 package com.woowa.woowakit.domain.order.domain;
 
-import javax.persistence.Column;
-import javax.persistence.Convert;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
 import com.woowa.woowakit.domain.model.BaseEntity;
 import com.woowa.woowakit.domain.model.Image;
 import com.woowa.woowakit.domain.model.Money;
@@ -14,11 +7,13 @@ import com.woowa.woowakit.domain.model.Quantity;
 import com.woowa.woowakit.domain.model.converter.ImageConverter;
 import com.woowa.woowakit.domain.model.converter.MoneyConverter;
 import com.woowa.woowakit.domain.model.converter.QuantityConverter;
-
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Table(name = "order_items")
@@ -80,5 +75,18 @@ public class OrderItem extends BaseEntity {
 
 	Money calculateTotalPrice() {
 		return price.multiply(quantity.getValue());
+	}
+
+	@Override
+	public boolean equals(final Object o) {
+		if (this == o) return true;
+		if (!(o instanceof OrderItem)) return false;
+		final OrderItem orderItem = (OrderItem) o;
+		return Objects.equals(id, orderItem.id);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id);
 	}
 }

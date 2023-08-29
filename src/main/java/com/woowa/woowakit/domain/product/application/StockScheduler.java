@@ -1,17 +1,19 @@
 package com.woowa.woowakit.domain.product.application;
 
+import com.woowa.woowakit.domain.product.domain.product.ProductRepository;
+import com.woowa.woowakit.domain.product.domain.stock.Stock;
+import com.woowa.woowakit.domain.product.domain.stock.StockRepository;
+import com.woowa.woowakit.domain.product.domain.stock.StockType;
+import com.woowa.woowakit.domain.product.exception.StockBatchFailException;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
-
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
-
-import com.woowa.woowakit.domain.product.domain.product.ProductRepository;
-
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
@@ -19,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 public class StockScheduler {
 
 	private final ProductRepository productRepository;
+	private final StockRepository stockRepository;
 	private final StockProcessingService stockProcessingService;
 
 	@Scheduled(zone = "Asia/Seoul", cron = "0 0 0 * * ?")
@@ -26,13 +29,20 @@ public class StockScheduler {
 		long startEnd = System.currentTimeMillis();
 		log.info("재고 정합성 스케쥴러 시작 = {}", LocalDateTime.now());
 		List<Long> productIds = productRepository.findAllIds();
-
 		for (Long productId : productIds) {
-			log.info("상품 정합성 시작 = {} productId = {}", LocalDateTime.now(), productId);
-			stockProcessingService.doProcess(productId, LocalDate.now(ZoneId.of("Asia/Seoul")));
-			log.info("상품 정합성 끝 = {}", LocalDateTime.now());
+			List<Stock> stocks = stockRepository.findAllByProductId(productId, StockType.NORMAL);
+			doStockProcess(productId, stocks);
 		}
 		long diffTime = System.currentTimeMillis() - startEnd;
 		log.info("재고 정합성 스케쥴러 끝 = {} , 걸린 시간 = {} ms ", LocalDateTime.now(), diffTime);
+	}
+
+	private void doStockProcess(final Long productId, final List<Stock> stocks) {
+		try {
+			stockProcessingService.doAsyncStockProcess(productId, LocalDate.now(ZoneId.of("Asia/Seoul")), stocks);
+		} catch (Exception e) {
+			log.warn("productId = {} 배치 처리 실패", productId);
+			throw new StockBatchFailException(e);
+		}
 	}
 }
