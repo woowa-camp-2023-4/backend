@@ -30,7 +30,7 @@ public class PayResultHandler {
 	@Transactional
 	@Counted("order.payment.success")
 	public void save(final Long orderId, final String paymentKey) {
-		log.error("결제 성공 orderId: {}, paymentKey={}", orderId, paymentKey);
+		log.info("결제 성공 orderId: {}, paymentKey={}", orderId, paymentKey);
 		Order order = findOrderById(orderId);
 
 		order.pay();
