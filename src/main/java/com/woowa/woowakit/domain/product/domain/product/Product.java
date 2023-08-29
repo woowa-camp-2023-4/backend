@@ -1,18 +1,29 @@
 package com.woowa.woowakit.domain.product.domain.product;
 
+import java.util.Objects;
+
+import javax.persistence.Column;
+import javax.persistence.Convert;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
 import com.woowa.woowakit.domain.model.BaseEntity;
 import com.woowa.woowakit.domain.model.Quantity;
 import com.woowa.woowakit.domain.model.converter.QuantityConverter;
 import com.woowa.woowakit.domain.product.domain.product.converter.ProductImageConverter;
 import com.woowa.woowakit.domain.product.domain.product.converter.ProductPriceConverter;
 import com.woowa.woowakit.domain.product.exception.UpdateProductStatusFailException;
+
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import javax.persistence.*;
-import java.util.Objects;
 
 @Entity
 @Table(name = "products")
@@ -99,18 +110,5 @@ public class Product extends BaseEntity {
 
 	public boolean isEnoughQuantity(final Quantity requiredQuantity) {
 		return requiredQuantity.smallerThanOrEqualTo(this.quantity);
-	}
-
-	@Override
-	public boolean equals(final Object o) {
-		if (this == o) return true;
-		if (!(o instanceof Product)) return false;
-		final Product product = (Product) o;
-		return Objects.equals(id, product.id);
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(id);
 	}
 }

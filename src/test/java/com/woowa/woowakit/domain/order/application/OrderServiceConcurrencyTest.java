@@ -1,6 +1,8 @@
 package com.woowa.woowakit.domain.order.application;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
@@ -18,12 +20,14 @@ import com.woowa.woowakit.domain.auth.domain.MemberRepository;
 import com.woowa.woowakit.domain.cart.domain.CartItemRepository;
 import com.woowa.woowakit.domain.member.fixture.MemberFixture;
 import com.woowa.woowakit.domain.model.Quantity;
+import com.woowa.woowakit.domain.order.domain.PaymentClient;
 import com.woowa.woowakit.domain.order.dto.request.OrderCreateRequest;
 import com.woowa.woowakit.domain.order.dto.request.PreOrderCreateRequest;
-import com.woowa.woowakit.domain.payment.domain.PaymentService;
 import com.woowa.woowakit.domain.product.domain.product.Product;
 import com.woowa.woowakit.domain.product.domain.product.ProductRepository;
 import com.woowa.woowakit.domain.product.fixture.ProductFixture;
+
+import reactor.core.publisher.Mono;
 
 @SpringBootTest
 @DisplayName("OrderService 동시성 테스트")
@@ -42,7 +46,7 @@ class OrderServiceConcurrencyTest {
 	private OrderService orderService;
 
 	@MockBean
-	private PaymentService paymentService;
+	private PaymentClient paymentClient;
 
 	@Test
 	@DisplayName("주문 동시성 테스트")
@@ -57,6 +61,7 @@ class OrderServiceConcurrencyTest {
 			PreOrderCreateRequest request = PreOrderCreateRequest.of(product.getId(), 10L);
 			orderService.preOrder(AuthPrincipal.from(member), request);
 		}
+		when(paymentClient.validatePayment(any(), any(), any())).thenReturn(Mono.empty());
 
 		// when
 		ExecutorService executorService = Executors.newFixedThreadPool(32);
@@ -65,7 +70,7 @@ class OrderServiceConcurrencyTest {
 			OrderCreateRequest request = OrderCreateRequest.of((long)(i + 1), "test");
 			executorService.submit(() -> {
 				try {
-					orderService.order(AuthPrincipal.from(member), request);
+					orderService.pay(AuthPrincipal.from(member), request);
 				} finally {
 					countDownLatch.countDown();
 				}

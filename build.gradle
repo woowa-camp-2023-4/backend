@@ -41,6 +41,10 @@ dependencies {
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
 
+    // cache
+    implementation 'org.springframework.boot:spring-boot-starter-cache'
+    implementation 'com.github.ben-manes.caffeine:caffeine'
+
     // querydsl
     implementation "com.querydsl:querydsl-jpa"
     implementation "com.querydsl:querydsl-core"
@@ -91,6 +95,8 @@ asciidoctor {
 
 bootJar {
     dependsOn asciidoctor
+    dependsOn test
+    
     copy {
         from asciidoctor.outputDir
         into "src/main/resources/static/docs"

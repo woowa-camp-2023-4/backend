@@ -1,6 +1,8 @@
 package integration.order;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
 
 import java.util.List;
 
@@ -10,9 +12,9 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 
 import com.woowa.woowakit.domain.order.domain.OrderStatus;
+import com.woowa.woowakit.domain.order.domain.PaymentClient;
 import com.woowa.woowakit.domain.order.dto.response.OrderDetailResponse;
 import com.woowa.woowakit.domain.order.dto.response.PreOrderResponse;
-import com.woowa.woowakit.domain.payment.domain.PaymentService;
 
 import integration.IntegrationTest;
 import integration.helper.CartItemHelper;
@@ -22,12 +24,13 @@ import integration.helper.OrderHelper;
 import integration.helper.ProductHelper;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import reactor.core.publisher.Mono;
 
 @DisplayName("주문 통합 테스트")
 class OrderIntegrationTest extends IntegrationTest {
 
 	@MockBean
-	private PaymentService paymentService;
+	private PaymentClient paymentClient;
 
 	@Test
 	@DisplayName("가주문을 생성한다")
@@ -74,64 +77,96 @@ class OrderIntegrationTest extends IntegrationTest {
 
 	@Test
 	@DisplayName("주문을 진행한다")
-	void order() {
+	void order() throws InterruptedException {
 		// given
 		Long productId = ProductHelper.createProductAndSetUp();
 		String accessToken = MemberHelper.signUpAndLogIn();
 		Long orderId = OrderHelper.createPreOrderAndGetId(productId, accessToken);
 		Long beforeProductQuantity = ProductHelper.getProductDetail(productId).getQuantity();
 
+		when(paymentClient.validatePayment(any(), any(), any())).thenReturn(Mono.empty());
+
 		//when
 		ExtractableResponse<Response> response = OrderHelper.createOrder(
 			OrderHelper.createOrderCreateRequest(orderId), accessToken);
 
-        // then
-        assertThat(response.statusCode()).isEqualTo(200);
-        assertThat(response.as(Long.class)).isNotNull();
-        Long afterProductQuantity = ProductHelper.getProductDetail(productId).getQuantity();
-        assertThat(afterProductQuantity).isEqualTo(beforeProductQuantity - 1);
-    }
+		// then
+		assertThat(response.statusCode()).isEqualTo(200);
+		assertThat(response.as(Long.class)).isNotNull();
+		Long afterProductQuantity = ProductHelper.getProductDetail(productId).getQuantity();
+		assertThat(afterProductQuantity).isEqualTo(beforeProductQuantity - 1);
 
-    @Test
-    @DisplayName("회원이 주문 상세 정보를 조회한다.")
-    void findById() {
-        // given
-        Long productId = ProductHelper.createProductAndSetUp();
-        String accessToken = MemberHelper.signUpAndLogIn();
-        Long orderId = OrderHelper.createPreOrderAndGetId(productId, accessToken);
+		OrderDetailResponse orderResponse = OrderHelper.getOrder(orderId, accessToken);
+		assertThat(orderResponse).extracting("orderStatus").isEqualTo("PAYED");
+	}
 
-        OrderHelper.createOrder(OrderHelper.createOrderCreateRequest(orderId), accessToken);
+	@Test
+	@DisplayName("주문 실패 시 복구 로직을 진행한다")
+	void orderRecovery() throws InterruptedException {
+		// given
+		Long productId = ProductHelper.createProductAndSetUp();
+		String accessToken = MemberHelper.signUpAndLogIn();
+		Long orderId = OrderHelper.createPreOrderAndGetId(productId, accessToken);
+		Long beforeProductQuantity = ProductHelper.getProductDetail(productId).getQuantity();
 
-        // when
-        ExtractableResponse<Response> response = CommonRestAssuredUtils.get("/orders/" + orderId, accessToken);
+		when(paymentClient.validatePayment(any(), any(), any())).thenReturn(
+			Mono.error(IllegalArgumentException::new));
 
-        // then
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-        OrderDetailResponse body = response.as(OrderDetailResponse.class);
-        assertThat(body).extracting(OrderDetailResponse::getOrderId).isEqualTo(orderId);
-        assertThat(body).extracting(OrderDetailResponse::getOrderStatus).isEqualTo(OrderStatus.ORDERED.name());
-        assertThat(body).extracting(OrderDetailResponse::getTotalPrice).isEqualTo(3000L);
-    }
+		//when
+		ExtractableResponse<Response> response = OrderHelper.createOrder(
+			OrderHelper.createOrderCreateRequest(orderId), accessToken);
 
-    @Test
-    @DisplayName("회원이 본인 주문 리스트를 조회한다.")
-    void findAll() {
-        // given
-        Long productId = ProductHelper.createProductAndSetUp();
-        String accessToken = MemberHelper.signUpAndLogIn();
-        Long orderId1 = OrderHelper.createPreOrderAndGetId(productId, accessToken);
-        Long orderId2 = OrderHelper.createPreOrderAndGetId(productId, accessToken);
+		// then
+		assertThat(response.statusCode()).isEqualTo(400);
 
-        OrderHelper.createOrder(OrderHelper.createOrderCreateRequest(orderId1), accessToken);
-        OrderHelper.createOrder(OrderHelper.createOrderCreateRequest(orderId2), accessToken);
+		Long afterProductQuantity = ProductHelper.getProductDetail(productId).getQuantity();
+		assertThat(afterProductQuantity).isEqualTo(beforeProductQuantity);
 
-        // when
-        ExtractableResponse<Response> response = CommonRestAssuredUtils.get("/orders", accessToken);
+		OrderDetailResponse orderResponse = OrderHelper.getOrder(orderId, accessToken);
+		assertThat(orderResponse).extracting("orderStatus").isEqualTo("CANCELED");
+	}
 
-        // then
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-        List body = response.as(List.class);
-        assertThat(body).hasSize(2);
-    }
+	@Test
+	@DisplayName("회원이 주문 상세 정보를 조회한다.")
+	void findById() {
+		// given
+		Long productId = ProductHelper.createProductAndSetUp();
+		String accessToken = MemberHelper.signUpAndLogIn();
+		Long orderId = OrderHelper.createPreOrderAndGetId(productId, accessToken);
+
+		when(paymentClient.validatePayment(any(), any(), any())).thenReturn(Mono.empty());
+		OrderHelper.createOrder(OrderHelper.createOrderCreateRequest(orderId), accessToken);
+
+		// when
+		ExtractableResponse<Response> response = CommonRestAssuredUtils.get("/orders/" + orderId, accessToken);
+
+		// then
+		assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+		OrderDetailResponse body = response.as(OrderDetailResponse.class);
+		assertThat(body).extracting(OrderDetailResponse::getOrderId).isEqualTo(orderId);
+		assertThat(body).extracting(OrderDetailResponse::getOrderStatus).isEqualTo(OrderStatus.PAYED.name());
+		assertThat(body).extracting(OrderDetailResponse::getTotalPrice).isEqualTo(3000L);
+	}
+
+	@Test
+	@DisplayName("회원이 본인 주문 리스트를 조회한다.")
+	void findAll() {
+		// given
+		Long productId = ProductHelper.createProductAndSetUp();
+		String accessToken = MemberHelper.signUpAndLogIn();
+		Long orderId1 = OrderHelper.createPreOrderAndGetId(productId, accessToken);
+		Long orderId2 = OrderHelper.createPreOrderAndGetId(productId, accessToken);
+
+		OrderHelper.createOrder(OrderHelper.createOrderCreateRequest(orderId1), accessToken);
+		OrderHelper.createOrder(OrderHelper.createOrderCreateRequest(orderId2), accessToken);
+
+		// when
+		ExtractableResponse<Response> response = CommonRestAssuredUtils.get("/orders", accessToken);
+
+		// then
+		assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+		List body = response.as(List.class);
+		assertThat(body).hasSize(2);
+	}
 
 }

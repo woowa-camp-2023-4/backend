@@ -4,11 +4,19 @@ import java.time.LocalDate;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
+@EqualsAndHashCode
+@Builder
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class ProductSearchCondition {
+
+	private static final int DEFAULT_PAGE_SIZE = 20;
+
+	private static final LocalDate DEFAULT_SALE_DATE = LocalDate.now().minusDays(1);
 
 	private String productKeyword;
 
@@ -16,9 +24,12 @@ public class ProductSearchCondition {
 
 	private Long lastProductSale;
 
-	private int pageSize;
+	@Builder.Default
+	private int pageSize = DEFAULT_PAGE_SIZE;
 
-	private LocalDate saleDate;
+	@Builder.Default
+	private LocalDate saleDate = DEFAULT_SALE_DATE;
+
 
 	public static ProductSearchCondition of(
 		final String productKeyword,
