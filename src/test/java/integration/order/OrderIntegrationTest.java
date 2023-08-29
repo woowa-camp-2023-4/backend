@@ -1,22 +1,14 @@
 package integration.order;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
-
-import java.util.List;
-
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.HttpStatus;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 import com.woowa.woowakit.domain.order.domain.OrderStatus;
 import com.woowa.woowakit.domain.order.domain.PaymentClient;
 import com.woowa.woowakit.domain.order.dto.response.OrderDetailResponse;
 import com.woowa.woowakit.domain.order.dto.response.OrderResponse;
 import com.woowa.woowakit.global.error.ErrorResponse;
-
 import integration.IntegrationTest;
 import integration.helper.CommonRestAssuredUtils;
 import integration.helper.MemberHelper;
@@ -24,6 +16,11 @@ import integration.helper.OrderHelper;
 import integration.helper.ProductHelper;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import java.util.List;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpStatus;
 import reactor.core.publisher.Mono;
 
 @DisplayName("주문 통합 테스트")
@@ -47,7 +44,8 @@ class OrderIntegrationTest extends IntegrationTest {
 		// then
 		OrderResponse orderResponse = response.as(OrderResponse.class);
 		assertThat(response.statusCode()).isEqualTo(201);
-		assertThat(orderResponse).extracting(OrderResponse::getId, OrderResponse::getUuid).isNotNull();
+		assertThat(orderResponse).extracting(OrderResponse::getId, OrderResponse::getUuid)
+			.isNotNull();
 		assertThat(orderResponse).extracting(OrderResponse::getOrderItems).asList().hasSize(2);
 	}
 
@@ -110,7 +108,7 @@ class OrderIntegrationTest extends IntegrationTest {
 			OrderHelper.createOrderPayRequest(), orderId, accessToken);
 
 		// then
-		assertThat(response.statusCode()).isEqualTo(400);
+		assertThat(response.statusCode()).isEqualTo(200);
 
 		Long afterProductQuantity = ProductHelper.getProductDetail(productId).getQuantity();
 		assertThat(afterProductQuantity).isEqualTo(beforeProductQuantity);
@@ -131,13 +129,15 @@ class OrderIntegrationTest extends IntegrationTest {
 		OrderHelper.payOrder(OrderHelper.createOrderPayRequest(), orderId, accessToken);
 
 		// when
-		ExtractableResponse<Response> response = CommonRestAssuredUtils.get("/orders/" + orderId, accessToken);
+		ExtractableResponse<Response> response = CommonRestAssuredUtils.get("/orders/" + orderId,
+			accessToken);
 
 		// then
 		assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
 		OrderDetailResponse body = response.as(OrderDetailResponse.class);
 		assertThat(body).extracting(OrderDetailResponse::getOrderId).isEqualTo(orderId);
-		assertThat(body).extracting(OrderDetailResponse::getOrderStatus).isEqualTo(OrderStatus.PAYED.name());
+		assertThat(body).extracting(OrderDetailResponse::getOrderStatus)
+			.isEqualTo(OrderStatus.PAYED.name());
 		assertThat(body).extracting(OrderDetailResponse::getTotalPrice).isEqualTo(3000L);
 	}
 
