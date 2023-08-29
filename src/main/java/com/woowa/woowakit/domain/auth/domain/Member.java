@@ -1,23 +1,15 @@
 package com.woowa.woowakit.domain.auth.domain;
 
-import javax.persistence.Column;
-import javax.persistence.Convert;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
 import com.woowa.woowakit.domain.auth.domain.converter.EmailConverter;
 import com.woowa.woowakit.domain.auth.domain.converter.PasswordConverter;
 import com.woowa.woowakit.domain.auth.exception.LoginFailException;
-
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
+import java.util.Objects;
 
 @Getter
 @Entity
@@ -68,6 +60,19 @@ public class Member {
 		if (!encodedPassword.isMatch(password, passwordEncoder)) {
 			throw new LoginFailException();
 		}
+	}
+
+	@Override
+	public boolean equals(final Object o) {
+		if (this == o) return true;
+		if (!(o instanceof Member)) return false;
+		final Member member = (Member) o;
+		return Objects.equals(id, member.id);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id);
 	}
 
 	@Override

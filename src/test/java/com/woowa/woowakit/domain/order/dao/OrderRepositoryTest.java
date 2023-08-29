@@ -81,11 +81,13 @@ class OrderRepositoryTest {
                 .memberId(member.getId())
                 .orderItems(List.of(orderItem1))
                 .build();
+        order1.pay();
 
         Order order2 = OrderFixture.anOrder()
                 .memberId(member.getId())
                 .orderItems(List.of(orderItem2))
                 .build();
+        order2.pay();
 
         orderRepository.save(order1);
         orderRepository.save(order2);

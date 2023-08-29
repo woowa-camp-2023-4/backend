@@ -150,6 +150,7 @@ class OrderIntegrationTest extends IntegrationTest {
 		Long orderId1 = OrderHelper.createOrderAndGetId(productId, accessToken);
 		Long orderId2 = OrderHelper.createOrderAndGetId(productId, accessToken);
 
+		when(paymentClient.validatePayment(any(), any(), any())).thenReturn(Mono.empty());
 		OrderHelper.payOrder(OrderHelper.createOrderPayRequest(), orderId1, accessToken);
 		OrderHelper.payOrder(OrderHelper.createOrderPayRequest(), orderId2, accessToken);
 

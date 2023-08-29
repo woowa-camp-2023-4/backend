@@ -1,11 +1,11 @@
 package com.woowa.woowakit.domain.product.domain.stock;
 
+import com.woowa.woowakit.domain.product.exception.StockExpiredException;
+import lombok.Getter;
+
 import java.time.LocalDate;
 import java.time.ZoneId;
-
-import com.woowa.woowakit.domain.product.exception.StockExpiredException;
-
-import lombok.Getter;
+import java.util.Objects;
 
 @Getter
 public class ExpiryDate implements Comparable<ExpiryDate> {
@@ -30,5 +30,18 @@ public class ExpiryDate implements Comparable<ExpiryDate> {
 	@Override
 	public int compareTo(final ExpiryDate o) {
 		return this.date.compareTo(o.date);
+	}
+
+	@Override
+	public boolean equals(final Object o) {
+		if (this == o) return true;
+		if (!(o instanceof ExpiryDate)) return false;
+		final ExpiryDate that = (ExpiryDate) o;
+		return Objects.equals(date, that.date);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(date);
 	}
 }
