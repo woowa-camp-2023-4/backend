@@ -184,6 +184,17 @@ include::{snippets}/product/findAll/request-fields.adoc[]
 include::{snippets}/product/findAll/http-response.adoc[]
 include::{snippets}/product/findAll/response-fields.adoc[]
 
+== 메인 페이지 조회
+
+=== 요청
+
+include::{snippets}/product/main/http-request.adoc[]
+
+=== 응답
+
+include::{snippets}/product/main/http-response.adoc[]
+include::{snippets}/product/main/response-fields.adoc[]
+
 == 상품 상태 변경
 
 === 요청
