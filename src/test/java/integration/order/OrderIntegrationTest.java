@@ -93,7 +93,7 @@ class OrderIntegrationTest extends IntegrationTest {
 
 	@Test
 	@DisplayName("주문 실패 시 복구 로직을 진행한다")
-	void orderRecovery() {
+	void orderRecovery() throws InterruptedException {
 		// given
 		Long productId = ProductHelper.createProductAndSetUp();
 		String accessToken = MemberHelper.signUpAndLogIn();
@@ -109,7 +109,7 @@ class OrderIntegrationTest extends IntegrationTest {
 
 		// then
 		assertThat(response.statusCode()).isEqualTo(200);
-
+		Thread.sleep(100);
 		Long afterProductQuantity = ProductHelper.getProductDetail(productId).getQuantity();
 		assertThat(afterProductQuantity).isEqualTo(beforeProductQuantity);
 
