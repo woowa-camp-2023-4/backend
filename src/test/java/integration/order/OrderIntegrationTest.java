@@ -15,6 +15,7 @@ import com.woowa.woowakit.domain.order.domain.OrderStatus;
 import com.woowa.woowakit.domain.order.domain.PaymentClient;
 import com.woowa.woowakit.domain.order.dto.response.OrderDetailResponse;
 import com.woowa.woowakit.domain.order.dto.response.OrderResponse;
+import com.woowa.woowakit.global.error.ErrorResponse;
 
 import integration.IntegrationTest;
 import integration.helper.CommonRestAssuredUtils;
@@ -48,6 +49,24 @@ class OrderIntegrationTest extends IntegrationTest {
 		assertThat(response.statusCode()).isEqualTo(201);
 		assertThat(orderResponse).extracting(OrderResponse::getId, OrderResponse::getUuid).isNotNull();
 		assertThat(orderResponse).extracting(OrderResponse::getOrderItems).asList().hasSize(2);
+	}
+
+	@Test
+	@DisplayName("상품 구매가 불가능하면 주문 생성에 실패한다")
+	void createOrderFail() {
+		// given
+		Long orderId = ProductHelper.createProductAndSetUp();
+		String accessToken = MemberHelper.signUpAndLogIn();
+
+		// when
+		ExtractableResponse<Response> response = OrderHelper.createOrder(
+			OrderHelper.createOrderRequest(orderId, 11L), accessToken);
+
+		// then
+		assertThat(response.statusCode()).isEqualTo(400);
+		ErrorResponse errorResponse = response.as(ErrorResponse.class);
+		assertThat(errorResponse).extracting("message")
+			.isEqualTo("판매 중이 아닌 상품입니다.");
 	}
 
 	@Test

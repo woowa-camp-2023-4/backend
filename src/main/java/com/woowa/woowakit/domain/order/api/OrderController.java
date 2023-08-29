@@ -32,8 +32,8 @@ public class OrderController {
 
 	private final OrderService orderService;
 
-	@PostMapping
 	@User
+	@PostMapping
 	public ResponseEntity<OrderResponse> create(
 		@Authenticated final AuthPrincipal authPrincipal,
 		@Valid @RequestBody final List<OrderCreateRequest> request

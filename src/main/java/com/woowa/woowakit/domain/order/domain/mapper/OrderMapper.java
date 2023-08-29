@@ -11,6 +11,7 @@ import com.woowa.woowakit.domain.model.Quantity;
 import com.woowa.woowakit.domain.order.domain.Order;
 import com.woowa.woowakit.domain.order.domain.OrderItem;
 import com.woowa.woowakit.domain.order.dto.request.OrderCreateRequest;
+import com.woowa.woowakit.domain.order.exception.ProductNotOnSaleException;
 import com.woowa.woowakit.domain.product.domain.product.Product;
 import com.woowa.woowakit.domain.product.domain.product.ProductRepository;
 
@@ -33,19 +34,9 @@ public class OrderMapper {
 			.collect(Collectors.toList()));
 	}
 
-	private Map<Long, Product> findProductsByIds(List<Long> productIds) {
-		return productRepository.findAllById(productIds)
-			.stream()
-			.collect(Collectors.toUnmodifiableMap(Product::getId, product -> product));
-	}
-
-	private List<Long> collectProductIds(List<OrderCreateRequest> request) {
-		return request.stream()
-			.map(OrderCreateRequest::getProductId)
-			.collect(Collectors.toUnmodifiableList());
-	}
-
 	private OrderItem mapOrderItemFrom(final OrderCreateRequest item, final Product product) {
+		validatePurchasable(product, Quantity.from(item.getQuantity()));
+
 		return OrderItem.of(
 			item.getProductId(),
 			product.getName().getName(),
@@ -53,5 +44,23 @@ public class OrderMapper {
 			product.getPrice().getPrice(),
 			Quantity.from(item.getQuantity())
 		);
+	}
+
+	private Map<Long, Product> findProductsByIds(final List<Long> productIds) {
+		return productRepository.findAllById(productIds)
+			.stream()
+			.collect(Collectors.toUnmodifiableMap(Product::getId, product -> product));
+	}
+
+	private List<Long> collectProductIds(final List<OrderCreateRequest> request) {
+		return request.stream()
+			.map(OrderCreateRequest::getProductId)
+			.collect(Collectors.toUnmodifiableList());
+	}
+
+	private void validatePurchasable(final Product product, final Quantity quantity) {
+		if (!product.isOnSale() || !product.isEnoughQuantity(quantity)) {
+			throw new ProductNotOnSaleException();
+		}
 	}
 }

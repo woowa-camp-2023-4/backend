@@ -26,13 +26,13 @@ public class OrderHelper {
 			.collect(Collectors.toList());
 	}
 
-	public static List<OrderCreateRequest> createOrderRequest(Long productId) {
-		return List.of(OrderCreateRequest.of(productId, 1L));
+	public static List<OrderCreateRequest> createOrderRequest(Long productId, Long quantity) {
+		return List.of(OrderCreateRequest.of(productId, quantity));
 	}
 
 	public static Long createOrderAndGetId(Long productId, String accessToken) {
 		return OrderHelper.createOrder(
-				OrderHelper.createOrderRequest(productId), accessToken)
+				OrderHelper.createOrderRequest(productId, 1L), accessToken)
 			.as(OrderResponse.class).getId();
 	}
 
