@@ -147,8 +147,8 @@ class TestRunner {
     }
 
     void 단건_주문(Long productId) {
-        String body = "{\n \"productId\" : " + productId + " ,\n  \"quantity\" : 1 \n}"
-        HTTPResponse preOrderResponse = request.POST(SERVER_URL + "/orders/pre", body.getBytes())
+        String body = "[{\n \"productId\" : " + productId + " ,\n  \"quantity\" : 1 \n}]"
+        HTTPResponse preOrderResponse = request.POST(SERVER_URL + "/orders", body.getBytes())
 
         주문_결제_요청(new JsonSlurper().parseText(preOrderResponse.getBodyText()).id)
         checkErrorLog(preOrderResponse)
@@ -158,18 +158,24 @@ class TestRunner {
         카트_담기(productId1)
         카트_담기(productId2)
         카트_담기(productId3)
-        HTTPResponse response = 카트_주문_요청()
+        HTTPResponse response = 카트_주문_요청(productId1, productId2, productId3)
         주문_결제_요청(new JsonSlurper().parseText(response.getBodyText()).id)
     }
 
-    HTTPResponse 카트_주문_요청() {
-        String body = "[ {\n" +
-                "  \"cartItemId\" : 1\n" +
-                "}, {\n" +
-                "  \"cartItemId\" : 3\n" +
-                "} ]"
-
-        HTTPResponse response = request.POST(SERVER_URL + "/orders/pre-cart-item", 카트_조회().getBytes())
+    HTTPResponse 카트_주문_요청(Long productId1, Long productId2, Long productId3) {
+        String body = "[{\n" +
+                "        \"productId\": " + productId1 + ",\n" +
+                "        \"quantity\": 3,\n" +
+                "    },\n" +
+                "    {\n" +
+                "        \"productId\": " + productId2 + ",\n" +
+                "        \"quantity\": 3,\n" +
+                "    },\n" +
+                "    {\n" +
+                "        \"productId\": " + productId3 + ",\n" +
+                "        \"quantity\": 3,\n" +
+                "    }]"
+        HTTPResponse response = request.POST(SERVER_URL + "/orders", body.getBytes())
         checkErrorLog(response)
 
         return response
@@ -187,11 +193,10 @@ class TestRunner {
 
     void 주문_결제_요청(Long orderId) {
         String orderPayBody = "{\n" +
-                "  \"orderId\" : " + orderId + ",\n" +
                 "  \"paymentKey\" : \"paymentKey\"\n" +
                 "}"
 
-        HTTPResponse orderPayResponse = request.POST(SERVER_URL + "/orders", orderPayBody.getBytes())
+        HTTPResponse orderPayResponse = request.POST(SERVER_URL + "/orders/" + orderId + "/pay", orderPayBody.getBytes())
         checkErrorLog(orderPayResponse)
     }
 
