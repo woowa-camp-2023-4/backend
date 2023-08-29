@@ -140,6 +140,8 @@ include::{snippets}/orders/detail/response-fields.adoc[]
 
 include::{snippets}/orders/details/http-request.adoc[]
 include::{snippets}/orders/details/request-headers.adoc[]
+include::{snippets}/orders/details/request-fields.adoc[]
+
 
 === 응답
 

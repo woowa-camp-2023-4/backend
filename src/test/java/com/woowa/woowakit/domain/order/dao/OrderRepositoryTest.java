@@ -91,7 +91,7 @@ class OrderRepositoryTest {
         orderRepository.save(order2);
 
         // when
-        List<Order> result = orderRepository.findAllByMemberId(member.getId());
+        List<Order> result = orderRepository.findOrdersByMemberId(member.getId(), order2.getId() + 1L, 20);
 
         // then
         assertThat(result).hasSize(2);
