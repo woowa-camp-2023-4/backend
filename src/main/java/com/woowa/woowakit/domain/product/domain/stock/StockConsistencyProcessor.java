@@ -25,24 +25,12 @@ public class StockConsistencyProcessor {
 	public void run(final Product product, final List<Stock> stocks) {
 		Quantity difference = getDifference(product, stocks);
 		saveProductSales(product.getId(), difference);
-
-		for (Stock stock : stocks) {
-			Quantity removalQuantity = computeRemovalQuantity(difference, stock);
-			difference = difference.subtract(removalQuantity);
-			stock.subtractQuantity(removalQuantity);
-			updateStockQuantity(difference, stock);
-		}
-		stockRepository.deleteStock(computeDeletingStock(stocks));
+		consistentStock(stocks, difference);
 	}
+
 
 	private Quantity getDifference(Product product, List<Stock> stocks) {
 		return getTotalStockQuantity(stocks).subtract(product.getQuantity());
-	}
-
-	private void updateStockQuantity(final Quantity difference, final Stock stock) {
-		if (difference.isEmpty()) {
-			stockRepository.updateStockQuantity(stock.getId(), stock.getQuantity());
-		}
 	}
 
 	private void saveProductSales(final Long productId, final Quantity quantity) {
@@ -56,6 +44,22 @@ public class StockConsistencyProcessor {
 				.build());
 		} catch (Exception e) {
 			log.warn("일일 판매량을 저장하는데 실패했습니다.", e);
+		}
+	}
+
+	private void consistentStock(final List<Stock> stocks, Quantity difference) {
+		for (Stock stock : stocks) {
+			Quantity removalQuantity = computeRemovalQuantity(difference, stock);
+			difference = difference.subtract(removalQuantity);
+			stock.subtractQuantity(removalQuantity);
+			updateStockQuantity(difference, stock);
+		}
+		stockRepository.deleteStock(computeDeletingStock(stocks));
+	}
+
+	private void updateStockQuantity(final Quantity difference, final Stock stock) {
+		if (difference.isEmpty()) {
+			stockRepository.updateStockQuantity(stock.getId(), stock.getQuantity());
 		}
 	}
 

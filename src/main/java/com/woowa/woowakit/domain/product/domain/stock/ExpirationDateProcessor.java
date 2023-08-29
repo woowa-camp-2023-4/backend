@@ -1,5 +1,6 @@
 package com.woowa.woowakit.domain.product.domain.stock;
 
+import com.woowa.woowakit.domain.product.domain.product.Product;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -15,7 +16,7 @@ public class ExpirationDateProcessor {
 	private final StockRepository stockRepository;
 
 	@Transactional
-	public void run(final Long productId, final LocalDate currentDate) {
-		stockRepository.updateStatus(StockType.EXPIRED, ExpiryDate.from(currentDate.plusDays(6)), productId);
+	public void run(final Product product, final LocalDate currentDate) {
+		stockRepository.updateStatus(StockType.EXPIRED, ExpiryDate.from(currentDate.plusDays(6)), product.getId());
 	}
 }

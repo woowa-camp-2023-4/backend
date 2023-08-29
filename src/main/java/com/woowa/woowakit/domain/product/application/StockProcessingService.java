@@ -43,9 +43,8 @@ public class StockProcessingService {
 	@Transactional
 	public void doStockProcess(final Long productId, final LocalDate currentDate, final List<Stock> stocks) {
 		Product product = getProductById(productId);
-		doStockConsistencyProcess(stocks, product);
-		doExpirationDateProcess(productId, currentDate);
-		subtractProductQuantity(productId, currentDate, product);
+		doStockConsistencyProcess(product, stocks);
+		doExpirationDateProcess(product, currentDate);
 	}
 
 	private Product getProductById(final Long productId) {
@@ -53,25 +52,30 @@ public class StockProcessingService {
 			.orElseThrow(ProductNotExistException::new);
 	}
 
-	private void doStockConsistencyProcess(final List<Stock> stocks, final Product product) {
+	private void doStockConsistencyProcess(final Product product, final List<Stock> stocks) {
 		long stockConsistencyProcessorStartTime = currentTimeMillis();
 		stockConsistencyProcessor.run(product, stocks);
 		log.info("stockConsistencyProcessor 걸린 시간 = {}ms ", currentTimeMillis() - stockConsistencyProcessorStartTime);
 	}
 
-	private void doExpirationDateProcess(final Long productId, final LocalDate currentDate) {
+	private void doExpirationDateProcess(final Product product, final LocalDate currentDate) {
 		long expirationDateProcessorStartTime = currentTimeMillis();
-		expirationDateProcessor.run(productId, currentDate);
+		expirationDateProcessor.run(product, currentDate);
+		subtractProductQuantity(product, currentDate);
 		log.info("expirationDateProcessor 걸린 시간 = {}ms ", currentTimeMillis() - expirationDateProcessorStartTime);
 	}
 
-	private void subtractProductQuantity(final Long productId, final LocalDate currentDate, final Product product) {
-		long subtractExpiryQuantity = stockRepository.countStockByExpiry(productId, StockType.EXPIRED.name(),
+	private void subtractProductQuantity(final Product product, final LocalDate currentDate) {
+		long subtractExpiryQuantity = stockRepository.countStockByExpiry(product.getId(), StockType.EXPIRED.name(),
 				currentDate.plusDays(DAYS))
 			.orElse(DEFAULT_SUBTRACT);
-		if (!product.getQuantity().smallerThan(Quantity.from(subtractExpiryQuantity))) {
+		if (!isPossibleSubtractExpiryQuantity(product, subtractExpiryQuantity)) {
 			log.info("유통기한 정책에 의해 차감된 재고 = {}", subtractExpiryQuantity);
 			product.subtractQuantity(Quantity.from(subtractExpiryQuantity));
 		}
+	}
+
+	private boolean isPossibleSubtractExpiryQuantity(final Product product, final long subtractExpiryQuantity) {
+		return product.getQuantity().smallerThan(Quantity.from(subtractExpiryQuantity));
 	}
 }

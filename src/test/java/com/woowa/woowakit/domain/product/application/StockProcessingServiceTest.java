@@ -93,7 +93,7 @@ class StockProcessingServiceTest {
 		// then
 		Assertions.assertThat(stockRepository.findAllByProductId(product.getId(), StockType.NORMAL))
 			.hasSize(3)
-			.extracting("quantity")
+			.extracting(Stock::getQuantity)
 			.contains(Quantity.from(15), Quantity.from(30), Quantity.from(30));
 	}
 

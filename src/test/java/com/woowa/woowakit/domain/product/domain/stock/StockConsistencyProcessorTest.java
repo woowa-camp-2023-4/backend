@@ -60,12 +60,12 @@ class StockConsistencyProcessorTest {
 		// then
 		List<Stock> stocks = stockRepository.findAllByProductId(product.getId(), StockType.NORMAL);
 		assertThat(stocks).hasSize(2)
-			.extracting("quantity")
+			.extracting(Stock::getQuantity)
 			.contains(Quantity.from(5), Quantity.from(30));
 
 		List<ProductSales> productSales = productSalesRepository.findByProductId(product.getId());
 		assertThat(productSales).hasSize(1)
-			.extracting("sale")
+			.extracting(ProductSales::getSale)
 			.contains(SaleQuantity.from(25));
 	}
 
