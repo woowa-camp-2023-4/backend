@@ -1,21 +1,16 @@
 package com.woowa.woowakit.domain.product.domain.stock;
 
-import static org.assertj.core.api.Assertions.*;
-
-import java.time.LocalDate;
-
+import com.woowa.woowakit.domain.model.Quantity;
+import com.woowa.woowakit.domain.product.domain.product.*;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.woowa.woowakit.domain.model.Quantity;
-import com.woowa.woowakit.domain.product.domain.product.Product;
-import com.woowa.woowakit.domain.product.domain.product.ProductImage;
-import com.woowa.woowakit.domain.product.domain.product.ProductName;
-import com.woowa.woowakit.domain.product.domain.product.ProductPrice;
-import com.woowa.woowakit.domain.product.domain.product.ProductRepository;
-import com.woowa.woowakit.domain.product.domain.product.ProductStatus;
+import java.time.LocalDate;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 class ExpirationDateProcessorTest {
@@ -28,6 +23,13 @@ class ExpirationDateProcessorTest {
 
 	@Autowired
 	private StockRepository stockRepository;
+
+	@AfterEach
+	void setup() {
+		productRepository.deleteAll();
+		stockRepository.deleteAll();
+	}
+
 
 	@Test
 	@DisplayName("재고 중 정책에 따라 유통기한이 만료된 재고는 EXPIRED 처리한다.")

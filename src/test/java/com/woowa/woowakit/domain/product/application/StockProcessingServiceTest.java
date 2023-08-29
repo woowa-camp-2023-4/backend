@@ -1,16 +1,5 @@
 package com.woowa.woowakit.domain.product.application;
 
-import static org.assertj.core.api.Assertions.*;
-
-import java.time.LocalDate;
-import java.util.List;
-
-import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-
 import com.woowa.woowakit.domain.model.Quantity;
 import com.woowa.woowakit.domain.product.domain.product.Product;
 import com.woowa.woowakit.domain.product.domain.product.ProductRepository;
@@ -19,6 +8,17 @@ import com.woowa.woowakit.domain.product.domain.stock.Stock;
 import com.woowa.woowakit.domain.product.domain.stock.StockRepository;
 import com.woowa.woowakit.domain.product.domain.stock.StockType;
 import com.woowa.woowakit.domain.product.fixture.ProductFixture;
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+
+import java.time.LocalDate;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 class StockProcessingServiceTest {
@@ -31,6 +31,12 @@ class StockProcessingServiceTest {
 
 	@Autowired
 	private StockRepository stockRepository;
+
+	@AfterEach
+	void setup() {
+		productRepository.deleteAll();
+		stockRepository.deleteAll();
+	}
 
 	@Test
 	@DisplayName("유통기한 테스트")

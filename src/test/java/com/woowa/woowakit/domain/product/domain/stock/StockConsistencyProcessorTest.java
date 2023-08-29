@@ -1,15 +1,5 @@
 package com.woowa.woowakit.domain.product.domain.stock;
 
-import static org.assertj.core.api.Assertions.*;
-
-import java.time.LocalDate;
-import java.util.List;
-
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-
 import com.woowa.woowakit.domain.model.Quantity;
 import com.woowa.woowakit.domain.product.domain.ProductSalesRepository;
 import com.woowa.woowakit.domain.product.domain.product.Product;
@@ -17,6 +7,16 @@ import com.woowa.woowakit.domain.product.domain.product.ProductRepository;
 import com.woowa.woowakit.domain.product.domain.product.ProductSales;
 import com.woowa.woowakit.domain.product.domain.product.SaleQuantity;
 import com.woowa.woowakit.domain.product.fixture.ProductFixture;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+
+import java.time.LocalDate;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 class StockConsistencyProcessorTest {
@@ -32,6 +32,15 @@ class StockConsistencyProcessorTest {
 
 	@Autowired
 	private ProductSalesRepository productSalesRepository;
+
+
+	@AfterEach
+	void setup() {
+		productRepository.deleteAll();
+		stockRepository.deleteAll();
+		productSalesRepository.deleteAll();
+	}
+
 
 	@Test
 	@DisplayName("상품 수량과 재고 테이블의 정합성을 맞춘다.")
