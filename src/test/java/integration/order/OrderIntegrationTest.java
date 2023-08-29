@@ -14,10 +14,10 @@ import org.springframework.http.HttpStatus;
 import com.woowa.woowakit.domain.order.domain.OrderStatus;
 import com.woowa.woowakit.domain.order.domain.PaymentClient;
 import com.woowa.woowakit.domain.order.dto.response.OrderDetailResponse;
-import com.woowa.woowakit.domain.order.dto.response.PreOrderResponse;
+import com.woowa.woowakit.domain.order.dto.response.OrderResponse;
+import com.woowa.woowakit.global.error.ErrorResponse;
 
 import integration.IntegrationTest;
-import integration.helper.CartItemHelper;
 import integration.helper.CommonRestAssuredUtils;
 import integration.helper.MemberHelper;
 import integration.helper.OrderHelper;
@@ -33,66 +33,59 @@ class OrderIntegrationTest extends IntegrationTest {
 	private PaymentClient paymentClient;
 
 	@Test
-	@DisplayName("가주문을 생성한다")
-	void preOrder() {
+	@DisplayName("주문을 생성한다")
+	void createOrder() {
 		// given
-		Long productId = ProductHelper.createProductAndSetUp();
+		Long orderId1 = ProductHelper.createProductAndSetUp();
+		Long orderId2 = ProductHelper.createProductAndSetUp();
 		String accessToken = MemberHelper.signUpAndLogIn();
 
 		// when
-		ExtractableResponse<Response> response = OrderHelper.createPreOrder(
-			OrderHelper.createPreOrderCreateRequest(productId), accessToken);
+		ExtractableResponse<Response> response = OrderHelper.createOrder(
+			OrderHelper.createOrderRequests(orderId1, orderId2), accessToken);
 
 		// then
-		PreOrderResponse preOrderResponse = response.as(PreOrderResponse.class);
+		OrderResponse orderResponse = response.as(OrderResponse.class);
 		assertThat(response.statusCode()).isEqualTo(201);
-		assertThat(preOrderResponse).extracting(PreOrderResponse::getId,
-				PreOrderResponse::getUuid)
-			.isNotNull();
-		assertThat(preOrderResponse).extracting(PreOrderResponse::getOrderItems).asList()
-			.hasSize(1);
+		assertThat(orderResponse).extracting(OrderResponse::getId, OrderResponse::getUuid).isNotNull();
+		assertThat(orderResponse).extracting(OrderResponse::getOrderItems).asList().hasSize(2);
 	}
 
 	@Test
-	@DisplayName("장바구니 상품을 바탕으로 가주문을 생성한다")
-	void preOrderByCartItems() {
+	@DisplayName("상품 구매가 불가능하면 주문 생성에 실패한다")
+	void createOrderFail() {
 		// given
-		Long productId = ProductHelper.createProductAndSetUp();
+		Long orderId = ProductHelper.createProductAndSetUp();
 		String accessToken = MemberHelper.signUpAndLogIn();
-		Long cartItemId = CartItemHelper.addCartItemAndGetID(productId, 10L, accessToken);
 
 		// when
-		ExtractableResponse<Response> response = OrderHelper.createPreOrder(
-			OrderHelper.createPreOrderCreateCartItemRequest(cartItemId), accessToken);
+		ExtractableResponse<Response> response = OrderHelper.createOrder(
+			OrderHelper.createOrderRequest(orderId, 11L), accessToken);
 
 		// then
-		PreOrderResponse preOrderResponse = response.as(PreOrderResponse.class);
-		assertThat(response.statusCode()).isEqualTo(201);
-		assertThat(preOrderResponse).extracting(PreOrderResponse::getId,
-				PreOrderResponse::getUuid)
-			.isNotNull();
-		assertThat(preOrderResponse).extracting(PreOrderResponse::getOrderItems).asList()
-			.hasSize(1);
+		assertThat(response.statusCode()).isEqualTo(400);
+		ErrorResponse errorResponse = response.as(ErrorResponse.class);
+		assertThat(errorResponse).extracting("message")
+			.isEqualTo("판매 중이 아닌 상품입니다.");
 	}
 
 	@Test
-	@DisplayName("주문을 진행한다")
-	void order() throws InterruptedException {
+	@DisplayName("주문을 결제한다")
+	void pay() {
 		// given
 		Long productId = ProductHelper.createProductAndSetUp();
 		String accessToken = MemberHelper.signUpAndLogIn();
-		Long orderId = OrderHelper.createPreOrderAndGetId(productId, accessToken);
+		Long orderId = OrderHelper.createOrderAndGetId(productId, accessToken);
 		Long beforeProductQuantity = ProductHelper.getProductDetail(productId).getQuantity();
 
 		when(paymentClient.validatePayment(any(), any(), any())).thenReturn(Mono.empty());
 
 		//when
-		ExtractableResponse<Response> response = OrderHelper.createOrder(
-			OrderHelper.createOrderCreateRequest(orderId), accessToken);
+		ExtractableResponse<Response> response = OrderHelper.payOrder(
+			OrderHelper.createOrderPayRequest(), orderId, accessToken);
 
 		// then
 		assertThat(response.statusCode()).isEqualTo(200);
-		assertThat(response.as(Long.class)).isNotNull();
 		Long afterProductQuantity = ProductHelper.getProductDetail(productId).getQuantity();
 		assertThat(afterProductQuantity).isEqualTo(beforeProductQuantity - 1);
 
@@ -102,19 +95,19 @@ class OrderIntegrationTest extends IntegrationTest {
 
 	@Test
 	@DisplayName("주문 실패 시 복구 로직을 진행한다")
-	void orderRecovery() throws InterruptedException {
+	void orderRecovery() {
 		// given
 		Long productId = ProductHelper.createProductAndSetUp();
 		String accessToken = MemberHelper.signUpAndLogIn();
-		Long orderId = OrderHelper.createPreOrderAndGetId(productId, accessToken);
+		Long orderId = OrderHelper.createOrderAndGetId(productId, accessToken);
 		Long beforeProductQuantity = ProductHelper.getProductDetail(productId).getQuantity();
 
 		when(paymentClient.validatePayment(any(), any(), any())).thenReturn(
 			Mono.error(IllegalArgumentException::new));
 
 		//when
-		ExtractableResponse<Response> response = OrderHelper.createOrder(
-			OrderHelper.createOrderCreateRequest(orderId), accessToken);
+		ExtractableResponse<Response> response = OrderHelper.payOrder(
+			OrderHelper.createOrderPayRequest(), orderId, accessToken);
 
 		// then
 		assertThat(response.statusCode()).isEqualTo(400);
@@ -132,10 +125,10 @@ class OrderIntegrationTest extends IntegrationTest {
 		// given
 		Long productId = ProductHelper.createProductAndSetUp();
 		String accessToken = MemberHelper.signUpAndLogIn();
-		Long orderId = OrderHelper.createPreOrderAndGetId(productId, accessToken);
+		Long orderId = OrderHelper.createOrderAndGetId(productId, accessToken);
 
 		when(paymentClient.validatePayment(any(), any(), any())).thenReturn(Mono.empty());
-		OrderHelper.createOrder(OrderHelper.createOrderCreateRequest(orderId), accessToken);
+		OrderHelper.payOrder(OrderHelper.createOrderPayRequest(), orderId, accessToken);
 
 		// when
 		ExtractableResponse<Response> response = CommonRestAssuredUtils.get("/orders/" + orderId, accessToken);
@@ -154,13 +147,12 @@ class OrderIntegrationTest extends IntegrationTest {
 		// given
 		Long productId = ProductHelper.createProductAndSetUp();
 		String accessToken = MemberHelper.signUpAndLogIn();
-		Long orderId1 = OrderHelper.createPreOrderAndGetId(productId, accessToken);
-		Long orderId2 = OrderHelper.createPreOrderAndGetId(productId, accessToken);
+		Long orderId1 = OrderHelper.createOrderAndGetId(productId, accessToken);
+		Long orderId2 = OrderHelper.createOrderAndGetId(productId, accessToken);
 
 		when(paymentClient.validatePayment(any(), any(), any())).thenReturn(Mono.empty());
-
-		OrderHelper.createOrder(OrderHelper.createOrderCreateRequest(orderId1), accessToken);
-		OrderHelper.createOrder(OrderHelper.createOrderCreateRequest(orderId2), accessToken);
+		OrderHelper.payOrder(OrderHelper.createOrderPayRequest(), orderId1, accessToken);
+		OrderHelper.payOrder(OrderHelper.createOrderPayRequest(), orderId2, accessToken);
 
 		// when
 		ExtractableResponse<Response> response = CommonRestAssuredUtils.get("/orders", accessToken);
@@ -170,5 +162,4 @@ class OrderIntegrationTest extends IntegrationTest {
 		List body = response.as(List.class);
 		assertThat(body).hasSize(2);
 	}
-
 }

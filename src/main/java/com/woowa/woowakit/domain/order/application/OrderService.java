@@ -12,13 +12,11 @@ import com.woowa.woowakit.domain.order.domain.OrderPlaceService;
 import com.woowa.woowakit.domain.order.domain.OrderRepository;
 import com.woowa.woowakit.domain.order.domain.mapper.OrderMapper;
 import com.woowa.woowakit.domain.order.dto.request.OrderCreateRequest;
+import com.woowa.woowakit.domain.order.dto.request.OrderPayRequest;
 import com.woowa.woowakit.domain.order.dto.request.OrderSearchRequest;
-import com.woowa.woowakit.domain.order.dto.request.PreOrderCreateCartItemRequest;
-import com.woowa.woowakit.domain.order.dto.request.PreOrderCreateRequest;
 import com.woowa.woowakit.domain.order.dto.response.OrderDetailResponse;
-import com.woowa.woowakit.domain.order.dto.response.PreOrderResponse;
+import com.woowa.woowakit.domain.order.dto.response.OrderResponse;
 import com.woowa.woowakit.domain.order.exception.OrderNotFoundException;
-import com.woowa.woowakit.domain.product.dto.request.ProductSearchRequest;
 
 import io.micrometer.core.annotation.Counted;
 import lombok.RequiredArgsConstructor;
@@ -65,29 +63,16 @@ public class OrderService {
 
 	@Transactional
 	@Counted("order.preOrder")
-	public PreOrderResponse preOrder(final AuthPrincipal authPrincipal,
-		final PreOrderCreateRequest request) {
-		log.info("가주문 생성 memberId: {} productId: {} quantity: {}", authPrincipal.getId(),
-			request.getProductId(), request.getQuantity());
-		Order order = orderMapper.mapFrom(authPrincipal.getId(), request.getProductId(),
-			request.getQuantity());
-		return PreOrderResponse.from(orderRepository.save(order));
+	public OrderResponse create(final AuthPrincipal authPrincipal, final List<OrderCreateRequest> request) {
+		log.info("주문 생성 memberId: {}", authPrincipal.getId());
+		Order order = orderMapper.mapFrom(authPrincipal.getId(), request);
+
+		orderRepository.save(order);
+		return OrderResponse.from(order);
 	}
 
-	@Transactional
-	public PreOrderResponse preOrderCartItems(
-		final AuthPrincipal authPrincipal,
-		final List<PreOrderCreateCartItemRequest> requests
-	) {
-		log.info("장바구니로 가주문 생성 memberId: {}", authPrincipal.getId());
-		List<Long> cartItemIds = PreOrderCreateCartItemRequest.toCartItemIds(requests);
-		Order order = orderMapper.mapFrom(authPrincipal.getId(), cartItemIds);
-		return PreOrderResponse.from(orderRepository.save(order));
-	}
-
-	public Long pay(final AuthPrincipal authPrincipal, final OrderCreateRequest request) {
-		orderPlaceService.place(authPrincipal, request.getOrderId());
-		orderPayService.pay(request.getOrderId(), request.getPaymentKey());
-		return request.getOrderId();
+	public void pay(final AuthPrincipal authPrincipal, final Long orderId, final OrderPayRequest request) {
+		orderPlaceService.place(authPrincipal, orderId);
+		orderPayService.pay(orderId, request.getPaymentKey());
 	}
 }

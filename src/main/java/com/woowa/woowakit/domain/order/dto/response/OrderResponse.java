@@ -13,23 +13,23 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
-public class PreOrderResponse {
+public class OrderResponse {
 
 	private Long id;
 	private List<OrderItemResponse> orderItems;
 	private String uuid;
 
-	public static PreOrderResponse of(final Long id, final List<OrderItemResponse> orderItems,
+	public static OrderResponse of(final Long id, final List<OrderItemResponse> orderItems,
 		final String uuid) {
-		return new PreOrderResponse(id, orderItems, uuid);
+		return new OrderResponse(id, orderItems, uuid);
 	}
-	
-	public static PreOrderResponse from(final Order order) {
+
+	public static OrderResponse from(final Order order) {
 		List<OrderItemResponse> orderItemResponses = order.getOrderItems().stream()
 			.map(OrderItemResponse::from)
 			.collect(Collectors.toUnmodifiableList());
 
-		return PreOrderResponse.of(
+		return OrderResponse.of(
 			order.getId(),
 			orderItemResponses,
 			order.getUuid()

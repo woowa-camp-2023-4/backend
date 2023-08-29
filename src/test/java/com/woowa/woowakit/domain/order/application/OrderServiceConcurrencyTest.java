@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -22,7 +23,7 @@ import com.woowa.woowakit.domain.member.fixture.MemberFixture;
 import com.woowa.woowakit.domain.model.Quantity;
 import com.woowa.woowakit.domain.order.domain.PaymentClient;
 import com.woowa.woowakit.domain.order.dto.request.OrderCreateRequest;
-import com.woowa.woowakit.domain.order.dto.request.PreOrderCreateRequest;
+import com.woowa.woowakit.domain.order.dto.request.OrderPayRequest;
 import com.woowa.woowakit.domain.product.domain.product.Product;
 import com.woowa.woowakit.domain.product.domain.product.ProductRepository;
 import com.woowa.woowakit.domain.product.fixture.ProductFixture;
@@ -58,8 +59,8 @@ class OrderServiceConcurrencyTest {
 
 		int threadCount = 10;
 		for (int i = 0; i < threadCount; i++) {
-			PreOrderCreateRequest request = PreOrderCreateRequest.of(product.getId(), 10L);
-			orderService.preOrder(AuthPrincipal.from(member), request);
+			List<OrderCreateRequest> request = List.of(OrderCreateRequest.of(product.getId(), 10L));
+			orderService.create(AuthPrincipal.from(member), request);
 		}
 		when(paymentClient.validatePayment(any(), any(), any())).thenReturn(Mono.empty());
 
@@ -67,10 +68,12 @@ class OrderServiceConcurrencyTest {
 		ExecutorService executorService = Executors.newFixedThreadPool(32);
 		CountDownLatch countDownLatch = new CountDownLatch(threadCount);
 		for (int i = 0; i < threadCount; i++) {
-			OrderCreateRequest request = OrderCreateRequest.of((long)(i + 1), "test");
+			long orderId = i + 1;
+			OrderPayRequest request = OrderPayRequest.of("test");
+
 			executorService.submit(() -> {
 				try {
-					orderService.pay(AuthPrincipal.from(member), request);
+					orderService.pay(AuthPrincipal.from(member), orderId, request);
 				} finally {
 					countDownLatch.countDown();
 				}

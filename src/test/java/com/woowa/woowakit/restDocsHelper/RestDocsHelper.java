@@ -67,7 +67,7 @@ public class RestDocsHelper {
 			preprocessRequest(Preprocessors.prettyPrint()),
 			preprocessResponse(Preprocessors.prettyPrint()),
 			requestHeaders(
-				headerWithName(HttpHeaders.AUTHORIZATION).description("인증 헤더 이름")),
+				headerWithName(HttpHeaders.AUTHORIZATION).description("인증 토큰")),
 			responseFields(
 				responseFieldsDescriptor(responseFields.getValues()))
 		);
@@ -81,7 +81,7 @@ public class RestDocsHelper {
 			preprocessRequest(Preprocessors.prettyPrint()),
 			preprocessResponse(Preprocessors.prettyPrint()),
 			requestHeaders(
-				headerWithName(HttpHeaders.AUTHORIZATION).description("인증 헤더 이름")),
+				headerWithName(HttpHeaders.AUTHORIZATION).description("인증 토큰")),
 			requestFields(
 				requestFieldsDescriptor(requestFields.getValues()))
 		);
@@ -96,7 +96,7 @@ public class RestDocsHelper {
 			preprocessRequest(Preprocessors.prettyPrint()),
 			preprocessResponse(Preprocessors.prettyPrint()),
 			requestHeaders(
-				headerWithName(HttpHeaders.AUTHORIZATION).description("인증 헤더 이름")),
+				headerWithName(HttpHeaders.AUTHORIZATION).description("인증 토큰")),
 			pathParameters(
 				parameterWithName(pathParam.getName()).description(pathParam.getDescription()))
 		);
@@ -112,7 +112,7 @@ public class RestDocsHelper {
 			preprocessRequest(Preprocessors.prettyPrint()),
 			preprocessResponse(Preprocessors.prettyPrint()),
 			requestHeaders(
-				headerWithName(HttpHeaders.AUTHORIZATION).description("인증 헤더 이름")),
+				headerWithName(HttpHeaders.AUTHORIZATION).description("인증 토큰")),
 			requestFields(
 				requestFieldsDescriptor(requestFields.getValues())),
 			responseFields(
@@ -131,7 +131,7 @@ public class RestDocsHelper {
 			preprocessRequest(Preprocessors.prettyPrint()),
 			preprocessResponse(Preprocessors.prettyPrint()),
 			requestHeaders(
-				headerWithName(HttpHeaders.AUTHORIZATION).description("인증 헤더 이름")),
+				headerWithName(HttpHeaders.AUTHORIZATION).description("인증 토큰")),
 			pathParameters(
 				parameterWithName(pathParam.getName()).description(pathParam.getDescription())),
 			requestFields(
@@ -149,7 +149,7 @@ public class RestDocsHelper {
 			preprocessRequest(Preprocessors.prettyPrint()),
 			preprocessResponse(Preprocessors.prettyPrint()),
 			requestHeaders(
-				headerWithName(HttpHeaders.AUTHORIZATION).description("인증 헤더 이름")),
+				headerWithName(HttpHeaders.AUTHORIZATION).description("인증 토큰")),
 			pathParameters(
 				parameterWithName(pathParam.getName()).description(pathParam.getDescription())),
 			responseFields(

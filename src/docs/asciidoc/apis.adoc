@@ -87,39 +87,27 @@ include::{snippets}/cartItem/patch/http-response.adoc[]
 
 === 요청
 
-include::{snippets}/orders/pre/http-request.adoc[]
-include::{snippets}/orders/pre/request-headers.adoc[]
-include::{snippets}/orders/pre/request-fields.adoc[]
+include::{snippets}/orders/create/http-request.adoc[]
+include::{snippets}/orders/create/request-headers.adoc[]
+include::{snippets}/orders/create/request-fields.adoc[]
 
 === 응답
 
-include::{snippets}/orders/pre/http-response.adoc[]
-include::{snippets}/orders/pre/response-fields.adoc[]
-
-== 장바구니 주문 생성
-
-=== 요청
-
-include::{snippets}/orders/pre-cart/http-request.adoc[]
-include::{snippets}/orders/pre-cart/request-headers.adoc[]
-include::{snippets}/orders/pre-cart/request-fields.adoc[]
-
-=== 응답
-
-include::{snippets}/orders/pre-cart/http-response.adoc[]
-include::{snippets}/orders/pre-cart/response-fields.adoc[]
+include::{snippets}/orders/create/http-response.adoc[]
+include::{snippets}/orders/create/response-fields.adoc[]
 
 == 주문 결제
 
 === 요청
 
-include::{snippets}/orders/order/http-request.adoc[]
-include::{snippets}/orders/order/request-headers.adoc[]
-include::{snippets}/orders/order/request-fields.adoc[]
+include::{snippets}/orders/pay/http-request.adoc[]
+include::{snippets}/orders/pay/request-headers.adoc[]
+include::{snippets}/orders/pay/path-parameters.adoc[]
+include::{snippets}/orders/pay/request-fields.adoc[]
 
 === 응답
 
-include::{snippets}/orders/order/http-response.adoc[]
+include::{snippets}/orders/pay/http-response.adoc[]
 
 == 단일 주문 조회
 
