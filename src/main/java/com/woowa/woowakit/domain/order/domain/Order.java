@@ -3,6 +3,7 @@ package com.woowa.woowakit.domain.order.domain;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -20,7 +21,6 @@ import javax.persistence.Table;
 import com.woowa.woowakit.domain.model.BaseEntity;
 import com.woowa.woowakit.domain.model.Money;
 import com.woowa.woowakit.domain.model.converter.MoneyConverter;
-import com.woowa.woowakit.domain.order.domain.event.OrderCompleteEvent;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -78,8 +78,21 @@ public class Order extends BaseEntity {
 			.reduce(Money.ZERO, Money::add);
 	}
 
-	public void order(final String paymentKey) {
-		registerEvent(new OrderCompleteEvent(this, paymentKey));
-		log.info("주문 완료 이벤트 발행 orderId: {}", id);
+	public void place() {
+		orderStatus = OrderStatus.PLACED;
+	}
+
+	public void cancel() {
+		orderStatus = OrderStatus.CANCELED;
+	}
+
+	public void pay() {
+		orderStatus = OrderStatus.PAYED;
+	}
+
+	public List<Long> collectProductIds() {
+		return orderItems.stream()
+			.map(OrderItem::getProductId)
+			.collect(Collectors.toUnmodifiableList());
 	}
 }

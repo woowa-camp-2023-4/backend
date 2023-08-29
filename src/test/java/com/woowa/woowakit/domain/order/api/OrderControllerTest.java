@@ -1,5 +1,26 @@
 package com.woowa.woowakit.domain.order.api;
 
+import static com.woowa.woowakit.restDocsHelper.RestDocsHelper.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.BDDMockito.*;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+import java.util.List;
+import java.util.Map;
+
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.restdocs.RestDocumentationExtension;
+import org.springframework.test.web.servlet.MockMvc;
+
 import com.woowa.woowakit.domain.model.Image;
 import com.woowa.woowakit.domain.model.Money;
 import com.woowa.woowakit.domain.model.Quantity;
@@ -15,28 +36,6 @@ import com.woowa.woowakit.restDocsHelper.PathParam;
 import com.woowa.woowakit.restDocsHelper.RequestFields;
 import com.woowa.woowakit.restDocsHelper.ResponseFields;
 import com.woowa.woowakit.restDocsHelper.RestDocsTest;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.restdocs.RestDocumentationExtension;
-import org.springframework.test.web.servlet.MockMvc;
-
-import java.util.List;
-import java.util.Map;
-
-import static com.woowa.woowakit.restDocsHelper.RestDocsHelper.authorizationDocument;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.handler;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(OrderController.class)
 @AutoConfigureRestDocs(uriHost = "api.test.com", uriPort = 80)
@@ -125,7 +124,7 @@ class OrderControllerTest extends RestDocsTest {
 		String token = getToken();
 		OrderCreateRequest request = OrderCreateRequest.of(1L, "paymentKey");
 		Long response = 1L;
-		given(orderService.order(any(), any())).willReturn(response);
+		given(orderService.pay(any(), any())).willReturn(response);
 
 		mockMvc.perform(post("/orders")
 				.header(HttpHeaders.AUTHORIZATION, token)
