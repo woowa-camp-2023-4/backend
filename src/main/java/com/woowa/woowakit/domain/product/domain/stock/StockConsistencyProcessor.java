@@ -25,7 +25,7 @@ public class StockConsistencyProcessor {
 	public void run(final Product product, final List<Stock> stocks) {
 		Quantity difference = getDifference(product, stocks);
 		saveProductSales(product.getId(), difference);
-		consistentStock(stocks, difference);
+		matchStockConsistency(stocks, difference);
 	}
 
 
@@ -47,7 +47,7 @@ public class StockConsistencyProcessor {
 		}
 	}
 
-	private void consistentStock(final List<Stock> stocks, Quantity difference) {
+	private void matchStockConsistency(final List<Stock> stocks, Quantity difference) {
 		for (Stock stock : stocks) {
 			Quantity removalQuantity = computeRemovalQuantity(difference, stock);
 			difference = difference.subtract(removalQuantity);
