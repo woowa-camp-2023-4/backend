@@ -2,6 +2,7 @@ package com.woowa.woowakit.domain.product.domain.product;
 
 import java.util.Objects;
 
+import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -43,6 +44,7 @@ public class Product extends BaseEntity {
 	private ProductPrice price;
 
 	@Convert(converter = ProductImageConverter.class)
+	@Column(name = "image_url")
 	private ProductImage imageUrl;
 
 	@Enumerated(EnumType.STRING)
