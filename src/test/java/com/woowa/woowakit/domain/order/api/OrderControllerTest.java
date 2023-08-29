@@ -21,6 +21,7 @@ import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.woowa.woowakit.domain.model.Image;
 import com.woowa.woowakit.domain.model.Money;
 import com.woowa.woowakit.domain.model.Quantity;
@@ -29,6 +30,7 @@ import com.woowa.woowakit.domain.order.domain.Order;
 import com.woowa.woowakit.domain.order.domain.OrderItem;
 import com.woowa.woowakit.domain.order.dto.request.OrderCreateRequest;
 import com.woowa.woowakit.domain.order.dto.request.OrderPayRequest;
+import com.woowa.woowakit.domain.order.dto.request.OrderSearchRequest;
 import com.woowa.woowakit.domain.order.dto.response.OrderDetailResponse;
 import com.woowa.woowakit.domain.order.dto.response.OrderResponse;
 import com.woowa.woowakit.restDocsHelper.PathParam;
@@ -46,6 +48,9 @@ class OrderControllerTest extends RestDocsTest {
 
 	@MockBean
 	private OrderService orderService;
+
+	@Autowired
+	private ObjectMapper autowiredObjectMapper;
 
 	@Test
 	@DisplayName("[POST] [/orders] 주문 생성 테스트 및 문서화")
@@ -134,6 +139,10 @@ class OrderControllerTest extends RestDocsTest {
 	@Test
 	@DisplayName("[GET] [/orders] 주문 조회 테스트 및 문서화")
 	void getOrderDetails() throws Exception {
+		RequestFields requestFields = new RequestFields(Map.of(
+			"lastOrderId", "마지막 주문 ID",
+			"pageSize", "페이지 사이즈 (기본 20)"
+		));
 		ResponseFields responseFields = new ResponseFields(Map.of(
 			"[]orderId", "주문 아이디",
 			"[]uuid", "주문 고유 번호",
@@ -149,13 +158,14 @@ class OrderControllerTest extends RestDocsTest {
 
 		String token = getToken();
 		OrderDetailResponse response = OrderDetailResponse.from(getOrder());
-		given(orderService.findAllOrderByMemberId(any())).willReturn(List.of(response));
+		given(orderService.findAllOrderByMemberId(any(), any())).willReturn(List.of(response));
 
 		mockMvc.perform(get("/orders")
+				.content(autowiredObjectMapper.writeValueAsString(OrderSearchRequest.of(100L, 20)))
 				.header(HttpHeaders.AUTHORIZATION, token))
 			.andExpect(status().isOk())
 			.andExpect(handler().methodName("getOrderDetail"))
-			.andDo(authorizationDocument("orders/details", responseFields));
+			.andDo(authorizationDocument("orders/details", requestFields, responseFields));
 	}
 
 	private Order getOrder() {

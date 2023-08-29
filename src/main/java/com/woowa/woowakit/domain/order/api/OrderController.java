@@ -8,6 +8,7 @@ import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,6 +21,7 @@ import com.woowa.woowakit.domain.auth.domain.AuthPrincipal;
 import com.woowa.woowakit.domain.order.application.OrderService;
 import com.woowa.woowakit.domain.order.dto.request.OrderCreateRequest;
 import com.woowa.woowakit.domain.order.dto.request.OrderPayRequest;
+import com.woowa.woowakit.domain.order.dto.request.OrderSearchRequest;
 import com.woowa.woowakit.domain.order.dto.response.OrderDetailResponse;
 import com.woowa.woowakit.domain.order.dto.response.OrderResponse;
 
@@ -65,8 +67,9 @@ public class OrderController {
 	@User
 	@GetMapping
 	public ResponseEntity<List<OrderDetailResponse>> getOrderDetail(
-		@Authenticated final AuthPrincipal authPrincipal
+		@Authenticated final AuthPrincipal authPrincipal,
+		@ModelAttribute @Valid final OrderSearchRequest request
 	) {
-		return ResponseEntity.ok(orderService.findAllOrderByMemberId(authPrincipal));
+		return ResponseEntity.ok(orderService.findAllOrderByMemberId(authPrincipal, request));
 	}
 }
