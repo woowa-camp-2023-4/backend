@@ -41,11 +41,6 @@ public class OrderPlaceService {
 		log.info("장바구니 상품 삭제 memberId: {} productIds: {}", order.getMemberId(), productIds);
 	}
 
-	private Order getOrderById(final Long memberId, final Long orderId) {
-		return orderRepository.findByIdAndMemberId(orderId, memberId)
-			.orElseThrow(OrderNotFoundException::new);
-	}
-
 	private void subtractProductQuantity(final Order order) {
 		List<Product> products = productRepository.findByIdsWithPessimistic(order.collectProductIds());
 		QuantityOfProducts quantityData = QuantityOfProducts.from(order);
@@ -60,4 +55,8 @@ public class OrderPlaceService {
 		}
 	}
 
+	private Order getOrderById(final Long memberId, final Long orderId) {
+		return orderRepository.findByIdAndMemberId(orderId, memberId)
+			.orElseThrow(OrderNotFoundException::new);
+	}
 }

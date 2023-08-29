@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.woowa.woowakit.domain.cart.domain.CartItem;
 import com.woowa.woowakit.domain.cart.domain.CartItemRepository;
 import com.woowa.woowakit.domain.order.domain.mapper.CartItemMapper;
+import com.woowa.woowakit.domain.order.exception.OrderNotFoundException;
 import com.woowa.woowakit.domain.product.domain.product.Product;
 import com.woowa.woowakit.domain.product.domain.product.ProductRepository;
 
@@ -66,6 +67,6 @@ public class PayResultHandler {
 	}
 
 	private Order findOrderById(final Long id) {
-		return orderRepository.findById(id).orElseThrow();
+		return orderRepository.findById(id).orElseThrow(OrderNotFoundException::new);
 	}
 }
