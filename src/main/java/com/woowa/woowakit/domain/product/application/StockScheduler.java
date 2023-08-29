@@ -4,6 +4,7 @@ import com.woowa.woowakit.domain.product.domain.product.ProductRepository;
 import com.woowa.woowakit.domain.product.domain.stock.Stock;
 import com.woowa.woowakit.domain.product.domain.stock.StockRepository;
 import com.woowa.woowakit.domain.product.domain.stock.StockType;
+import com.woowa.woowakit.domain.product.exception.StockBatchFailException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -41,6 +42,7 @@ public class StockScheduler {
 			stockProcessingService.doAsyncStockProcess(productId, LocalDate.now(ZoneId.of("Asia/Seoul")), stocks);
 		} catch (Exception e) {
 			log.warn("productId = {} 배치 처리 실패", productId);
+			throw new StockBatchFailException(e);
 		}
 	}
 }
