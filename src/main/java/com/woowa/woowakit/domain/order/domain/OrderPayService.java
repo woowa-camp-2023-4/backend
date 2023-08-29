@@ -16,9 +16,8 @@ import reactor.core.scheduler.Schedulers;
 public class OrderPayService {
 
 	private final PaymentClient paymentClient;
-	private final PaymentSaveService paymentSaveService;
 	private final OrderRepository orderRepository;
-	private final OrderRollbackService orderRollbackService;
+	private final PayResultHandler payResultHandler;
 
 	@Counted("order.payment.request")
 	public void pay(final Long orderId, final String paymentKey) {
@@ -28,8 +27,8 @@ public class OrderPayService {
 
 		paymentClient.validatePayment(paymentKey, order.getUuid(), order.getTotalPrice())
 			.publishOn(Schedulers.boundedElastic())
-			.doOnSuccess(ignore -> paymentSaveService.save(orderId, order.getTotalPrice(), paymentKey))
-			.doOnError(error -> orderRollbackService.rollback(orderId, error))
+			.doOnSuccess(ignore -> payResultHandler.save(orderId, paymentKey))
+			.doOnError(error -> payResultHandler.rollback(orderId, error))
 			.onErrorMap(IllegalArgumentException.class,
 				error -> new WooWaException(error.getMessage(), HttpStatus.BAD_REQUEST))
 			.onErrorMap(IllegalStateException.class,

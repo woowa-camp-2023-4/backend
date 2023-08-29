@@ -6,7 +6,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.woowa.woowakit.domain.model.Money;
 import com.woowa.woowakit.domain.order.domain.PaymentSaveService;
 
-import io.micrometer.core.annotation.Counted;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -17,7 +16,6 @@ public class PaymentSaveServiceImpl implements PaymentSaveService {
 
 	private final PaymentRepository paymentRepository;
 
-	@Counted("order.payment.success")
 	@Transactional
 	public void save(final Long orderId, final Money totalPrice, final String paymentKey) {
 		Payment payment = Payment.of(paymentKey, totalPrice, orderId);

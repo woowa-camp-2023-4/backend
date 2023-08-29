@@ -18,12 +18,23 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class OrderRollbackService {
+public class PayResultHandler {
 
 	private final CartItemRepository cartItemRepository;
 	private final ProductRepository productRepository;
 	private final OrderRepository orderRepository;
+	private final PaymentSaveService paymentSaveService;
 	private final CartItemMapper cartItemMapper;
+
+	@Transactional
+	@Counted("order.payment.success")
+	public void save(final Long orderId, final String paymentKey) {
+		log.error("결제 성공 orderId: {}, paymentKey={}", orderId, paymentKey);
+		Order order = findOrderById(orderId);
+
+		order.pay();
+		paymentSaveService.save(orderId, order.getTotalPrice(), paymentKey);
+	}
 
 	@Transactional
 	@Counted("order.payment.failure")

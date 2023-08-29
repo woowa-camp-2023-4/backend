@@ -16,23 +16,24 @@ import com.woowa.woowakit.domain.product.domain.product.Product;
 import com.woowa.woowakit.domain.product.domain.product.ProductRepository;
 import com.woowa.woowakit.domain.product.fixture.ProductFixture;
 
-class OrderRollbackServiceTest {
+class PayResultHandlerTest {
 
 	@Test
 	@DisplayName("rollback 시 담은 개수만큼 다시 복구되는지 테스트.")
 	void rollback() {
 		// given
-		OrderRollbackService orderRollbackService = new OrderRollbackService(
+		PayResultHandler payResultHandler = new PayResultHandler(
 			mock(CartItemRepository.class),
 			mock(ProductRepository.class),
 			mock(OrderRepository.class),
+			mock(PaymentSaveService.class),
 			mock(CartItemMapper.class)
 		);
 		Order order = OrderFixture.anOrder().build();
 		Product product = ProductFixture.anProduct().id(2L).quantity(Quantity.from(1L)).build();
 
 		// when
-		orderRollbackService.rollbackProducts(order, List.of(product));
+		payResultHandler.rollbackProducts(order, List.of(product));
 
 		// then
 		assertThat(product).extracting("quantity").extracting("value").isEqualTo(2L);

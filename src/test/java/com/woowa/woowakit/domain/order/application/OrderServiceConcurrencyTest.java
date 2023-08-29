@@ -70,7 +70,7 @@ class OrderServiceConcurrencyTest {
 			OrderCreateRequest request = OrderCreateRequest.of((long)(i + 1), "test");
 			executorService.submit(() -> {
 				try {
-					orderService.order(AuthPrincipal.from(member), request);
+					orderService.pay(AuthPrincipal.from(member), request);
 				} finally {
 					countDownLatch.countDown();
 				}

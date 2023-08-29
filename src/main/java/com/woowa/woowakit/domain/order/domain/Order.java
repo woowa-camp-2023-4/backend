@@ -71,6 +71,10 @@ public class Order extends BaseEntity {
 			.reduce(Money.ZERO, Money::add);
 	}
 
+	public void place() {
+		orderStatus = OrderStatus.PLACED;
+	}
+
 	public void cancel() {
 		orderStatus = OrderStatus.CANCELED;
 	}

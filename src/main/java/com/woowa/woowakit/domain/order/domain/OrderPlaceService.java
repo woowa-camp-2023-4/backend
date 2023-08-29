@@ -26,11 +26,11 @@ public class OrderPlaceService {
 
 	@Transactional
 	@Counted("order.order")
-	public void order(final AuthPrincipal authPrincipal, final Long orderId) {
-		log.info("주문 생성 memberId: {} orderId: {}", authPrincipal.getId(), orderId);
+	public void place(final AuthPrincipal authPrincipal, final Long orderId) {
+		log.info("주문 수량 확보 및 장바구니 삭제 memberId: {} orderId: {}", authPrincipal.getId(), orderId);
 		Order order = getOrderById(authPrincipal.getId(), orderId);
 
-		order.pay();
+		order.place();
 		subtractProductQuantity(order);
 		deleteCartItems(order);
 	}
