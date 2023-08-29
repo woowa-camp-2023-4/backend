@@ -16,6 +16,12 @@ spring:
     driver-class-name: org.h2.Driver
     username: sa
     password:
+  cache:
+    caffeine:
+      spec: maximumSize=500,expireAfterAccess=5s
+    type: caffeine
+    cache-names:
+      - productsFirstRanking
 
 security:
   jwt:

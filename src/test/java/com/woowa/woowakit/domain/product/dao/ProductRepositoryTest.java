@@ -31,13 +31,11 @@ class ProductRepositoryTest {
     @DisplayName("상품을 검색 조건에 따라 커서 기반으로 검색한다.(첫 페이지)")
     void search() {
         // given
-        Product product1 = Product.of("테스트1", 1500L, "testImg1");
-        Product product2 = Product.of("테스트2", 1500L, "testImg2");
-        Product product3 = Product.of("테스트3", 1500L, "testImg3");
-        Product product4 = Product.of("테스트11", 1500L, "testImg4");
-        Product product5 = Product.of("테스트12", 1500L, "testImg5");
-
-        productRepository.saveAll(List.of(product1, product2, product3, product4, product5));
+        Product product1 = makeProduct("테스트1", 1500L, "testImg1");
+        Product product2 = makeProduct("테스트2", 1500L, "testImg2");
+        Product product3 = makeProduct("테스트3", 1500L, "testImg3");
+        Product product4 = makeProduct("테스트11", 1500L, "testImg4");
+        Product product5 = makeProduct("테스트12", 1500L, "testImg5");
 
         // when
         ProductSearchCondition productSearchCondition = ProductSearchCondition.of("1", null, null, 5, LocalDate.now());
@@ -54,13 +52,11 @@ class ProductRepositoryTest {
     @DisplayName("상품을 검색 조건에 따라 커서 기반으로 검색한다.(두 번째 페이지)")
     void searchCursor() {
         // given
-        Product product1 = Product.of("테스트1", 1500L, "testImg1");
-        Product product2 = Product.of("테스트2", 1500L, "testImg2");
-        Product product3 = Product.of("테스트3", 1500L, "testImg3");
-        Product product4 = Product.of("테스트11", 1500L, "testImg4");
-        Product product5 = Product.of("테스트12", 1500L, "testImg5");
-
-        productRepository.saveAll(List.of(product1, product2, product3, product4, product5));
+        Product product1 = makeProduct("테스트1", 1500L, "testImg1");
+        Product product2 = makeProduct("테스트2", 1500L, "testImg2");
+        Product product3 = makeProduct("테스트3", 1500L, "testImg3");
+        Product product4 = makeProduct("테스트4", 1500L, "testImg4");
+        Product product5 = makeProduct("테스트5", 1500L, "testImg5");
 
         // when
         ProductSearchCondition productSearchCondition = ProductSearchCondition.of("테스트", product2.getId(), null, 2,
@@ -71,6 +67,14 @@ class ProductRepositoryTest {
         Assertions.assertThat(result).hasSize(2);
         Assertions.assertThat(result.get(0)).extracting(ProductSpecification::getProduct).extracting(Product::getId).isEqualTo(product3.getId());
         Assertions.assertThat(result.get(1)).extracting(ProductSpecification::getProduct).extracting(Product::getId).isEqualTo(product4.getId());
+    }
+
+    private Product makeProduct(String name, Long price, String image) {
+        Product product = Product.of(name, price, image);
+        product.addQuantity(Quantity.from(10L));
+        product.updateProductStatus(ProductStatus.IN_STOCK);
+        productRepository.save(product);
+        return product;
     }
 
     @Test

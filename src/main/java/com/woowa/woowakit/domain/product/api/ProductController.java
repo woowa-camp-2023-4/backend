@@ -40,6 +40,12 @@ public class ProductController {
 		return ResponseEntity.ok(response);
 	}
 
+	@GetMapping("/rank")
+	public ResponseEntity<List<ProductResponse>> getMainPage() {
+		List<ProductResponse> response = productService.findRankingProducts();
+		return ResponseEntity.ok(response);
+	}
+
 	@GetMapping
 	public ResponseEntity<List<ProductResponse>> searchProducts(@Valid @ModelAttribute final ProductSearchRequest request) {
 		log.info("productKeyword: {}, lastProductId: {} 상품 조회", request.getProductKeyword(), request.getLastProductId());

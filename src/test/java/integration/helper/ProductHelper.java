@@ -32,7 +32,6 @@ public class ProductHelper {
 		final ProductStatusUpdateRequest request,
 		final String adminAccessToken
 	) {
-
 		return CommonRestAssuredUtils.patch("/products/" + getIdFrom(location) + "/status", request,
 			adminAccessToken);
 	}
@@ -48,7 +47,6 @@ public class ProductHelper {
 
 	public static ProductCreateRequest createProductCreateRequest2() {
 		return ProductCreateRequest.of("test2", 7000L, "testImage");
-
 	}
 
 	public static ProductCreateRequest createProductCreateRequest3() {

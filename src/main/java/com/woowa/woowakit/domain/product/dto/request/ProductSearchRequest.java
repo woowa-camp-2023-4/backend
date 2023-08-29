@@ -20,7 +20,9 @@ import lombok.Setter;
 @Setter
 public class ProductSearchRequest {
 
-	private static final int DEFAULT_PAGE_SIZE = 10;
+	private static final int DEFAULT_PAGE_SIZE = 20;
+
+	private static final LocalDate DEFAULT_SALE_DATE = LocalDate.now().minusDays(1);
 
 	private String productKeyword;
 
@@ -32,7 +34,7 @@ public class ProductSearchRequest {
 	private int pageSize = DEFAULT_PAGE_SIZE;
 
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	private LocalDate saleDate = LocalDate.now().minusDays(1);
+	private LocalDate saleDate = DEFAULT_SALE_DATE;
 
 	public static ProductSearchRequest of(
 		final String productKeyword,
@@ -48,5 +50,3 @@ public class ProductSearchRequest {
 		return ProductSearchCondition.of(productKeyword, lastProductId, lastProductSale, pageSize, saleDate);
 	}
 }
-
-

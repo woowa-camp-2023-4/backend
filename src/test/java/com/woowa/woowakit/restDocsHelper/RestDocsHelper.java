@@ -34,6 +34,18 @@ public class RestDocsHelper {
 
 	public static RestDocumentationResultHandler defaultDocument(
 		final String path,
+		final ResponseFields responseFields
+	) {
+		return document(path,
+			preprocessRequest(Preprocessors.prettyPrint()),
+			preprocessResponse(Preprocessors.prettyPrint()),
+			responseFields(
+				responseFieldsDescriptor(responseFields.getValues()))
+		);
+	}
+
+	public static RestDocumentationResultHandler defaultDocument(
+		final String path,
 		final PathParam pathParam,
 		final ResponseFields responseFields
 	) {

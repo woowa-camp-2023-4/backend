@@ -106,7 +106,30 @@ class ProductControllerTest extends RestDocsTest {
 	}
 
 	@Test
-	@DisplayName("[GET] [/products/{id}] 상품 단일 조회  테스트 및 문서화")
+	@DisplayName("[GET] [/products/rank] 상품 첫 페이지 조회 테스트 및 문서화")
+	void searchMainPage() throws Exception {
+		ResponseFields responseFields = new ResponseFields(Map.of(
+			"[]name", "상품 이름",
+			"[]id", "상품 ID",
+			"[]price", "상품 가격",
+			"[]imageUrl", "상품 이미지 URL",
+			"[]status", "상품 상태",
+			"[]quantity", "상품 총 수량",
+			"[]productSale", "마지막 상품 판매량"
+		));
+
+		List<ProductResponse> response = List.of(
+			ProductResponse.from(getProductSpecification()));
+		given(productService.findRankingProducts()).willReturn(response);
+
+		mockMvc.perform(get("/products/rank"))
+			.andExpect(status().isOk())
+			.andExpect(handler().methodName("getMainPage"))
+			.andDo(defaultDocument("product/main", responseFields));
+	}
+
+	@Test
+	@DisplayName("[GET] [/products] 상품 전체 조회 테스트 및 문서화")
 	void searchProducts() throws Exception {
 		RequestFields requestFields = new RequestFields(Map.of(
 			"productKeyword", "상품 이름 키워드",

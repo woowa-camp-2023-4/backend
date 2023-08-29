@@ -14,6 +14,7 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.woowa.woowakit.domain.product.domain.product.ProductSearchCondition;
 import com.woowa.woowakit.domain.product.domain.product.ProductSpecification;
+import com.woowa.woowakit.domain.product.domain.product.ProductStatus;
 
 import lombok.RequiredArgsConstructor;
 
@@ -35,7 +36,8 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
 			.where(
 				containsName(condition.getProductKeyword()),
 				saleNow(condition.getSaleDate()),
-				sale(condition.getLastProductSale(), condition.getLastProductId()))
+				sale(condition.getLastProductSale(), condition.getLastProductId()),
+				product.status.eq(ProductStatus.IN_STOCK))
 			.orderBy(productSales.sale.value.desc().nullsLast(), product.id.asc())
 			.limit(condition.getPageSize())
 			.fetch();
