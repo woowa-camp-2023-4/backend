@@ -1,20 +1,17 @@
 package com.woowa.woowakit.domain.product.domain.stock;
 
-import java.time.LocalDate;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.woowa.woowakit.domain.model.Quantity;
 import com.woowa.woowakit.domain.product.domain.ProductSalesRepository;
 import com.woowa.woowakit.domain.product.domain.product.Product;
 import com.woowa.woowakit.domain.product.domain.product.ProductSales;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -24,7 +21,7 @@ public class StockConsistencyProcessor {
 	private final StockRepository stockRepository;
 	private final ProductSalesRepository productSalesRepository;
 
-	@Transactional(propagation = Propagation.REQUIRES_NEW)
+	@Transactional
 	public void run(final Product product, final List<Stock> stocks) {
 		Quantity difference = getDifference(product, stocks);
 		saveProductSales(product.getId(), difference);

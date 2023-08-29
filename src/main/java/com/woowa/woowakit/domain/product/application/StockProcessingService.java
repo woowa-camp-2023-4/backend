@@ -1,34 +1,28 @@
 package com.woowa.woowakit.domain.product.application;
 
-import static java.lang.System.*;
-
-import java.time.LocalDate;
-import java.util.List;
-
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.woowa.woowakit.domain.cart.exception.ProductNotExistException;
 import com.woowa.woowakit.domain.model.Quantity;
 import com.woowa.woowakit.domain.product.domain.product.Product;
 import com.woowa.woowakit.domain.product.domain.product.ProductRepository;
-import com.woowa.woowakit.domain.product.domain.stock.ExpirationDateProcessor;
-import com.woowa.woowakit.domain.product.domain.stock.Stock;
-import com.woowa.woowakit.domain.product.domain.stock.StockConsistencyProcessor;
-import com.woowa.woowakit.domain.product.domain.stock.StockRepository;
-import com.woowa.woowakit.domain.product.domain.stock.StockType;
-
+import com.woowa.woowakit.domain.product.domain.stock.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDate;
+import java.util.List;
+
+import static java.lang.System.currentTimeMillis;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class StockProcessingService {
 
-	public static final int DAYS = 6;
-	public static final long DEFAULT_SUBTRACT = 0L;
+	private static final int DAYS = 6;
+	private static final long DEFAULT_SUBTRACT = 0L;
 	private final ProductRepository productRepository;
 	private final StockConsistencyProcessor stockConsistencyProcessor;
 	private final ExpirationDateProcessor expirationDateProcessor;
@@ -75,7 +69,9 @@ public class StockProcessingService {
 		long subtractExpiryQuantity = stockRepository.countStockByExpiry(productId, StockType.EXPIRED.name(),
 				currentDate.plusDays(DAYS))
 			.orElse(DEFAULT_SUBTRACT);
-		log.info("유통기한 정책에 의해 차감된 재고 = {}", subtractExpiryQuantity);
-		product.subtractQuantity(Quantity.from(subtractExpiryQuantity));
+		if (!product.getQuantity().smallerThan(Quantity.from(subtractExpiryQuantity))) {
+			log.info("유통기한 정책에 의해 차감된 재고 = {}", subtractExpiryQuantity);
+			product.subtractQuantity(Quantity.from(subtractExpiryQuantity));
+		}
 	}
 }

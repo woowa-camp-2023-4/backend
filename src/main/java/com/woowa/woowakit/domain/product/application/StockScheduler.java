@@ -1,20 +1,18 @@
 package com.woowa.woowakit.domain.product.application;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.List;
-
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
-
 import com.woowa.woowakit.domain.product.domain.product.ProductRepository;
 import com.woowa.woowakit.domain.product.domain.stock.Stock;
 import com.woowa.woowakit.domain.product.domain.stock.StockRepository;
 import com.woowa.woowakit.domain.product.domain.stock.StockType;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.List;
 
 @Slf4j
 @Component
@@ -32,9 +30,17 @@ public class StockScheduler {
 		List<Long> productIds = productRepository.findAllIds();
 		for (Long productId : productIds) {
 			List<Stock> stocks = stockRepository.findAllByProductId(productId, StockType.NORMAL);
-			stockProcessingService.doAsyncStockProcess(productId, LocalDate.now(ZoneId.of("Asia/Seoul")), stocks);
+			doStockProcess(productId, stocks);
 		}
 		long diffTime = System.currentTimeMillis() - startEnd;
 		log.info("재고 정합성 스케쥴러 끝 = {} , 걸린 시간 = {} ms ", LocalDateTime.now(), diffTime);
+	}
+
+	private void doStockProcess(final Long productId, final List<Stock> stocks) {
+		try {
+			stockProcessingService.doAsyncStockProcess(productId, LocalDate.now(ZoneId.of("Asia/Seoul")), stocks);
+		} catch (Exception e) {
+			log.warn("productId = {} 배치 처리 실패", productId);
+		}
 	}
 }
