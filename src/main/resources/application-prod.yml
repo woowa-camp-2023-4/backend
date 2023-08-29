@@ -17,7 +17,7 @@ spring:
     password: ${DB_PASSWORD}
 
 cors:
-  allowed-origin: http://www.dndnkit.shop
+  allowed-origin: https://www.dndnkit.shop
 
 cloud:
   aws:
