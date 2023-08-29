@@ -137,7 +137,6 @@ class TestRunner {
     }
 
     void 메인_조회() {
-        //아직 진행중
         HTTPResponse response = request.GET(SERVER_URL + "/products/rank")
         checkErrorLog(response)
     }
