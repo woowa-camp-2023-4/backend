@@ -28,10 +28,9 @@ import com.woowa.woowakit.domain.order.application.OrderService;
 import com.woowa.woowakit.domain.order.domain.Order;
 import com.woowa.woowakit.domain.order.domain.OrderItem;
 import com.woowa.woowakit.domain.order.dto.request.OrderCreateRequest;
-import com.woowa.woowakit.domain.order.dto.request.PreOrderCreateCartItemRequest;
-import com.woowa.woowakit.domain.order.dto.request.PreOrderCreateRequest;
+import com.woowa.woowakit.domain.order.dto.request.OrderPayRequest;
 import com.woowa.woowakit.domain.order.dto.response.OrderDetailResponse;
-import com.woowa.woowakit.domain.order.dto.response.PreOrderResponse;
+import com.woowa.woowakit.domain.order.dto.response.OrderResponse;
 import com.woowa.woowakit.restDocsHelper.PathParam;
 import com.woowa.woowakit.restDocsHelper.RequestFields;
 import com.woowa.woowakit.restDocsHelper.ResponseFields;
@@ -49,11 +48,11 @@ class OrderControllerTest extends RestDocsTest {
 	private OrderService orderService;
 
 	@Test
-	@DisplayName("[POST] [/orders/pre] 주문 생성 테스트 및 문서화")
+	@DisplayName("[POST] [/orders] 주문 생성 테스트 및 문서화")
 	void createPreOrder() throws Exception {
 		RequestFields requestFields = new RequestFields(Map.of(
-			"productId", "상품 ID",
-			"quantity", "상품 수량"
+			"[]productId", "주문 상품 ID",
+			"[]quantity", "주문 상품 수량"
 		));
 		ResponseFields responseFields = new ResponseFields(Map.of(
 			"id", "주문 아이디",
@@ -67,54 +66,24 @@ class OrderControllerTest extends RestDocsTest {
 		));
 
 		String token = getToken();
-		PreOrderCreateRequest request = PreOrderCreateRequest.of(1L, 10L);
-		PreOrderResponse response = PreOrderResponse.from(getOrder());
-		given(orderService.preOrder(any(), any())).willReturn(response);
+		List<OrderCreateRequest> request = List.of(
+			OrderCreateRequest.of(1L, 10L),
+			OrderCreateRequest.of(2L, 10L)
+		);
+		OrderResponse response = OrderResponse.from(getOrder());
+		given(orderService.create(any(), any())).willReturn(response);
 
-		mockMvc.perform(post("/orders/pre")
+		mockMvc.perform(post("/orders")
 				.header(HttpHeaders.AUTHORIZATION, token)
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(request)))
 			.andExpect(status().isCreated())
-			.andExpect(handler().methodName("createPreOrder"))
-			.andDo(authorizationDocument("orders/pre", requestFields, responseFields));
+			.andExpect(handler().methodName("create"))
+			.andDo(authorizationDocument("orders/create", requestFields, responseFields));
 	}
 
 	@Test
-	@DisplayName("[POST] [/orders/pre-cart-item] 장바구니 주문 생성 테스트 및 문서화")
-	void createPreOrderByCartItems() throws Exception {
-		RequestFields requestFields = new RequestFields(Map.of(
-			"[]cartItemId", "장바구니 ID"
-		));
-		ResponseFields responseFields = new ResponseFields(Map.of(
-			"id", "주문 아이디",
-			"uuid", "주문 고유 번호",
-			"orderItems[].id", "주문 상품 ID",
-			"orderItems[].productId", "주문 상품 ID",
-			"orderItems[].name", "주문 상품 이름",
-			"orderItems[].image", "주문 상품 이미지 URL",
-			"orderItems[].price", "주문 상품 가격",
-			"orderItems[].quantity", "주문 상품 수량"
-		));
-
-		String token = getToken();
-		List<PreOrderCreateCartItemRequest> requests = List.of(
-			PreOrderCreateCartItemRequest.from(1L),
-			PreOrderCreateCartItemRequest.from(3L));
-		PreOrderResponse response = PreOrderResponse.from(getOrder());
-		given(orderService.preOrderCartItems(any(), any())).willReturn(response);
-
-		mockMvc.perform(post("/orders/pre-cart-item")
-				.header(HttpHeaders.AUTHORIZATION, token)
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(objectMapper.writeValueAsString(requests)))
-			.andExpect(status().isCreated())
-			.andExpect(handler().methodName("createPreOrderByCartItems"))
-			.andDo(authorizationDocument("orders/pre-cart", requestFields, responseFields));
-	}
-
-	@Test
-	@DisplayName("[POST] [/orders/{id}/pay] 주문 테스트 및 문서화")
+	@DisplayName("[POST] [/orders/{id}/pay] 주문 결제 테스트 및 문서화")
 	void createOrder() throws Exception {
 		PathParam pathParam = new PathParam("id", "주문 ID");
 		RequestFields requestFields = new RequestFields(Map.of(
@@ -122,7 +91,7 @@ class OrderControllerTest extends RestDocsTest {
 		));
 
 		String token = getToken();
-		OrderCreateRequest request = OrderCreateRequest.of("paymentKey");
+		OrderPayRequest request = OrderPayRequest.of("paymentKey");
 
 		mockMvc.perform(post("/orders/{id}/pay", 1L)
 				.header(HttpHeaders.AUTHORIZATION, token)

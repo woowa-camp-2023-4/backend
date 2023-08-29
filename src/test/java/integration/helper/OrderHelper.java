@@ -1,54 +1,51 @@
 package integration.helper;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.woowa.woowakit.domain.order.dto.request.OrderCreateRequest;
-import com.woowa.woowakit.domain.order.dto.request.PreOrderCreateCartItemRequest;
-import com.woowa.woowakit.domain.order.dto.request.PreOrderCreateRequest;
+import com.woowa.woowakit.domain.order.dto.request.OrderPayRequest;
 import com.woowa.woowakit.domain.order.dto.response.OrderDetailResponse;
-import com.woowa.woowakit.domain.order.dto.response.PreOrderResponse;
+import com.woowa.woowakit.domain.order.dto.response.OrderResponse;
 
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 
 public class OrderHelper {
 
-	public static ExtractableResponse<Response> createPreOrder(
-		final PreOrderCreateRequest request, final String accessToken
-	) {
-		return CommonRestAssuredUtils.post("/orders/pre", request, accessToken);
-	}
-
-	public static ExtractableResponse<Response> createPreOrder(
-		final PreOrderCreateCartItemRequest request, final String accessToken
-	) {
-		return CommonRestAssuredUtils.post("/orders/pre-cart-item", List.of(request), accessToken);
-	}
-
-	public static PreOrderCreateRequest createPreOrderCreateRequest(Long productId) {
-		return PreOrderCreateRequest.of(productId, 1L);
-	}
-
-	public static PreOrderCreateCartItemRequest createPreOrderCreateCartItemRequest(Long cartItemId) {
-		return new PreOrderCreateCartItemRequest(cartItemId);
-	}
-
-	public static Long createPreOrderAndGetId(Long productId, String accessToken) {
-		return OrderHelper.createPreOrder(
-				OrderHelper.createPreOrderCreateRequest(productId), accessToken)
-			.as(PreOrderResponse.class).getId();
-	}
-
 	public static ExtractableResponse<Response> createOrder(
-		final OrderCreateRequest request,
+		final List<OrderCreateRequest> request, final String accessToken
+	) {
+		return CommonRestAssuredUtils.post("/orders", request, accessToken);
+	}
+
+	public static List<OrderCreateRequest> createOrderRequests(Long... ids) {
+		return Arrays.stream(ids)
+			.map(id -> OrderCreateRequest.of(id, 1L))
+			.collect(Collectors.toList());
+	}
+
+	public static List<OrderCreateRequest> createOrderRequest(Long productId) {
+		return List.of(OrderCreateRequest.of(productId, 1L));
+	}
+
+	public static Long createOrderAndGetId(Long productId, String accessToken) {
+		return OrderHelper.createOrder(
+				OrderHelper.createOrderRequest(productId), accessToken)
+			.as(OrderResponse.class).getId();
+	}
+
+	public static ExtractableResponse<Response> payOrder(
+		final OrderPayRequest request,
 		final Long orderId,
 		final String accessToken
 	) {
 		return CommonRestAssuredUtils.post("/orders/" + orderId + "/pay", request, accessToken);
 	}
 
-	public static OrderCreateRequest createOrderCreateRequest() {
-		return OrderCreateRequest.of("paymentKey");
+	public static OrderPayRequest createOrderPayRequest() {
+		return OrderPayRequest.of("paymentKey");
 	}
 
 	public static OrderDetailResponse getOrder(
