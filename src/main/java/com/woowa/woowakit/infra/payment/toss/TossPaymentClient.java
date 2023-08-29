@@ -14,7 +14,7 @@ import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import com.woowa.woowakit.domain.model.Money;
-import com.woowa.woowakit.domain.payment.domain.PaymentClient;
+import com.woowa.woowakit.domain.order.domain.PaymentClient;
 import com.woowa.woowakit.infra.payment.toss.dto.TossPaymentErrorResponse;
 import com.woowa.woowakit.infra.payment.toss.dto.TossPaymentRequest;
 

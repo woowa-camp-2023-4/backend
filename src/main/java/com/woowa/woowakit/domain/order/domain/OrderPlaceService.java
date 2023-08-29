@@ -30,7 +30,7 @@ public class OrderPlaceService {
 		log.info("주문 생성 memberId: {} orderId: {}", authPrincipal.getId(), orderId);
 		Order order = getOrderById(authPrincipal.getId(), orderId);
 
-		order.order();
+		order.pay();
 		subtractProductQuantity(order);
 		deleteCartItems(order);
 	}

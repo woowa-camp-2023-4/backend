@@ -71,11 +71,6 @@ public class Order extends BaseEntity {
 			.reduce(Money.ZERO, Money::add);
 	}
 
-	public void order() {
-		this.orderStatus = OrderStatus.PLACED;
-		log.info("주문 배치 완료 orderId: {}", id);
-	}
-
 	public void cancel() {
 		orderStatus = OrderStatus.CANCELED;
 	}

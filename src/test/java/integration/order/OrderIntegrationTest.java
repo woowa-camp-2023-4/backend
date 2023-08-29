@@ -1,13 +1,21 @@
 package integration.order;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.assertj.core.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
+
+import java.util.List;
+
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpStatus;
 
 import com.woowa.woowakit.domain.order.domain.OrderStatus;
+import com.woowa.woowakit.domain.order.domain.PaymentClient;
 import com.woowa.woowakit.domain.order.dto.response.OrderDetailResponse;
 import com.woowa.woowakit.domain.order.dto.response.PreOrderResponse;
-import com.woowa.woowakit.domain.payment.domain.PaymentClient;
+
 import integration.IntegrationTest;
 import integration.helper.CartItemHelper;
 import integration.helper.CommonRestAssuredUtils;
@@ -16,11 +24,6 @@ import integration.helper.OrderHelper;
 import integration.helper.ProductHelper;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import java.util.List;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.HttpStatus;
 import reactor.core.publisher.Mono;
 
 @DisplayName("주문 통합 테스트")
@@ -131,18 +134,17 @@ class OrderIntegrationTest extends IntegrationTest {
 		String accessToken = MemberHelper.signUpAndLogIn();
 		Long orderId = OrderHelper.createPreOrderAndGetId(productId, accessToken);
 
+		when(paymentClient.validatePayment(any(), any(), any())).thenReturn(Mono.empty());
 		OrderHelper.createOrder(OrderHelper.createOrderCreateRequest(orderId), accessToken);
 
 		// when
-		ExtractableResponse<Response> response = CommonRestAssuredUtils.get("/orders/" + orderId,
-			accessToken);
+		ExtractableResponse<Response> response = CommonRestAssuredUtils.get("/orders/" + orderId, accessToken);
 
 		// then
 		assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
 		OrderDetailResponse body = response.as(OrderDetailResponse.class);
 		assertThat(body).extracting(OrderDetailResponse::getOrderId).isEqualTo(orderId);
-		assertThat(body).extracting(OrderDetailResponse::getOrderStatus)
-			.isEqualTo(OrderStatus.PLACED.name());
+		assertThat(body).extracting(OrderDetailResponse::getOrderStatus).isEqualTo(OrderStatus.PAYED.name());
 		assertThat(body).extracting(OrderDetailResponse::getTotalPrice).isEqualTo(3000L);
 	}
 

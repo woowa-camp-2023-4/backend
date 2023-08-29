@@ -1,4 +1,4 @@
-package com.woowa.woowakit.domain.payment.domain;
+package com.woowa.woowakit.domain.order.domain;
 
 import com.woowa.woowakit.domain.model.Money;
 
