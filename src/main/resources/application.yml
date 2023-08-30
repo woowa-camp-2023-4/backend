@@ -1,57 +1,57 @@
 logging:
-    config: classpath:logback-spring-${spring.profiles.active}.xml
+  config: classpath:logback-spring-${spring.profiles.active}.xml
 
 security:
-    jwt:
-        token:
-            secret-key: ${JWT_SECRET_KEY}
-            expire-length: 3600000
+  jwt:
+    token:
+      secret-key: ${JWT_SECRET_KEY}
+      expire-length: 3600000
 
 payment:
-    toss:
-        secret-key: ${PAYMENT_SECRET_KEY}
-        confirm-url: https://api.tosspayments.com/v1/payments/confirm
-        timeout: 3000
-        max-retry: 3
+  toss:
+    secret-key: ${PAYMENT_SECRET_KEY}
+    confirm-url: https://api.tosspayments.com/v1/payments/confirm
+    timeout: 3000
+    max-retry: 3
 
 cors:
-    allowed-origin: ${ALLOWED_ORIGIN}
+  allowed-origin: ${ALLOWED_ORIGIN}
 
 cloud:
-    aws:
-        s3:
-            bucket: woowa-camp-4
-        region:
-            static: ap-northeast-2
-        stack:
-            auto: false
+  aws:
+    s3:
+      bucket: woowa-camp-4
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
 
 spring:
-    servlet:
-        multipart:
-            max-file-size: 5MB
-    datasource:
-        hikari:
-            maximum-pool-size: 20
-    cache:
-        caffeine:
-            spec: maximumSize=100,expireAfterAccess=30s
-        type: caffeine
-        cache-names:
-            - productsFirstRanking
+  servlet:
+    multipart:
+      max-file-size: 5MB
+  datasource:
+    hikari:
+      maximum-pool-size: 20
+  cache:
+    caffeine:
+      spec: maximumSize=100,expireAfterAccess=30s
+    type: caffeine
+    cache-names:
+      - productsFirstRanking
 
 management:
-    server:
-        port: ${ACTUATOR_PORT}
-    endpoints:
-        web:
-            exposure:
-                include: "*"
-            base-path: ${ACTUATOR_BASE_PATH}
+  server:
+    port: ${ACTUATOR_PORT}
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+      base-path: ${ACTUATOR_BASE_PATH}
 
 server:
-    tomcat:
-        mbeanregistry:
-            enabled: true
-        threads:
-            max: 200 # 생성할 수 있는 thread의 총 개수
+  tomcat:
+    5mbeanregistry:
+      enabled: true
+    threads:
+      max: 100 # 생성할 수 있는 thread의 총 개수
