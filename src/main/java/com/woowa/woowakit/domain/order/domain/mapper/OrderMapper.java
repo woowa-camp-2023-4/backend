@@ -1,5 +1,11 @@
 package com.woowa.woowakit.domain.order.domain.mapper;
 
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Component;
+
 import com.woowa.woowakit.domain.model.Image;
 import com.woowa.woowakit.domain.model.Quantity;
 import com.woowa.woowakit.domain.order.domain.Order;
@@ -7,14 +13,12 @@ import com.woowa.woowakit.domain.order.domain.OrderItem;
 import com.woowa.woowakit.domain.order.dto.request.OrderCreateRequest;
 import com.woowa.woowakit.domain.order.exception.ProductNotFoundException;
 import com.woowa.woowakit.domain.order.exception.ProductNotOnSaleException;
+import com.woowa.woowakit.domain.order.exception.QuantityNotEnoughException;
 import com.woowa.woowakit.domain.product.domain.product.Product;
 import com.woowa.woowakit.domain.product.domain.product.ProductRepository;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
@@ -33,6 +37,7 @@ public class OrderMapper {
 	}
 
 	private OrderItem mapOrderItemFrom(final OrderCreateRequest item, final Product product) {
+
 		validatePurchasable(product, Quantity.from(item.getQuantity()));
 
 		return OrderItem.of(
@@ -67,8 +72,12 @@ public class OrderMapper {
 	}
 
 	private void validatePurchasable(final Product product, final Quantity quantity) {
-		if (!product.isOnSale() || !product.isEnoughQuantity(quantity)) {
+		if (!product.isOnSale()) {
 			throw new ProductNotOnSaleException();
+		}
+
+		if (!product.isEnoughQuantity(quantity)) {
+			throw new QuantityNotEnoughException();
 		}
 	}
 }

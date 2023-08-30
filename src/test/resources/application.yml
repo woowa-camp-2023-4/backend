@@ -47,11 +47,3 @@ cloud:
       static: ap-northeast-2
     stack:
       auto: false
-
-logging:
-  level:
-    org:
-      springframework:
-        orm:
-          jpa: DEBUG
-        transaction: DEBUG
