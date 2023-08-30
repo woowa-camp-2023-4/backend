@@ -158,7 +158,7 @@ class ProductControllerTest extends RestDocsTest {
 			ProductResponse.from(getProductSpecification()));
 		given(productService.searchProducts(any())).willReturn(response);
 
-		mockMvc.perform(get("/products")
+		mockMvc.perform(get("/products/search")
 				.contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
 				.content(autowiredObjectMapper.writeValueAsString(request)))
 			.andExpect(status().isOk())

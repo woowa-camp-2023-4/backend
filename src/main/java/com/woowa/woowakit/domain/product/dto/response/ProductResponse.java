@@ -3,6 +3,7 @@ package com.woowa.woowakit.domain.product.dto.response;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.woowa.woowakit.domain.product.domain.product.Product;
 import com.woowa.woowakit.domain.product.domain.product.ProductSpecification;
 
 import lombok.AccessLevel;
@@ -53,8 +54,27 @@ public class ProductResponse {
             .build();
     }
 
-    public static List<ProductResponse> listOf(final List<ProductSpecification> productSpecifications) {
+    public static ProductResponse from(final Product product) {
+        return ProductResponse.builder()
+            .id(product.getId())
+            .name(product.getName().getName())
+            .price(product.getPrice().getPrice().getValue())
+            .imageUrl(product.getImageUrl().getPath())
+            .quantity(product.getQuantity().getValue())
+            .status(product.getStatus().name())
+            .build();
+    }
+
+    public static List<ProductResponse> listOfProductSpecification(
+        final List<ProductSpecification> productSpecifications
+    ) {
         return productSpecifications.stream()
+            .map(ProductResponse::from)
+            .collect(Collectors.toUnmodifiableList());
+    }
+
+    public static List<ProductResponse> listOfProducts(final List<Product> products) {
+        return products.stream()
             .map(ProductResponse::from)
             .collect(Collectors.toUnmodifiableList());
     }

@@ -56,11 +56,13 @@ class ProductRepositoryTest {
         Product product2 = makeProduct("테스트2", 1500L, "testImg2");
         Product product3 = makeProduct("테스트3", 1500L, "testImg3");
         Product product4 = makeProduct("테스트4", 1500L, "testImg4");
-        Product product5 = makeProduct("테스트5", 1500L, "testImg5");
+        Product product5 = productRepository.save(Product.of("테스트5", 1500L, "testImg5"));
+        Product product6 = productRepository.save(Product.of("테스트5", 1500L, "testImg5"));
+        Product product7 = productRepository.save(Product.of("테스트5", 1500L, "testImg5"));
 
         // when
-        ProductSearchCondition productSearchCondition = ProductSearchCondition.of("테스트", product2.getId(), null, 2,
-                LocalDate.now());
+        ProductSearchCondition productSearchCondition = ProductSearchCondition.of("테스트", product2.getId(), null, 4,
+                null);
         List<ProductSpecification> result = productRepository.searchProducts(productSearchCondition);
 
         // then

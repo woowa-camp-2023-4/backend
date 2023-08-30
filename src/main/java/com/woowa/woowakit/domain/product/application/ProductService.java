@@ -11,6 +11,7 @@ import com.woowa.woowakit.domain.product.domain.product.Product;
 import com.woowa.woowakit.domain.product.domain.product.ProductRepository;
 import com.woowa.woowakit.domain.product.domain.product.ProductSearchCondition;
 import com.woowa.woowakit.domain.product.domain.product.ProductSpecification;
+import com.woowa.woowakit.domain.product.dto.request.AdminProductSearchRequest;
 import com.woowa.woowakit.domain.product.dto.request.ProductCreateRequest;
 import com.woowa.woowakit.domain.product.dto.request.ProductSearchRequest;
 import com.woowa.woowakit.domain.product.dto.request.ProductStatusUpdateRequest;
@@ -45,7 +46,13 @@ public class ProductService {
         final List<ProductSpecification> productSpecifications = productRepository.searchProducts(
             ProductSearchCondition.builder().build());
 
-        return ProductResponse.listOf(productSpecifications);
+        return ProductResponse.listOfProductSpecification(productSpecifications);
+    }
+
+    @Transactional(readOnly = true)
+    public List<ProductResponse> searchAdminProducts(final AdminProductSearchRequest request) {
+        List<Product> products = productRepository.searchAdminProducts(request.toAdminProductSearchCondition());
+        return ProductResponse.listOfProducts(products);
     }
 
     @Transactional(readOnly = true)
@@ -53,7 +60,7 @@ public class ProductService {
         final List<ProductSpecification> productSpecifications = productRepository.searchProducts(
             request.toProductSearchCondition());
 
-        return ProductResponse.listOf(productSpecifications);
+        return ProductResponse.listOfProductSpecification(productSpecifications);
     }
 
     @Transactional

@@ -3,6 +3,7 @@ package com.woowa.woowakit.domain.product.api;
 import com.woowa.woowakit.domain.auth.annotation.Admin;
 import com.woowa.woowakit.domain.product.application.ProductService;
 import com.woowa.woowakit.domain.product.application.StockService;
+import com.woowa.woowakit.domain.product.dto.request.AdminProductSearchRequest;
 import com.woowa.woowakit.domain.product.dto.request.ProductCreateRequest;
 import com.woowa.woowakit.domain.product.dto.request.ProductSearchRequest;
 import com.woowa.woowakit.domain.product.dto.request.ProductStatusUpdateRequest;
@@ -55,7 +56,17 @@ public class ProductController {
 		return ResponseEntity.ok(response);
 	}
 
-	@GetMapping
+	@Admin
+	@GetMapping("/products")
+	public ResponseEntity<List<ProductResponse>> searchAdminProducts(
+		@Valid @ModelAttribute final AdminProductSearchRequest request
+	) {
+		log.info("관리자 상품 조회");
+		List<ProductResponse> response = productService.searchAdminProducts(request);
+		return ResponseEntity.ok(response);
+	}
+
+	@GetMapping("/search")
 	public ResponseEntity<List<ProductResponse>> searchProducts(
 		@Valid @ModelAttribute final ProductSearchRequest request) {
 		log.info("productKeyword: {}, lastProductId: {} 상품 조회", request.getProductKeyword(),
