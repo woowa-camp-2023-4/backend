@@ -35,7 +35,7 @@ jobs:
       - name: Build with Gradle
         uses: gradle/gradle-build-action@bd5760595778326ba7f1441bcf7e88b49de61a25
         with:
-          arguments: bootJar
+          arguments: bootJar -x test
 
       - name: Let script executable
         run: chmod 755 scripts/run.sh

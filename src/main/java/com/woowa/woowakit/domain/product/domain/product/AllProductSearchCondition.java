@@ -8,7 +8,7 @@ import lombok.Getter;
 @Getter
 @Builder
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class AdminProductSearchCondition {
+public class AllProductSearchCondition {
 
 	private static final int DEFAULT_PAGE_SIZE = 20;
 

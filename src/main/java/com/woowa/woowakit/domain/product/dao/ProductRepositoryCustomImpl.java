@@ -14,10 +14,10 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.woowa.woowakit.domain.product.domain.product.Product;
-import com.woowa.woowakit.domain.product.domain.product.ProductSearchCondition;
+import com.woowa.woowakit.domain.product.domain.product.InStockProductSearchCondition;
 import com.woowa.woowakit.domain.product.domain.product.ProductSpecification;
 import com.woowa.woowakit.domain.product.domain.product.ProductStatus;
-import com.woowa.woowakit.domain.product.domain.product.AdminProductSearchCondition;
+import com.woowa.woowakit.domain.product.domain.product.AllProductSearchCondition;
 
 import lombok.RequiredArgsConstructor;
 
@@ -28,7 +28,7 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
 	private final JPAQueryFactory jpaQueryFactory;
 
 	@Override
-	public List<ProductSpecification> searchProducts(final ProductSearchCondition condition) {
+	public List<ProductSpecification> searchInStockProducts(final InStockProductSearchCondition condition) {
 		return jpaQueryFactory.select(
 				Projections.constructor(ProductSpecification.class,
 					product,
@@ -65,7 +65,7 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
 	}
 
 	@Override
-	public List<Product> searchAdminProducts(final AdminProductSearchCondition condition) {
+	public List<Product> searchAllProducts(final AllProductSearchCondition condition) {
 		return jpaQueryFactory.selectFrom(product)
 			.where(
 				containsName(condition.getProductKeyword()),

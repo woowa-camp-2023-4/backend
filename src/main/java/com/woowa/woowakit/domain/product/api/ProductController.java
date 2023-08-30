@@ -3,9 +3,9 @@ package com.woowa.woowakit.domain.product.api;
 import com.woowa.woowakit.domain.auth.annotation.Admin;
 import com.woowa.woowakit.domain.product.application.ProductService;
 import com.woowa.woowakit.domain.product.application.StockService;
-import com.woowa.woowakit.domain.product.dto.request.AdminProductSearchRequest;
+import com.woowa.woowakit.domain.product.dto.request.AllProductSearchRequest;
 import com.woowa.woowakit.domain.product.dto.request.ProductCreateRequest;
-import com.woowa.woowakit.domain.product.dto.request.ProductSearchRequest;
+import com.woowa.woowakit.domain.product.dto.request.InStockProductSearchRequest;
 import com.woowa.woowakit.domain.product.dto.request.ProductStatusUpdateRequest;
 import com.woowa.woowakit.domain.product.dto.request.StockCreateRequest;
 import com.woowa.woowakit.domain.product.dto.response.ProductDetailResponse;
@@ -57,21 +57,21 @@ public class ProductController {
 	}
 
 	@Admin
-	@GetMapping("/products")
-	public ResponseEntity<List<ProductResponse>> searchAdminProducts(
-		@Valid @ModelAttribute final AdminProductSearchRequest request
+	@GetMapping
+	public ResponseEntity<List<ProductResponse>> searchAllProducts(
+		@Valid @ModelAttribute final AllProductSearchRequest request
 	) {
 		log.info("관리자 상품 조회");
-		List<ProductResponse> response = productService.searchAdminProducts(request);
+		List<ProductResponse> response = productService.searchAllProducts(request);
 		return ResponseEntity.ok(response);
 	}
 
 	@GetMapping("/search")
-	public ResponseEntity<List<ProductResponse>> searchProducts(
-		@Valid @ModelAttribute final ProductSearchRequest request) {
+	public ResponseEntity<List<ProductResponse>> searchInStockProducts(
+		@Valid @ModelAttribute final InStockProductSearchRequest request) {
 		log.info("productKeyword: {}, lastProductId: {} 상품 조회", request.getProductKeyword(),
 			request.getLastProductId());
-		final List<ProductResponse> response = productService.searchProducts(request);
+		final List<ProductResponse> response = productService.searchInStockProducts(request);
 		return ResponseEntity.ok(response);
 	}
 

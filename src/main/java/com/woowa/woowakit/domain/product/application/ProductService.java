@@ -9,11 +9,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.woowa.woowakit.domain.product.domain.product.Product;
 import com.woowa.woowakit.domain.product.domain.product.ProductRepository;
-import com.woowa.woowakit.domain.product.domain.product.ProductSearchCondition;
+import com.woowa.woowakit.domain.product.domain.product.InStockProductSearchCondition;
 import com.woowa.woowakit.domain.product.domain.product.ProductSpecification;
-import com.woowa.woowakit.domain.product.dto.request.AdminProductSearchRequest;
+import com.woowa.woowakit.domain.product.dto.request.AllProductSearchRequest;
 import com.woowa.woowakit.domain.product.dto.request.ProductCreateRequest;
-import com.woowa.woowakit.domain.product.dto.request.ProductSearchRequest;
+import com.woowa.woowakit.domain.product.dto.request.InStockProductSearchRequest;
 import com.woowa.woowakit.domain.product.dto.request.ProductStatusUpdateRequest;
 import com.woowa.woowakit.domain.product.dto.response.ProductDetailResponse;
 import com.woowa.woowakit.domain.product.dto.response.ProductResponse;
@@ -43,22 +43,22 @@ public class ProductService {
     @Transactional(readOnly = true)
     @Cacheable(value = "productsFirstRanking")
     public List<ProductResponse> findRankingProducts() {
-        final List<ProductSpecification> productSpecifications = productRepository.searchProducts(
-            ProductSearchCondition.builder().build());
+        final List<ProductSpecification> productSpecifications = productRepository.searchInStockProducts(
+            InStockProductSearchCondition.builder().build());
 
         return ProductResponse.listOfProductSpecification(productSpecifications);
     }
 
     @Transactional(readOnly = true)
-    public List<ProductResponse> searchAdminProducts(final AdminProductSearchRequest request) {
-        List<Product> products = productRepository.searchAdminProducts(request.toAdminProductSearchCondition());
+    public List<ProductResponse> searchAllProducts(final AllProductSearchRequest request) {
+        List<Product> products = productRepository.searchAllProducts(request.toAllProductSearchCondition());
         return ProductResponse.listOfProducts(products);
     }
 
     @Transactional(readOnly = true)
-    public List<ProductResponse> searchProducts(final ProductSearchRequest request) {
-        final List<ProductSpecification> productSpecifications = productRepository.searchProducts(
-            request.toProductSearchCondition());
+    public List<ProductResponse> searchInStockProducts(final InStockProductSearchRequest request) {
+        final List<ProductSpecification> productSpecifications = productRepository.searchInStockProducts(
+            request.toInStockProductSearchCondition());
 
         return ProductResponse.listOfProductSpecification(productSpecifications);
     }

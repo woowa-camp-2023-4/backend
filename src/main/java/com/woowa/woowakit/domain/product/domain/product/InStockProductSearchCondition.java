@@ -12,7 +12,7 @@ import lombok.Getter;
 @EqualsAndHashCode
 @Builder
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class ProductSearchCondition {
+public class InStockProductSearchCondition {
 
 	private static final int DEFAULT_PAGE_SIZE = 20;
 
@@ -31,13 +31,13 @@ public class ProductSearchCondition {
 	private LocalDate saleDate = DEFAULT_SALE_DATE;
 
 
-	public static ProductSearchCondition of(
+	public static InStockProductSearchCondition of(
 		final String productKeyword,
 		final Long lastProductId,
 		final Long lastProductSale,
 		final int pageSize,
 		final LocalDate saleDate
 	) {
-		return new ProductSearchCondition(productKeyword, lastProductId, lastProductSale, pageSize, saleDate);
+		return new InStockProductSearchCondition(productKeyword, lastProductId, lastProductSale, pageSize, saleDate);
 	}
 }
