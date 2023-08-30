@@ -15,6 +15,7 @@ import com.woowa.woowakit.domain.order.domain.OrderStatus;
 import com.woowa.woowakit.domain.order.domain.PaymentClient;
 import com.woowa.woowakit.domain.order.dto.response.OrderDetailResponse;
 import com.woowa.woowakit.domain.order.dto.response.OrderResponse;
+import com.woowa.woowakit.domain.product.domain.product.ProductStatus;
 import com.woowa.woowakit.global.error.ErrorResponse;
 
 import integration.IntegrationTest;
@@ -66,6 +67,25 @@ class OrderIntegrationTest extends IntegrationTest {
 		assertThat(response.statusCode()).isEqualTo(400);
 		ErrorResponse errorResponse = response.as(ErrorResponse.class);
 		assertThat(errorResponse).extracting("message")
+			.isEqualTo("상품의 재고가 부족합니다");
+	}
+
+	@Test
+	@DisplayName("상품이 구매 불가능 상태일 떄 주문 생성에 실패한다.")
+	void createOrderOnSaleFail() {
+		// given
+		Long orderId = ProductHelper.createProductAndSetUp(20L, ProductStatus.STOPPED);
+		String accessToken = MemberHelper.signUpAndLogIn();
+
+		// when
+		ExtractableResponse<Response> response = OrderHelper.createOrder(
+			OrderHelper.createOrderRequest(orderId, 11L), accessToken);
+
+		// then
+		assertThat(response.statusCode()).isEqualTo(400);
+		ErrorResponse errorResponse = response.as(ErrorResponse.class);
+		assertThat(errorResponse)
+			.extracting("message")
 			.isEqualTo("판매 중이 아닌 상품입니다.");
 	}
 
