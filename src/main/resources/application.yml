@@ -32,7 +32,7 @@ spring:
       max-file-size: 5MB
   datasource:
     hikari:
-      maximum-pool-size: 100
+      maximum-pool-size: 200
   cache:
     caffeine:
       spec: maximumSize=100,expireAfterAccess=30s
