@@ -162,7 +162,7 @@ include::{snippets}/product/findById/path-parameters.adoc[]
 include::{snippets}/product/findById/http-response.adoc[]
 include::{snippets}/product/findById/response-fields.adoc[]
 
-== 상품 조회
+== InStock 상품 조회
 
 === 요청
 
@@ -173,6 +173,18 @@ include::{snippets}/product/findAll/request-fields.adoc[]
 
 include::{snippets}/product/findAll/http-response.adoc[]
 include::{snippets}/product/findAll/response-fields.adoc[]
+
+== 상품 전체 조회
+
+=== 요청
+
+include::{snippets}/product/findAllProducts/http-request.adoc[]
+include::{snippets}/product/findAllProducts/request-fields.adoc[]
+
+=== 응답
+
+include::{snippets}/product/findAllProducts/http-response.adoc[]
+include::{snippets}/product/findAllProducts/response-fields.adoc[]
 
 == 메인 페이지 조회
 

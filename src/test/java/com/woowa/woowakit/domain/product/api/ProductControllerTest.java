@@ -1,20 +1,15 @@
 package com.woowa.woowakit.domain.product.api;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.woowa.woowakit.domain.model.Quantity;
-import com.woowa.woowakit.domain.product.application.ProductService;
-import com.woowa.woowakit.domain.product.application.StockService;
-import com.woowa.woowakit.domain.product.domain.product.*;
-import com.woowa.woowakit.domain.product.dto.request.ProductCreateRequest;
-import com.woowa.woowakit.domain.product.dto.request.ProductSearchRequest;
-import com.woowa.woowakit.domain.product.dto.request.ProductStatusUpdateRequest;
-import com.woowa.woowakit.domain.product.dto.request.StockCreateRequest;
-import com.woowa.woowakit.domain.product.dto.response.ProductDetailResponse;
-import com.woowa.woowakit.domain.product.dto.response.ProductResponse;
-import com.woowa.woowakit.restDocsHelper.PathParam;
-import com.woowa.woowakit.restDocsHelper.RequestFields;
-import com.woowa.woowakit.restDocsHelper.ResponseFields;
-import com.woowa.woowakit.restDocsHelper.RestDocsTest;
+import static com.woowa.woowakit.restDocsHelper.RestDocsHelper.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.BDDMockito.*;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,18 +22,27 @@ import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Map;
-
-import static com.woowa.woowakit.restDocsHelper.RestDocsHelper.authorizationDocument;
-import static com.woowa.woowakit.restDocsHelper.RestDocsHelper.defaultDocument;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.willDoNothing;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.handler;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.woowa.woowakit.domain.model.Quantity;
+import com.woowa.woowakit.domain.product.application.ProductService;
+import com.woowa.woowakit.domain.product.application.StockService;
+import com.woowa.woowakit.domain.product.domain.product.Product;
+import com.woowa.woowakit.domain.product.domain.product.ProductImage;
+import com.woowa.woowakit.domain.product.domain.product.ProductName;
+import com.woowa.woowakit.domain.product.domain.product.ProductPrice;
+import com.woowa.woowakit.domain.product.domain.product.ProductSpecification;
+import com.woowa.woowakit.domain.product.domain.product.ProductStatus;
+import com.woowa.woowakit.domain.product.dto.request.AllProductSearchRequest;
+import com.woowa.woowakit.domain.product.dto.request.InStockProductSearchRequest;
+import com.woowa.woowakit.domain.product.dto.request.ProductCreateRequest;
+import com.woowa.woowakit.domain.product.dto.request.ProductStatusUpdateRequest;
+import com.woowa.woowakit.domain.product.dto.request.StockCreateRequest;
+import com.woowa.woowakit.domain.product.dto.response.ProductDetailResponse;
+import com.woowa.woowakit.domain.product.dto.response.ProductResponse;
+import com.woowa.woowakit.restDocsHelper.PathParam;
+import com.woowa.woowakit.restDocsHelper.RequestFields;
+import com.woowa.woowakit.restDocsHelper.ResponseFields;
+import com.woowa.woowakit.restDocsHelper.RestDocsTest;
 
 @WebMvcTest(ProductController.class)
 @AutoConfigureRestDocs(uriHost = "api.test.com", uriPort = 80)
@@ -129,7 +133,7 @@ class ProductControllerTest extends RestDocsTest {
 	}
 
 	@Test
-	@DisplayName("[GET] [/products] 상품 전체 조회 테스트 및 문서화")
+	@DisplayName("[GET] [/products/search] 상품 전체 조회 테스트 및 문서화")
 	void searchProducts() throws Exception {
 		RequestFields requestFields = new RequestFields(Map.of(
 			"productKeyword", "상품 이름 키워드",
@@ -148,7 +152,7 @@ class ProductControllerTest extends RestDocsTest {
 			"[]productSale", "마지막 상품 판매량"
 		));
 
-		ProductSearchRequest request = ProductSearchRequest.of(
+		InStockProductSearchRequest request = InStockProductSearchRequest.of(
 			"",
 			3L,
 			109L,
@@ -156,14 +160,52 @@ class ProductControllerTest extends RestDocsTest {
 			LocalDate.now());
 		List<ProductResponse> response = List.of(
 			ProductResponse.from(getProductSpecification()));
-		given(productService.searchProducts(any())).willReturn(response);
+		given(productService.searchInStockProducts(any())).willReturn(response);
 
-		mockMvc.perform(get("/products")
+		mockMvc.perform(get("/products/search")
 				.contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
 				.content(autowiredObjectMapper.writeValueAsString(request)))
 			.andExpect(status().isOk())
-			.andExpect(handler().methodName("searchProducts"))
+			.andExpect(handler().methodName("searchInStockProducts"))
 			.andDo(defaultDocument("product/findAll", requestFields, responseFields));
+	}
+
+	@Test
+	@DisplayName("[GET] [/products] 어드민 상품 전체 조회 테스트 및 문서화")
+	void searchAllProducts() throws Exception {
+		RequestFields requestFields = new RequestFields(Map.of(
+			"productKeyword", "상품 이름 키워드",
+			"lastProductId", "마지막 상품 ID",
+			"pageSize", "페이지 사이즈"
+		));
+		ResponseFields responseFields = new ResponseFields(Map.of(
+			"[]name", "상품 이름",
+			"[]id", "상품 ID",
+			"[]price", "상품 가격",
+			"[]imageUrl", "상품 이미지 URL",
+			"[]status", "상품 상태",
+			"[]quantity", "상품 총 수량",
+			"[]productSale", "마지막 상품 판매량"
+		));
+
+		String token = getToken();
+
+		AllProductSearchRequest request = AllProductSearchRequest.of(
+			null,
+			null,
+			20
+		);
+		List<ProductResponse> response = List.of(
+			ProductResponse.from(getProduct()));
+		given(productService.searchAllProducts(any())).willReturn(response);
+
+		mockMvc.perform(get("/products")
+				.header(HttpHeaders.AUTHORIZATION, token)
+				.contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+				.content(autowiredObjectMapper.writeValueAsString(request)))
+			.andExpect(status().isOk())
+			.andExpect(handler().methodName("searchAllProducts"))
+			.andDo(defaultDocument("product/findAllProducts", requestFields, responseFields));
 	}
 
 	@Test

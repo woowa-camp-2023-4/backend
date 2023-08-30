@@ -111,7 +111,7 @@ class ProductIntegrationTest extends IntegrationTest {
 		ProductHelper.updateProductStatus(location2, productStatusUpdateRequest2, accessToken);
 
 		// when
-		ExtractableResponse<Response> response = CommonRestAssuredUtils.get("/products",
+		ExtractableResponse<Response> response = CommonRestAssuredUtils.get("/products/search",
 			Map.of("pageSize", 5));
 
 		// then

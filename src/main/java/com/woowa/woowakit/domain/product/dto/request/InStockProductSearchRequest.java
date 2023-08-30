@@ -6,7 +6,7 @@ import javax.validation.constraints.Min;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
-import com.woowa.woowakit.domain.product.domain.product.ProductSearchCondition;
+import com.woowa.woowakit.domain.product.domain.product.InStockProductSearchCondition;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -18,7 +18,7 @@ import lombok.Setter;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
 @Setter
-public class ProductSearchRequest {
+public class InStockProductSearchRequest {
 
 	private static final int DEFAULT_PAGE_SIZE = 20;
 
@@ -36,17 +36,17 @@ public class ProductSearchRequest {
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate saleDate = DEFAULT_SALE_DATE;
 
-	public static ProductSearchRequest of(
+	public static InStockProductSearchRequest of(
 		final String productKeyword,
 		final Long lastProductId,
 		final Long lastProductSale,
 		final int pageSize,
 		final LocalDate saleDate
 	) {
-		return new ProductSearchRequest(productKeyword, lastProductId, lastProductSale, pageSize, saleDate);
+		return new InStockProductSearchRequest(productKeyword, lastProductId, lastProductSale, pageSize, saleDate);
 	}
 
-	public ProductSearchCondition toProductSearchCondition() {
-		return ProductSearchCondition.of(productKeyword, lastProductId, lastProductSale, pageSize, saleDate);
+	public InStockProductSearchCondition toInStockProductSearchCondition() {
+		return InStockProductSearchCondition.of(productKeyword, lastProductId, lastProductSale, pageSize, saleDate);
 	}
 }

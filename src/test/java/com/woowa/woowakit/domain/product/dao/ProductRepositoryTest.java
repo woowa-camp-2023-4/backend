@@ -38,8 +38,8 @@ class ProductRepositoryTest {
         Product product5 = makeProduct("테스트12", 1500L, "testImg5");
 
         // when
-        ProductSearchCondition productSearchCondition = ProductSearchCondition.of("1", null, null, 5, LocalDate.now());
-        List<ProductSpecification> result = productRepository.searchProducts(productSearchCondition);
+        InStockProductSearchCondition inStockProductSearchCondition = InStockProductSearchCondition.of("1", null, null, 5, LocalDate.now());
+        List<ProductSpecification> result = productRepository.searchInStockProducts(inStockProductSearchCondition);
 
         // then
         Assertions.assertThat(result).hasSize(3);
@@ -56,12 +56,14 @@ class ProductRepositoryTest {
         Product product2 = makeProduct("테스트2", 1500L, "testImg2");
         Product product3 = makeProduct("테스트3", 1500L, "testImg3");
         Product product4 = makeProduct("테스트4", 1500L, "testImg4");
-        Product product5 = makeProduct("테스트5", 1500L, "testImg5");
+        Product product5 = productRepository.save(Product.of("테스트5", 1500L, "testImg5"));
+        Product product6 = productRepository.save(Product.of("테스트5", 1500L, "testImg5"));
+        Product product7 = productRepository.save(Product.of("테스트5", 1500L, "testImg5"));
 
         // when
-        ProductSearchCondition productSearchCondition = ProductSearchCondition.of("테스트", product2.getId(), null, 2,
-                LocalDate.now());
-        List<ProductSpecification> result = productRepository.searchProducts(productSearchCondition);
+        InStockProductSearchCondition inStockProductSearchCondition = InStockProductSearchCondition.of("테스트", product2.getId(), null, 4,
+                null);
+        List<ProductSpecification> result = productRepository.searchInStockProducts(inStockProductSearchCondition);
 
         // then
         Assertions.assertThat(result).hasSize(2);
@@ -123,8 +125,8 @@ class ProductRepositoryTest {
         productSalesRepository.save(createProductSale(productI, 30, LocalDate.of(2023, 8, 25)));
         productSalesRepository.save(createProductSale(productJ, 30, LocalDate.of(2023, 8, 25)));
 
-        ProductSearchCondition condition = ProductSearchCondition.of(null, productD.getId(), 30L, 4, LocalDate.of(2023, 8, 25));
-        List<ProductSpecification> products = productRepository.searchProducts(condition);
+        InStockProductSearchCondition condition = InStockProductSearchCondition.of(null, productD.getId(), 30L, 4, LocalDate.of(2023, 8, 25));
+        List<ProductSpecification> products = productRepository.searchInStockProducts(condition);
         Assertions.assertThat(products).hasSize(4)
                 .extracting(ProductSpecification::getProduct)
                 .extracting(Product::getName)
