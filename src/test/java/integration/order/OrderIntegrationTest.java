@@ -119,7 +119,7 @@ class OrderIntegrationTest extends IntegrationTest {
 
 	@Test
 	@DisplayName("회원이 주문 상세 정보를 조회한다.")
-	void findById() {
+	void findById() throws InterruptedException {
 		// given
 		Long productId = ProductHelper.createProductAndSetUp();
 		String accessToken = MemberHelper.signUpAndLogIn();
@@ -127,6 +127,7 @@ class OrderIntegrationTest extends IntegrationTest {
 
 		when(paymentClient.validatePayment(any(), any(), any())).thenReturn(Mono.empty());
 		OrderHelper.payOrder(OrderHelper.createOrderPayRequest(), orderId, accessToken);
+		Thread.sleep(100);
 
 		// when
 		ExtractableResponse<Response> response = CommonRestAssuredUtils.get("/orders/" + orderId,
