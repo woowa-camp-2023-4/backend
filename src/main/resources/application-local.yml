@@ -1,0 +1,41 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        format_sql: true
+  sql:
+    init:
+      schema-locations: classpath:schema.sql
+      mode: always
+  datasource:
+    url: jdbc:h2:mem:testdb;MODE=MySQL
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  h2:
+    console:
+      enabled: true
+
+security:
+  jwt:
+    token:
+      secret-key: fjhbewhjbrfkelwdvhkewjkbwd
+      expire-length: 3600000
+
+cors:
+  allowed-origin: http://localhost:3000
+
+payment:
+  toss:
+    secret-key: localocal
+
+management:
+  server:
+    port: 8080
+  endpoints:
+    web:
+      base-path: /actuator

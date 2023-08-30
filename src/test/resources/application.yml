@@ -5,14 +5,45 @@ spring:
     show-sql: true
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.H2Dialect
+        dialect: org.hibernate.dialect.MySQL8Dialect
         format_sql: true
   sql:
     init:
       schema-locations: classpath*:schema.sql
       mode: always
   datasource:
-    url: jdbc:h2:mem:testdb
+    url: jdbc:h2:mem:testdb;MODE=MYSQL
     driver-class-name: org.h2.Driver
     username: sa
     password:
+  cache:
+    caffeine:
+      spec: maximumSize=500,expireAfterAccess=5s
+    type: caffeine
+    cache-names:
+      - productsFirstRanking
+
+security:
+  jwt:
+    token:
+      secret-key: test
+      expire-length: 3600000
+
+payment:
+  toss:
+    secret-key: test-key
+    confirm-url: http://localhost:8888
+    timeout: 1000
+    max-retry: 3
+
+cors:
+  allowed-origin: http://localhost:3000
+
+cloud:
+  aws:
+    s3:
+      bucket: woowa-camp-4
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
