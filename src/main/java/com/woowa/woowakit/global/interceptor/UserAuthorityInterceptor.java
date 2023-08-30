@@ -11,7 +11,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 
 import com.woowa.woowakit.domain.auth.annotation.User;
 import com.woowa.woowakit.domain.auth.domain.AuthPrincipal;
-import com.woowa.woowakit.global.error.ForbiddenException;
+import com.woowa.woowakit.global.error.UnAuthorizationException;
 
 @Component
 public class UserAuthorityInterceptor implements HandlerInterceptor {
@@ -36,7 +36,7 @@ public class UserAuthorityInterceptor implements HandlerInterceptor {
 	private void validateUserAuthorization(final HttpServletRequest request) {
 		AuthPrincipal authPrincipal = (AuthPrincipal)request.getAttribute(MEMBER_KEY);
 		if (Objects.isNull(authPrincipal)) {
-			throw new ForbiddenException();
+			throw new UnAuthorizationException();
 		}
 	}
 }
