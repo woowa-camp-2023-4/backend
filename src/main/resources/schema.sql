@@ -101,3 +101,12 @@ create table if not exists product_sales
     updated_at datetime not null,
     primary key(id)
 );
+
+
+alter table stocks add constraint uq_stock unique(product_id , expiry_date);
+alter table product_sales add constraint uq_product unique(product_id , sale_date);
+create index stocks_index_product_id on stocks(product_id);
+create index orders_index_member_id on orders(member_id);
+create index product_sales_index_sale on product_sales(sale);
+
+
