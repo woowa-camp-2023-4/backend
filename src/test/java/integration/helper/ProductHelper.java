@@ -2,11 +2,11 @@ package integration.helper;
 
 import java.time.LocalDate;
 
-import com.woowa.woowakit.domain.product.domain.product.ProductStatus;
-import com.woowa.woowakit.domain.product.dto.request.ProductCreateRequest;
-import com.woowa.woowakit.domain.product.dto.request.ProductStatusUpdateRequest;
-import com.woowa.woowakit.domain.product.dto.request.StockCreateRequest;
-import com.woowa.woowakit.domain.product.dto.response.ProductResponse;
+import com.woowa.woowakit.domains.product.domain.product.ProductStatus;
+import com.woowa.woowakit.domains.product.dto.request.ProductCreateRequest;
+import com.woowa.woowakit.domains.product.dto.request.ProductStatusUpdateRequest;
+import com.woowa.woowakit.domains.product.dto.request.StockCreateRequest;
+import com.woowa.woowakit.domains.product.dto.response.ProductResponse;
 
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;

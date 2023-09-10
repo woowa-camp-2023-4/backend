@@ -1,8 +1,8 @@
 package com.woowa.woowakit.global.interceptor;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.woowa.woowakit.domain.auth.domain.MemberRepository;
-import com.woowa.woowakit.domain.auth.infra.TokenProvider;
+import com.woowa.woowakit.domains.auth.domain.MemberRepository;
+import com.woowa.woowakit.domains.auth.infra.TokenProvider;
 import com.woowa.woowakit.global.config.JpaConfig;
 import com.woowa.woowakit.global.config.QuerydslTestConfig;
 import com.woowa.woowakit.global.error.TokenInvalidException;

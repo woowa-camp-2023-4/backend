@@ -4,7 +4,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
-import com.woowa.woowakit.domain.order.domain.PaymentClient;
+import com.woowa.woowakit.domains.order.domain.PaymentClient;
 import com.woowa.woowakit.infra.payment.toss.ThreadSleepClient;
 
 import reactor.core.scheduler.Scheduler;

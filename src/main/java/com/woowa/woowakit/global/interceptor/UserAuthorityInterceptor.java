@@ -9,8 +9,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
-import com.woowa.woowakit.domain.auth.annotation.User;
-import com.woowa.woowakit.domain.auth.domain.AuthPrincipal;
+import com.woowa.woowakit.domains.auth.annotation.User;
+import com.woowa.woowakit.domains.auth.domain.AuthPrincipal;
 import com.woowa.woowakit.global.error.UnAuthorizationException;
 
 @Component

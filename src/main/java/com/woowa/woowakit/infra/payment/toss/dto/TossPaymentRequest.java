@@ -1,6 +1,6 @@
 package com.woowa.woowakit.infra.payment.toss.dto;
 
-import com.woowa.woowakit.domain.model.Money;
+import com.woowa.woowakit.domains.model.Money;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

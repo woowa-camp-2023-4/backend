@@ -10,11 +10,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 
-import com.woowa.woowakit.domain.product.domain.product.ProductStatus;
-import com.woowa.woowakit.domain.product.dto.request.ProductCreateRequest;
-import com.woowa.woowakit.domain.product.dto.request.ProductStatusUpdateRequest;
-import com.woowa.woowakit.domain.product.dto.request.StockCreateRequest;
-import com.woowa.woowakit.domain.product.dto.response.ProductResponse;
+import com.woowa.woowakit.domains.product.domain.product.ProductStatus;
+import com.woowa.woowakit.domains.product.dto.request.ProductCreateRequest;
+import com.woowa.woowakit.domains.product.dto.request.ProductStatusUpdateRequest;
+import com.woowa.woowakit.domains.product.dto.request.StockCreateRequest;
+import com.woowa.woowakit.domains.product.dto.response.ProductResponse;
 
 import integration.IntegrationTest;
 import integration.helper.CommonRestAssuredUtils;

@@ -4,10 +4,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.woowa.woowakit.domain.order.dto.request.OrderCreateRequest;
-import com.woowa.woowakit.domain.order.dto.request.OrderPayRequest;
-import com.woowa.woowakit.domain.order.dto.response.OrderDetailResponse;
-import com.woowa.woowakit.domain.order.dto.response.OrderResponse;
+import com.woowa.woowakit.domains.order.dto.request.OrderCreateRequest;
+import com.woowa.woowakit.domains.order.dto.request.OrderPayRequest;
+import com.woowa.woowakit.domains.order.dto.response.OrderDetailResponse;
+import com.woowa.woowakit.domains.order.dto.response.OrderResponse;
 
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;

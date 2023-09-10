@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.woowa.woowakit.domain.product.application.ImageUploader;
+import com.woowa.woowakit.domains.product.application.ImageUploader;
 
 import lombok.RequiredArgsConstructor;
 
