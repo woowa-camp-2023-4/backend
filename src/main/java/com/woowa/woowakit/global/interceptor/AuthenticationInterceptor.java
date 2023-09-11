@@ -2,9 +2,9 @@ package com.woowa.woowakit.global.interceptor;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.woowa.woowakit.domain.auth.domain.AuthPrincipal;
-import com.woowa.woowakit.domain.auth.domain.MemberRepository;
-import com.woowa.woowakit.domain.auth.infra.TokenProvider;
+import com.woowa.woowakit.shop.auth.domain.AuthPrincipal;
+import com.woowa.woowakit.shop.auth.domain.MemberRepository;
+import com.woowa.woowakit.shop.auth.infra.TokenProvider;
 import com.woowa.woowakit.global.error.NotFoundMemberException;
 import com.woowa.woowakit.global.error.TokenInvalidException;
 import javax.servlet.http.HttpServletRequest;

@@ -3,7 +3,7 @@ package integration.product;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.woowa.woowakit.domain.product.application.ImageUploader;
+import com.woowa.woowakit.shop.product.application.ImageUploader;
 import integration.IntegrationTest;
 import integration.helper.MemberHelper;
 import io.restassured.RestAssured;

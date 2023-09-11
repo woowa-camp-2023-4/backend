@@ -1,6 +1,6 @@
 package com.woowa.woowakit.global.config;
 
-import com.woowa.woowakit.domain.product.application.ImageUploader;
+import com.woowa.woowakit.shop.product.application.ImageUploader;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;

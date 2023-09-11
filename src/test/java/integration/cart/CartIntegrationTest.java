@@ -1,9 +1,9 @@
 package integration.cart;
 
-import com.woowa.woowakit.domain.cart.domain.CartItemSpecification;
-import com.woowa.woowakit.domain.cart.dto.CartItemAddRequest;
-import com.woowa.woowakit.domain.cart.dto.CartItemUpdateQuantityRequest;
-import com.woowa.woowakit.domain.product.domain.product.ProductStatus;
+import com.woowa.woowakit.shop.cart.domain.CartItemSpecification;
+import com.woowa.woowakit.shop.cart.dto.CartItemAddRequest;
+import com.woowa.woowakit.shop.cart.dto.CartItemUpdateQuantityRequest;
+import com.woowa.woowakit.shop.product.domain.product.ProductStatus;
 import integration.IntegrationTest;
 import integration.helper.CartItemHelper;
 import integration.helper.CommonRestAssuredUtils;

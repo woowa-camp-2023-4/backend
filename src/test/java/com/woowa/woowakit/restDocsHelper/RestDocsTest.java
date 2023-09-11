@@ -2,8 +2,8 @@ package com.woowa.woowakit.restDocsHelper;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.woowa.woowakit.domain.auth.domain.*;
-import com.woowa.woowakit.domain.auth.infra.TokenProvider;
+import com.woowa.woowakit.shop.auth.domain.*;
+import com.woowa.woowakit.shop.auth.infra.TokenProvider;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import static org.mockito.ArgumentMatchers.any;
