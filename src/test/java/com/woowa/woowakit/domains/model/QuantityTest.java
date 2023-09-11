@@ -3,6 +3,7 @@ package com.woowa.woowakit.domains.model;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 
+import com.woowa.woowakit.domains.model.exception.QuantityNegativeException;
 import com.woowa.woowakit.domains.product.exception.ProductQuantityNegativeException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,7 +15,7 @@ class QuantityTest {
     @DisplayName("수량은 0보다 작을 수 없다.")
     void negativeProductQuantityError() {
         assertThatCode(() -> Quantity.from(-1L))
-            .isInstanceOf(ProductQuantityNegativeException.class)
+            .isInstanceOf(QuantityNegativeException.class)
             .hasMessage("제품 수량은 0보다 작을 수 없습니다.");
     }
 
