@@ -1,6 +1,5 @@
 package com.woowa.woowakit.domains.product.dao;
 
-import static com.woowa.woowakit.domains.order.domain.QOrder.*;
 import static com.woowa.woowakit.domains.product.domain.product.QProduct.*;
 import static com.woowa.woowakit.domains.product.domain.product.QProductSales.*;
 
@@ -81,7 +80,7 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
 			return null;
 		}
 
-		return order.id.gt(cursorId);
+		return product.id.gt(cursorId);
 	}
 
 	private BooleanExpression containsName(final String productKeyword) {
