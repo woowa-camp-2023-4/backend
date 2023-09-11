@@ -2,6 +2,7 @@ package com.woowa.woowakit.domains.model;
 
 import java.util.Objects;
 
+import com.woowa.woowakit.domains.model.exception.QuantityNegativeException;
 import com.woowa.woowakit.domains.product.exception.ProductQuantityNegativeException;
 
 import lombok.Getter;
@@ -22,7 +23,7 @@ public class Quantity {
 
 	private void validNotNegative(final long quantity) {
 		if (quantity < 0) {
-			throw new ProductQuantityNegativeException();
+			throw new QuantityNegativeException();
 		}
 	}
 

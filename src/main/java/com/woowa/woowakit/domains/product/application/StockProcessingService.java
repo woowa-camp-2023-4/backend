@@ -1,10 +1,10 @@
 package com.woowa.woowakit.domains.product.application;
 
-import com.woowa.woowakit.domains.cart.exception.ProductNotExistException;
 import com.woowa.woowakit.domains.model.Quantity;
 import com.woowa.woowakit.domains.product.domain.product.Product;
 import com.woowa.woowakit.domains.product.domain.product.ProductRepository;
 import com.woowa.woowakit.domains.product.domain.stock.*;
+import com.woowa.woowakit.domains.product.exception.ProductNotExistException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
