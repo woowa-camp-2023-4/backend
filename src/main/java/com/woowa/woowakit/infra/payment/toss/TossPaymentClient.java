@@ -13,8 +13,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import com.woowa.woowakit.domains.model.Money;
-import com.woowa.woowakit.domains.order.domain.PaymentClient;
+import com.woowa.woowakit.shop.model.Money;
+import com.woowa.woowakit.shop.order.domain.PaymentClient;
 import com.woowa.woowakit.infra.payment.toss.dto.TossPaymentErrorResponse;
 import com.woowa.woowakit.infra.payment.toss.dto.TossPaymentRequest;
 

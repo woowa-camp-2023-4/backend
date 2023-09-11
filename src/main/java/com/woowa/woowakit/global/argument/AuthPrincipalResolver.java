@@ -9,8 +9,8 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
-import com.woowa.woowakit.domains.auth.annotation.Authenticated;
-import com.woowa.woowakit.domains.auth.domain.AuthPrincipal;
+import com.woowa.woowakit.shop.auth.annotation.Authenticated;
+import com.woowa.woowakit.shop.auth.domain.AuthPrincipal;
 
 @Component
 public class AuthPrincipalResolver implements HandlerMethodArgumentResolver {

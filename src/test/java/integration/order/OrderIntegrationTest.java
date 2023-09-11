@@ -11,11 +11,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 
-import com.woowa.woowakit.domains.order.domain.OrderStatus;
-import com.woowa.woowakit.domains.order.domain.PaymentClient;
-import com.woowa.woowakit.domains.order.dto.response.OrderDetailResponse;
-import com.woowa.woowakit.domains.order.dto.response.OrderResponse;
-import com.woowa.woowakit.domains.product.domain.product.ProductStatus;
+import com.woowa.woowakit.shop.order.domain.OrderStatus;
+import com.woowa.woowakit.shop.order.domain.PaymentClient;
+import com.woowa.woowakit.shop.order.dto.response.OrderDetailResponse;
+import com.woowa.woowakit.shop.order.dto.response.OrderResponse;
+import com.woowa.woowakit.shop.product.domain.product.ProductStatus;
 import com.woowa.woowakit.global.error.ErrorResponse;
 
 import integration.IntegrationTest;

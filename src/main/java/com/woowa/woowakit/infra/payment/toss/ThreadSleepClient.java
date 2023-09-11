@@ -3,8 +3,8 @@ package com.woowa.woowakit.infra.payment.toss;
 import java.time.Duration;
 import java.util.Random;
 
-import com.woowa.woowakit.domains.model.Money;
-import com.woowa.woowakit.domains.order.domain.PaymentClient;
+import com.woowa.woowakit.shop.model.Money;
+import com.woowa.woowakit.shop.order.domain.PaymentClient;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

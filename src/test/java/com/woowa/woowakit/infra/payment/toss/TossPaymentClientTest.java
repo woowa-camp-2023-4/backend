@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThatCode;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.woowa.woowakit.domains.model.Money;
+import com.woowa.woowakit.shop.model.Money;
 import com.woowa.woowakit.infra.payment.toss.dto.TossPaymentErrorResponse;
 import java.io.IOException;
 import okhttp3.mockwebserver.MockResponse;

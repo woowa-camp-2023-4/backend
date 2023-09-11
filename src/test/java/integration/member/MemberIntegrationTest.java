@@ -5,8 +5,8 @@ import static org.assertj.core.api.Assertions.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import com.woowa.woowakit.domains.auth.dto.request.LoginRequest;
-import com.woowa.woowakit.domains.auth.dto.request.SignUpRequest;
+import com.woowa.woowakit.shop.auth.dto.request.LoginRequest;
+import com.woowa.woowakit.shop.auth.dto.request.SignUpRequest;
 
 import integration.IntegrationTest;
 import integration.helper.CommonRestAssuredUtils;

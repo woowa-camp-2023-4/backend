@@ -1,6 +1,6 @@
 package integration.helper;
 
-import com.woowa.woowakit.domains.cart.dto.CartItemAddRequest;
+import com.woowa.woowakit.shop.cart.dto.CartItemAddRequest;
 
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
